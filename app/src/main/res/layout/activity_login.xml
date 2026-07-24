@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF">
+    android:background="#020B1D">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,74 +12,151 @@
         android:padding="24dp"
         android:gravity="center_horizontal">
 
+        <!-- Logo -->
+
+
+
+
         <!-- App Name -->
+
         <TextView
-            android:id="@+id/tvLoginTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="SmartMart+"
-            android:textSize="32sp"
+            android:textSize="34sp"
             android:textStyle="bold"
-            android:textColor="#2563EB"
-            android:layout_marginTop="80dp" />
+            android:textColor="#2F80FF" />
+
+
+        <!-- Tagline -->
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Intelligent In-Store Retail System"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:layout_marginTop="4dp" />
+
+
 
         <!-- Welcome Text -->
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Welcome Back!"
-            android:textSize="18sp"
-            android:textColor="#555555"
-            android:layout_marginTop="8dp" />
+            android:textColor="#FFFFFF"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:layout_marginTop="35dp" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Login to continue to your account"
+            android:textColor="#BDBDBD"
+            android:textSize="14sp"
+            android:layout_marginBottom="25dp"/>
+
+
 
         <!-- Email -->
+
         <EditText
             android:id="@+id/etEmail"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Enter Email"
-            android:inputType="textEmailAddress"
-            android:layout_marginTop="40dp"
-            android:padding="12dp" />
+            android:layout_height="55dp"
+            android:hint="Email"
+            android:textColorHint="#9E9E9E"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/edittext_bg"
+            android:padding="15dp"
+            android:inputType="textEmailAddress"/>
+
 
         <!-- Password -->
+
+
         <EditText
             android:id="@+id/etPassword"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Enter Password"
-            android:inputType="textPassword"
-            android:layout_marginTop="16dp"
-            android:padding="12dp" />
+            android:layout_height="55dp"
+            android:layout_marginTop="20dp"
+            android:hint="Password"
+            android:textColorHint="#9E9E9E"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/edittext_bg"
+            android:padding="15dp"
+            android:inputType="textPassword"/>
 
-        <!-- Login Button -->
-        <Button
-            android:id="@+id/btnLogin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="LOGIN"
-            android:layout_marginTop="24dp"
-            android:padding="12dp" />
 
-        <!-- Register Button -->
-        <Button
-            android:id="@+id/btnRegister"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="CREATE ACCOUNT"
-            android:layout_marginTop="12dp"
-            android:padding="12dp" />
 
         <!-- Forgot Password -->
+
         <TextView
-            android:id="@+id/tvForgotPassword"
+            android:id="@+id/tvforgot"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Forgot Password?"
-            android:textColor="#2563EB"
-            android:textSize="14sp"
-            android:layout_marginTop="20dp" />
+            android:textColor="#39B9FF"
+            android:layout_gravity="end"
+            android:layout_marginTop="10dp"/>
+
+
+
+        <!-- Login Button -->
+
+        <Button
+            android:id="@+id/btnLogin"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:text="LOGIN"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/login_button"
+            android:layout_marginTop="25dp"/>
+
+
+
+        <!-- Sign Up -->
+
+        <TextView
+            android:id="@+id/tvSignup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Don't have an account? Sign Up"
+            android:textColor="#FFFFFF"
+            android:layout_marginTop="25dp"/>
+
+
+        <!-- Divider -->
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="OR"
+            android:textColor="#FFFFFF"
+            android:layout_marginTop="20dp"/>
+
+
+
+        <!-- Continue Button -->
+
+
+        <Button
+            android:id="@+id/btnPhone"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:text="Continue as In-Store Customer"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/edittext_bg"
+            android:layout_marginTop="20dp"/>
+
 
     </LinearLayout>
+
 
 </ScrollView>
