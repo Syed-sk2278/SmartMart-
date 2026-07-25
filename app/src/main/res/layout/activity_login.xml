@@ -1,44 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#020B1D">
+    android:fillViewport="true"
+    android:background="@drawable/login_bg">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="24dp"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        android:padding="24dp">
 
-        <!-- Logo -->
+        <!-- Logo + SmartMart+ -->
 
-
-
-
-        <!-- App Name -->
-
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="SmartMart+"
-            android:textSize="34sp"
-            android:textStyle="bold"
-            android:textColor="#2F80FF" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="60dp">
 
+            <ImageView
+                android:id="@+id/imgLogo"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/smartmart_logo" />
 
-        <!-- Tagline -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginStart="8dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Intelligent In-Store Retail System"
-            android:textColor="#FFFFFF"
-            android:textSize="14sp"
-            android:layout_marginTop="4dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="SmartMart+"
+                    android:textColor="#1E88FF"
+                    android:textSize="32sp"
+                    android:textStyle="bold" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="AI Powered Smart Self Billing System"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp" />
 
+            </LinearLayout>
+
+        </LinearLayout>
 
         <!-- Welcome Text -->
 
@@ -47,78 +61,75 @@
             android:layout_height="wrap_content"
             android:text="Welcome Back!"
             android:textColor="#FFFFFF"
-            android:textSize="28sp"
+            android:textSize="30sp"
             android:textStyle="bold"
-            android:layout_marginTop="35dp" />
-
+            android:layout_marginTop="40dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Login to continue to your account"
-            android:textColor="#BDBDBD"
-            android:textSize="14sp"
-            android:layout_marginBottom="25dp"/>
-
-
+            android:textColor="#D9D9D9"
+            android:textSize="15sp"
+            android:layout_marginBottom="30dp" />
 
         <!-- Email -->
 
         <EditText
             android:id="@+id/etEmail"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:hint="Email"
-            android:textColorHint="#9E9E9E"
-            android:textColor="#FFFFFF"
+            android:layout_height="58dp"
             android:background="@drawable/edittext_bg"
-            android:padding="15dp"
-            android:inputType="textEmailAddress"/>
+            android:hint="Email"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#BFBFBF"
+            android:padding="16dp"
+            android:inputType="textEmailAddress" />
 
+        <!-- Space -->
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="18dp" />
 
         <!-- Password -->
-
 
         <EditText
             android:id="@+id/etPassword"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:layout_marginTop="20dp"
-            android:hint="Password"
-            android:textColorHint="#9E9E9E"
-            android:textColor="#FFFFFF"
+            android:layout_height="58dp"
             android:background="@drawable/edittext_bg"
-            android:padding="15dp"
-            android:inputType="textPassword"/>
-
-
+            android:hint="Password"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#BFBFBF"
+            android:padding="16dp"
+            android:inputType="textPassword" />
 
         <!-- Forgot Password -->
 
         <TextView
-            android:id="@+id/tvforgot"
-            android:layout_width="wrap_content"
+            android:id="@+id/tvForgot"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Forgot Password?"
-            android:textColor="#39B9FF"
-            android:layout_gravity="end"
-            android:layout_marginTop="10dp"/>
-
-
+            android:textColor="#66CCFF"
+            android:textAlignment="viewEnd"
+            android:textSize="14sp"
+            android:layout_marginTop="8dp" />
 
         <!-- Login Button -->
 
         <Button
             android:id="@+id/btnLogin"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:text="LOGIN"
-            android:textStyle="bold"
-            android:textColor="#FFFFFF"
+            android:layout_height="58dp"
+            android:layout_marginTop="25dp"
             android:background="@drawable/login_button"
-            android:layout_marginTop="25dp"/>
-
-
+            android:text="LOGIN"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <!-- Sign Up -->
 
@@ -128,35 +139,35 @@
             android:layout_height="wrap_content"
             android:text="Don't have an account? Sign Up"
             android:textColor="#FFFFFF"
-            android:layout_marginTop="25dp"/>
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:layout_marginTop="20dp" />
 
-
-        <!-- Divider -->
-
+        <!-- OR -->
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="OR"
-            android:textColor="#FFFFFF"
-            android:layout_marginTop="20dp"/>
+            android:text="---------------- OR ----------------"
+            android:textColor="#D3D3D3"
+            android:textSize="15sp"
+            android:layout_marginTop="25dp" />
 
-
-
-        <!-- Continue Button -->
-
+        <!-- Continue With Phone -->
 
         <Button
             android:id="@+id/btnPhone"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:text="Continue as In-Store Customer"
-            android:textColor="#FFFFFF"
+            android:layout_height="58dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="30dp"
             android:background="@drawable/edittext_bg"
-            android:layout_marginTop="20dp"/>
-
+            android:text="Continue with Phone"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
     </LinearLayout>
-
 
 </ScrollView>
