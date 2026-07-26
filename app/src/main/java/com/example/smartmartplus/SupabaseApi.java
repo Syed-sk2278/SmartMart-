@@ -16,4 +16,9 @@ public interface SupabaseApi {
     Call<LoginResponse> loginUser(
             @Body LoginRequest request
     );
+    @POST("YOUR_REGISTER_ENDPOINT")
+
+    Call<RegisterResponse> registerUser(
+            @Body RegisterRequest request
+    );
 }
