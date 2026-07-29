@@ -3,12 +3,9 @@ plugins {
 }
 
 android {
+
     namespace = "com.example.smartmartplus"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.smartmartplus"
@@ -17,31 +14,50 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner =
+            "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
-            optimization {
-                enable = false
-            }
+            isMinifyEnabled = false
         }
     }
+
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility =
+            JavaVersion.VERSION_11
+
+        targetCompatibility =
+            JavaVersion.VERSION_11
     }
 }
 
 dependencies {
-    implementation(libs.activity.ktx)
+
+    // Android Libraries
     implementation(libs.appcompat)
-    implementation(libs.constraintlayout)
     implementation(libs.material)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.espresso.core)
-    androidTestImplementation(libs.ext.junit)
+    implementation(libs.constraintlayout)
+    implementation(libs.activity.ktx)
+
+    // Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
+
+    // Gson Converter
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    // OkHttp
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+
+    // Logging Interceptor
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+
+    // Unit Testing
+    testImplementation(libs.junit)
+
+    // Android Testing
+    androidTestImplementation(libs.ext.junit)
+    androidTestImplementation(libs.espresso.core)
+
 }
