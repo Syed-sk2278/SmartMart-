@@ -15,7 +15,9 @@ import retrofit2.Response;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    private EditText etName, etPhone, etPassword;
+    private EditText etName, etEmail, etPhone,
+            etPassword, etConfirmPassword;
+
     private Button btnRegister, btnPhone;
     private TextView tvLogin;
 
@@ -26,12 +28,13 @@ public class RegisterActivity extends AppCompatActivity {
 
         // Initialize Views
         etName = findViewById(R.id.etName);
+        etEmail = findViewById(R.id.etEmail);
         etPhone = findViewById(R.id.etPhone);
         etPassword = findViewById(R.id.etPassword);
+        etConfirmPassword = findViewById(R.id.etConfirmPassword);
 
         btnRegister = findViewById(R.id.btnRegister);
         btnPhone = findViewById(R.id.btnPhone);
-
         tvLogin = findViewById(R.id.tvLogin);
 
 
@@ -63,7 +66,6 @@ public class RegisterActivity extends AppCompatActivity {
             ).show();
 
         });
-
     }
 
 
@@ -71,14 +73,21 @@ public class RegisterActivity extends AppCompatActivity {
 
         // Get User Input
         String name = etName.getText().toString().trim();
+        String email = etEmail.getText().toString().trim();
         String phone = etPhone.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
+        String confirmPassword = etConfirmPassword.getText().toString().trim();
 
 
         // Validation
 
         if (name.isEmpty()) {
             etName.setError("Enter your name");
+            return;
+        }
+
+        if (email.isEmpty()) {
+            etEmail.setError("Enter your email");
             return;
         }
 
@@ -92,38 +101,44 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
+        if (confirmPassword.isEmpty()) {
+            etConfirmPassword.setError("Confirm your password");
+            return;
+        }
+
+        // Check whether passwords match
+        if (!password.equals(confirmPassword)) {
+            etConfirmPassword.setError("Passwords do not match");
+            return;
+        }
+
 
         // Create Register Request Object
-
         RegisterRequest request = new RegisterRequest(
                 name,
+                email,
                 phone,
                 password
         );
 
 
         // Create API Instance
-
         SupabaseApi api = RetrofitClient
                 .getRetrofitInstance()
                 .create(SupabaseApi.class);
 
 
         // Call Register API
-
         Call<RegisterResponse> call =
                 api.registerUser(request);
 
 
         // Send Request
-
         call.enqueue(new Callback<RegisterResponse>() {
 
             @Override
             public void onResponse(Call<RegisterResponse> call,
                                    Response<RegisterResponse> response) {
-
-                // Registration Successful
 
                 if (response.isSuccessful()) {
 
@@ -135,7 +150,6 @@ public class RegisterActivity extends AppCompatActivity {
 
 
                     // Navigate to Login Screen
-
                     Intent intent = new Intent(
                             RegisterActivity.this,
                             LoginActivity.class
@@ -144,11 +158,7 @@ public class RegisterActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
 
-                }
-
-                // Registration Failed
-
-                else {
+                } else {
 
                     Toast.makeText(
                             RegisterActivity.this,
@@ -157,9 +167,7 @@ public class RegisterActivity extends AppCompatActivity {
                     ).show();
 
                 }
-
             }
-
 
             @Override
             public void onFailure(Call<RegisterResponse> call,
@@ -172,9 +180,7 @@ public class RegisterActivity extends AppCompatActivity {
                 ).show();
 
             }
-
         });
 
     }
-
 }
