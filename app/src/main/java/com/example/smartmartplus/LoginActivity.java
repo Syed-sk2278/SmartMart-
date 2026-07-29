@@ -2,10 +2,11 @@ package com.example.smartmartplus;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -17,7 +18,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText etEmail, etPassword;
     private Button btnLogin;
-    TextView tvSignup;
+    private TextView tvSignup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +31,10 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.btnLogin);
         tvSignup = findViewById(R.id.tvSignup);
 
-        // Login Button Click
+        // Login Button
         btnLogin.setOnClickListener(v -> loginUser());
+
+        // Sign Up Text
         tvSignup.setOnClickListener(v -> {
 
             Intent intent = new Intent(
@@ -50,33 +53,64 @@ public class LoginActivity extends AppCompatActivity {
         String email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
 
-        // Validation
 
+        // ==========================
+        // VALIDATIONS
+        // ==========================
+
+        // Empty Email Validation
         if (email.isEmpty()) {
             etEmail.setError("Please enter your email");
             return;
         }
 
+        // Valid Email Format Validation
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            etEmail.setError("Enter a valid email address");
+            return;
+        }
+
+        // Empty Password Validation
         if (password.isEmpty()) {
             etPassword.setError("Please enter your password");
             return;
         }
 
-        // Create Login Request Object
+        // Password Length Validation
+        if (password.length() < 6) {
+            etPassword.setError("Password must be at least 6 characters");
+            return;
+        }
 
-        LoginRequest request = new LoginRequest(email, password);
 
-        // Create API Instance
+        // ==========================
+        // CREATE LOGIN REQUEST
+        // ==========================
+
+        LoginRequest request =
+                new LoginRequest(email, password);
+
+
+        // ==========================
+        // CREATE API INSTANCE
+        // ==========================
 
         SupabaseApi api = RetrofitClient
                 .getRetrofitInstance()
                 .create(SupabaseApi.class);
 
-        // Call Login API
 
-        Call<LoginResponse> call = api.loginUser(request);
+        // ==========================
+        // LOGIN API CALL
+        // ==========================
+
+        Call<LoginResponse> call =
+                api.loginUser(request);
 
 
+        // ==========================
+        // SEND REQUEST TO SUPABASE
+        // ==========================
 
         call.enqueue(new Callback<LoginResponse>() {
 
@@ -85,7 +119,6 @@ public class LoginActivity extends AppCompatActivity {
                                    Response<LoginResponse> response) {
 
                 // Login Successful
-
                 if (response.isSuccessful()) {
 
                     Toast.makeText(
@@ -94,8 +127,8 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.LENGTH_SHORT
                     ).show();
 
-                    // Navigate to Home Screen
 
+                    // Navigate to Home Screen
                     Intent intent = new Intent(
                             LoginActivity.this,
                             HomeActivity.class
@@ -107,7 +140,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
                 // Invalid Credentials
-
                 else {
 
                     Toast.makeText(
@@ -120,13 +152,14 @@ public class LoginActivity extends AppCompatActivity {
 
             }
 
+
             @Override
             public void onFailure(Call<LoginResponse> call,
                                   Throwable t) {
 
                 Toast.makeText(
                         LoginActivity.this,
-                        "Network Error: " + t.getMessage(),
+                        "Network Error : " + t.getMessage(),
                         Toast.LENGTH_LONG
                 ).show();
 

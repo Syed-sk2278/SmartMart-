@@ -7,6 +7,7 @@ public class RegisterRequest {
     private String phone;
     private String password;
 
+    // Constructor
     public RegisterRequest(String fullName,
                            String email,
                            String phone,
@@ -16,5 +17,23 @@ public class RegisterRequest {
         this.email = email;
         this.phone = phone;
         this.password = password;
+    }
+
+    // Getter Methods
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }
