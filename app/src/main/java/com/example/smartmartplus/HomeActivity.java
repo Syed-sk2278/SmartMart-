@@ -1,24 +1,36 @@
 package com.example.smartmartplus;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 public class HomeActivity extends AppCompatActivity {
+
+    Button btnPlanner, btnScanner, btnCart, btnOffers, btnLogout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_home);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
+
+        btnPlanner = findViewById(R.id.btnPlanner);
+        btnScanner = findViewById(R.id.btnScanner);
+        btnCart = findViewById(R.id.btnCart);
+        btnOffers = findViewById(R.id.btnOffers);
+        btnLogout = findViewById(R.id.btnLogout);
+
+        // Logout
+        btnLogout.setOnClickListener(v -> {
+            Intent intent = new Intent(
+                    HomeActivity.this,
+                    LoginActivity.class
+            );
+            startActivity(intent);
+            finish();
         });
+
+        // Remaining buttons will be connected later
     }
 }
