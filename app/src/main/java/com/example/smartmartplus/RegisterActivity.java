@@ -46,7 +46,7 @@ public class RegisterActivity extends AppCompatActivity {
         // Register Button
         btnRegister.setOnClickListener(v -> registerUser());
 
-        // Navigate to Login Screen
+        // Already have an account? Login
         tvLogin.setOnClickListener(v -> {
 
             Intent intent = new Intent(
@@ -56,7 +56,6 @@ public class RegisterActivity extends AppCompatActivity {
 
             startActivity(intent);
             finish();
-
         });
 
         // Continue with Phone
@@ -67,84 +66,99 @@ public class RegisterActivity extends AppCompatActivity {
                     "Phone Registration Coming Soon!",
                     Toast.LENGTH_SHORT
             ).show();
-
         });
-
     }
 
 
     private void registerUser() {
 
-        // Get User Input
-
+        // Get user input
         String name = etName.getText().toString().trim();
         String email = etEmail.getText().toString().trim();
         String phone = etPhone.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
-        String confirmPassword = etConfirmPassword.getText().toString().trim();
+        String confirmPassword =
+                etConfirmPassword.getText().toString().trim();
 
 
         // ==========================
-        // VALIDATIONS
+        // VALIDATION
         // ==========================
 
-        // Full Name Validation
+        // Full Name
         if (name.isEmpty()) {
             etName.setError("Enter your name");
+            etName.requestFocus();
             return;
         }
 
-        // Email Validation
+        // Email empty
         if (email.isEmpty()) {
             etEmail.setError("Enter your email");
+            etEmail.requestFocus();
             return;
         }
 
-        // Valid Email Format Validation
+        // Email format
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             etEmail.setError("Enter a valid email address");
+            etEmail.requestFocus();
             return;
         }
 
-        // Phone Number Validation
+        // Phone empty
         if (phone.isEmpty()) {
             etPhone.setError("Enter your phone number");
+            etPhone.requestFocus();
             return;
         }
 
-        // Valid Phone Number Validation
+        // Phone length
         if (phone.length() != 10) {
-            etPhone.setError("Enter a valid 10 digit phone number");
+            etPhone.setError(
+                    "Enter a valid 10 digit phone number"
+            );
+            etPhone.requestFocus();
             return;
         }
 
-        // Password Validation
+        // Password empty
         if (password.isEmpty()) {
             etPassword.setError("Enter your password");
+            etPassword.requestFocus();
             return;
         }
 
-        // Password Length Validation
+        // Password length
         if (password.length() < 6) {
-            etPassword.setError("Password must be at least 6 characters");
+            etPassword.setError(
+                    "Password must be at least 6 characters"
+            );
+            etPassword.requestFocus();
             return;
         }
 
-        // Confirm Password Validation
+        // Confirm password empty
         if (confirmPassword.isEmpty()) {
-            etConfirmPassword.setError("Please confirm your password");
+            etConfirmPassword.setError(
+                    "Please confirm your password"
+            );
+            etConfirmPassword.requestFocus();
             return;
         }
 
-        // Password Match Validation
+        // Password matching
         if (!password.equals(confirmPassword)) {
-            etConfirmPassword.setError("Passwords do not match");
+            etConfirmPassword.setError(
+                    "Passwords do not match"
+            );
+            etConfirmPassword.requestFocus();
             return;
         }
 
 
         // ==========================
-        // CREATE REGISTER REQUEST
+        // CREATE REQUEST
         // ==========================
 
         RegisterRequest request = new RegisterRequest(
@@ -156,7 +170,7 @@ public class RegisterActivity extends AppCompatActivity {
 
 
         // ==========================
-        // CREATE API INSTANCE
+        // CREATE API
         // ==========================
 
         SupabaseApi api = RetrofitClient
@@ -165,33 +179,29 @@ public class RegisterActivity extends AppCompatActivity {
 
 
         // ==========================
-        // CALL REGISTER API
+        // REGISTER USER
         // ==========================
 
         Call<RegisterResponse> call =
                 api.registerUser(request);
 
 
-        // ==========================
-        // SEND REQUEST TO SUPABASE
-        // ==========================
-
         call.enqueue(new Callback<RegisterResponse>() {
 
             @Override
-            public void onResponse(Call<RegisterResponse> call,
-                                   Response<RegisterResponse> response) {
+            public void onResponse(
+                    Call<RegisterResponse> call,
+                    Response<RegisterResponse> response) {
 
-                // Registration Successful
                 if (response.isSuccessful()) {
 
                     Toast.makeText(
                             RegisterActivity.this,
-                            "Registration Successful",
+                            "Registration Successful!",
                             Toast.LENGTH_SHORT
                     ).show();
 
-                    // Navigate to Login Screen
+                    // Go to Login
                     Intent intent = new Intent(
                             RegisterActivity.this,
                             LoginActivity.class
@@ -200,35 +210,54 @@ public class RegisterActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
 
-                }
+                } else {
 
-                // Registration Failed
-                else {
+                    // Get actual Supabase error
+                    String errorMessage;
+
+                    try {
+
+                        if (response.errorBody() != null) {
+
+                            errorMessage =
+                                    response.errorBody().string();
+
+                        } else {
+
+                            errorMessage =
+                                    "Unknown Supabase error";
+
+                        }
+
+                    } catch (Exception e) {
+
+                        errorMessage =
+                                "Unable to read error";
+                    }
+
 
                     Toast.makeText(
                             RegisterActivity.this,
-                            "Registration Failed",
-                            Toast.LENGTH_SHORT
+                            "Registration Failed:\n" +
+                                    errorMessage,
+                            Toast.LENGTH_LONG
                     ).show();
-
                 }
-
             }
 
 
             @Override
-            public void onFailure(Call<RegisterResponse> call,
-                                  Throwable t) {
+            public void onFailure(
+                    Call<RegisterResponse> call,
+                    Throwable t) {
 
                 Toast.makeText(
                         RegisterActivity.this,
-                        "Network Error: " + t.getMessage(),
+                        "Network Error:\n" +
+                                t.getMessage(),
                         Toast.LENGTH_LONG
                 ).show();
-
             }
-
         });
-
     }
 }

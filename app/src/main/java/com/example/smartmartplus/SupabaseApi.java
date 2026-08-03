@@ -6,13 +6,13 @@ import retrofit2.http.POST;
 
 public interface SupabaseApi {
 
-    // Login API
+    // Login
     @POST("auth/v1/token?grant_type=password")
     Call<LoginResponse> loginUser(
             @Body LoginRequest request
     );
 
-    // Register API
+    // Registration
     @POST("auth/v1/signup")
     Call<RegisterResponse> registerUser(
             @Body RegisterRequest request
