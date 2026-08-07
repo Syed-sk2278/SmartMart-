@@ -2,6 +2,7 @@ package com.example.smartmartplus;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,22 +16,35 @@ import androidx.core.view.WindowInsetsCompat;
 public class ScannerActivity extends AppCompatActivity {
 
     private Button btnStartScan;
+
     private TextView tvManual;
     private TextView tvBack;
     private TextView tvCartIcon;
-    private TextView cartInfo;
+
+    // cartInfo is a LinearLayout in activity_scanner.xml,
+    // so we use View here.
+    private View cartInfo;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Enable edge-to-edge
         EdgeToEdge.enable(this);
 
+        // Load Scanner screen
         setContentView(R.layout.activity_scanner);
 
-        // Handle system bars
+
+        // =========================
+        // SYSTEM BAR HANDLING
+        // =========================
+
+        View mainView = findViewById(R.id.main);
+
         ViewCompat.setOnApplyWindowInsetsListener(
-                findViewById(R.id.main),
+                mainView,
                 (v, insets) -> {
 
                     Insets systemBars = insets.getInsets(
@@ -48,11 +62,19 @@ public class ScannerActivity extends AppCompatActivity {
                 }
         );
 
-        // Initialize views
+
+        // =========================
+        // INITIALIZE VIEWS
+        // =========================
+
         btnStartScan = findViewById(R.id.btnStartScan);
+
         tvManual = findViewById(R.id.tvManual);
+
         tvBack = findViewById(R.id.tvBack);
+
         tvCartIcon = findViewById(R.id.tvCartIcon);
+
         cartInfo = findViewById(R.id.cartInfo);
 
 
@@ -68,7 +90,7 @@ public class ScannerActivity extends AppCompatActivity {
 
 
         // =========================
-        // SCAN PRODUCT
+        // START SCANNER
         // =========================
 
         btnStartScan.setOnClickListener(v -> {
@@ -109,7 +131,7 @@ public class ScannerActivity extends AppCompatActivity {
 
 
         // =========================
-        // CART PREVIEW
+        // CART INFORMATION
         // =========================
 
         cartInfo.setOnClickListener(v -> {
@@ -135,4 +157,5 @@ public class ScannerActivity extends AppCompatActivity {
         startActivity(intent);
 
     }
+
 }

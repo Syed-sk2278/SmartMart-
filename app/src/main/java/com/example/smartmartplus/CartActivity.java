@@ -15,7 +15,6 @@ import androidx.core.view.WindowInsetsCompat;
 public class CartActivity extends AppCompatActivity {
 
     private TextView tvBack;
-    private TextView tvItemCount;
     private TextView tvTotal;
     private Button btnCheckout;
 
@@ -50,13 +49,12 @@ public class CartActivity extends AppCompatActivity {
 
         // Initialize views
         tvBack = findViewById(R.id.tvBack);
-        tvItemCount = findViewById(R.id.tvItemCount);
         tvTotal = findViewById(R.id.tvTotal);
         btnCheckout = findViewById(R.id.btnCheckout);
 
 
         // =========================
-        // BACK TO SCANNER
+        // BACK BUTTON
         // =========================
 
         tvBack.setOnClickListener(v -> {
@@ -74,11 +72,25 @@ public class CartActivity extends AppCompatActivity {
 
             Toast.makeText(
                     CartActivity.this,
-                    "Checkout will be connected next",
+                    "Proceeding to billing...",
                     Toast.LENGTH_SHORT
             ).show();
 
+            Intent intent = new Intent(
+                    CartActivity.this,
+                    PaymentActivity.class
+            );
+
+            startActivity(intent);
+
         });
+
+
+        // =========================
+        // INITIAL TOTAL
+        // =========================
+
+        tvTotal.setText("₹0.00");
 
     }
 }
