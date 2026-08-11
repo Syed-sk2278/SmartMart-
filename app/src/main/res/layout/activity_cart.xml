@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#050A1F"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:background="@drawable/login_bg">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,7 +13,9 @@
         android:orientation="vertical"
         android:padding="20dp">
 
+        <!-- ========================= -->
         <!-- HEADER -->
+        <!-- ========================= -->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -21,6 +24,8 @@
             android:orientation="horizontal"
             android:paddingTop="10dp"
             android:paddingBottom="20dp">
+
+            <!-- BACK -->
 
             <TextView
                 android:id="@+id/tvBack"
@@ -34,6 +39,8 @@
                 android:textColor="#FFFFFF"
                 android:textSize="32sp" />
 
+            <!-- TITLE -->
+
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -45,7 +52,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="SmartMart+"
-                    android:textColor="#9B7BFF"
+                    android:textColor="#B69CFF"
                     android:textSize="13sp"
                     android:textStyle="bold" />
 
@@ -59,10 +66,12 @@
 
             </LinearLayout>
 
+            <!-- CART COUNT -->
+
             <TextView
                 android:id="@+id/tvCartCount"
-                android:layout_width="42dp"
-                android:layout_height="42dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:background="@drawable/cart_circle_bg"
                 android:gravity="center"
                 android:text="0"
@@ -73,7 +82,9 @@
         </LinearLayout>
 
 
-        <!-- CART CARD -->
+        <!-- ========================= -->
+        <!-- CART ITEMS -->
+        <!-- ========================= -->
 
         <LinearLayout
             android:id="@+id/cartContainer"
@@ -98,13 +109,15 @@
                 android:layout_marginTop="35dp"
                 android:gravity="center"
                 android:text="Your cart is empty"
-                android:textColor="#AEB8D4"
+                android:textColor="#C4CBE0"
                 android:textSize="16sp" />
 
         </LinearLayout>
 
 
-        <!-- PRICE SUMMARY -->
+        <!-- ========================= -->
+        <!-- BILL SUMMARY -->
+        <!-- ========================= -->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -122,6 +135,9 @@
                 android:textSize="19sp"
                 android:textStyle="bold" />
 
+
+            <!-- SUBTOTAL -->
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -133,7 +149,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Subtotal"
-                    android:textColor="#AEB8D4"
+                    android:textColor="#C4CBE0"
                     android:textSize="14sp" />
 
                 <TextView
@@ -147,6 +163,8 @@
             </LinearLayout>
 
 
+            <!-- DISCOUNT -->
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -158,7 +176,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Discount"
-                    android:textColor="#AEB8D4"
+                    android:textColor="#C4CBE0"
                     android:textSize="14sp" />
 
                 <TextView
@@ -172,6 +190,8 @@
             </LinearLayout>
 
 
+            <!-- GST -->
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -183,7 +203,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="GST"
-                    android:textColor="#AEB8D4"
+                    android:textColor="#C4CBE0"
                     android:textSize="14sp" />
 
                 <TextView
@@ -197,12 +217,16 @@
             </LinearLayout>
 
 
+            <!-- DIVIDER -->
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginTop="16dp"
-                android:background="#303A60" />
+                android:background="#59627D" />
 
+
+            <!-- TOTAL -->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -224,7 +248,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="₹0.00"
-                    android:textColor="#9B7BFF"
+                    android:textColor="#B69CFF"
                     android:textSize="22sp"
                     android:textStyle="bold" />
 
@@ -233,7 +257,9 @@
         </LinearLayout>
 
 
-        <!-- CHECKOUT BUTTON -->
+        <!-- ========================= -->
+        <!-- PROCEED TO BILLING -->
+        <!-- ========================= -->
 
         <Button
             android:id="@+id/btnCheckout"
@@ -248,16 +274,20 @@
             android:textStyle="bold" />
 
 
+        <!-- ========================= -->
         <!-- CONTINUE SHOPPING -->
+        <!-- ========================= -->
 
         <TextView
             android:id="@+id/tvContinueShopping"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="10dp"
+            android:clickable="true"
+            android:focusable="true"
             android:gravity="center"
             android:text="Continue Shopping"
-            android:textColor="#9B7BFF"
+            android:textColor="#B69CFF"
             android:textSize="14sp"
             android:textStyle="bold" />
 

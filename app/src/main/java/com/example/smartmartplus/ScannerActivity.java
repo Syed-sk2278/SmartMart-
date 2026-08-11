@@ -20,26 +20,21 @@ public class ScannerActivity extends AppCompatActivity {
     private TextView tvManual;
     private TextView tvBack;
     private TextView tvCartIcon;
+    private TextView tvCartItems;
 
-    // cartInfo is a LinearLayout in activity_scanner.xml,
-    // so we use View here.
     private View cartInfo;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Enable edge-to-edge
         EdgeToEdge.enable(this);
 
-        // Load Scanner screen
         setContentView(R.layout.activity_scanner);
 
-
-        // =========================
+        // ==========================================
         // SYSTEM BAR HANDLING
-        // =========================
+        // ==========================================
 
         View mainView = findViewById(R.id.main);
 
@@ -47,9 +42,10 @@ public class ScannerActivity extends AppCompatActivity {
                 mainView,
                 (v, insets) -> {
 
-                    Insets systemBars = insets.getInsets(
-                            WindowInsetsCompat.Type.systemBars()
-                    );
+                    Insets systemBars =
+                            insets.getInsets(
+                                    WindowInsetsCompat.Type.systemBars()
+                            );
 
                     v.setPadding(
                             systemBars.left,
@@ -62,51 +58,75 @@ public class ScannerActivity extends AppCompatActivity {
                 }
         );
 
-
-        // =========================
+        // ==========================================
         // INITIALIZE VIEWS
-        // =========================
+        // ==========================================
 
-        btnStartScan = findViewById(R.id.btnStartScan);
+        btnStartScan =
+                findViewById(R.id.btnStartScan);
 
-        tvManual = findViewById(R.id.tvManual);
+        tvManual =
+                findViewById(R.id.tvManual);
 
-        tvBack = findViewById(R.id.tvBack);
+        tvBack =
+                findViewById(R.id.tvBack);
 
-        tvCartIcon = findViewById(R.id.tvCartIcon);
+        tvCartIcon =
+                findViewById(R.id.tvCartIcon);
 
-        cartInfo = findViewById(R.id.cartInfo);
+        tvCartItems =
+                findViewById(R.id.tvCartItems);
 
+        cartInfo =
+                findViewById(R.id.cartInfo);
 
-        // =========================
-        // BACK BUTTON
-        // =========================
+        // ==========================================
+        // CHECK RETURNED BARCODE
+        // ==========================================
 
-        tvBack.setOnClickListener(v -> {
+        String barcode =
+                getIntent().getStringExtra("BARCODE");
 
-            finish();
+        if (barcode != null &&
+                !barcode.isEmpty()) {
 
-        });
-
-
-        // =========================
-        // START SCANNER
-        // =========================
-
-        btnStartScan.setOnClickListener(v -> {
+            tvCartItems.setText(
+                    "Scanned: " + barcode
+            );
 
             Toast.makeText(
                     ScannerActivity.this,
-                    "Barcode scanner will be connected next",
-                    Toast.LENGTH_SHORT
+                    "Product scanned: " + barcode,
+                    Toast.LENGTH_LONG
             ).show();
+        }
 
+        // ==========================================
+        // BACK
+        // ==========================================
+
+        tvBack.setOnClickListener(v -> {
+            finish();
         });
 
+        // ==========================================
+        // SCAN PRODUCT
+        // ==========================================
 
-        // =========================
+        btnStartScan.setOnClickListener(v -> {
+
+            Intent intent =
+                    new Intent(
+                            ScannerActivity.this,
+                            BarcodeScannerActivity.class
+                    );
+
+            startActivity(intent);
+        });
+
+        // ==========================================
         // MANUAL BARCODE
-        // =========================
+        // ==========================================
 
         tvManual.setOnClickListener(v -> {
 
@@ -115,47 +135,37 @@ public class ScannerActivity extends AppCompatActivity {
                     "Manual barcode entry will be added next",
                     Toast.LENGTH_SHORT
             ).show();
-
         });
 
-
-        // =========================
+        // ==========================================
         // CART ICON
-        // =========================
+        // ==========================================
 
         tvCartIcon.setOnClickListener(v -> {
-
             openCart();
-
         });
 
-
-        // =========================
+        // ==========================================
         // CART INFORMATION
-        // =========================
+        // ==========================================
 
         cartInfo.setOnClickListener(v -> {
-
             openCart();
-
         });
-
     }
 
-
-    // =========================
+    // ==========================================
     // OPEN CART
-    // =========================
+    // ==========================================
 
     private void openCart() {
 
-        Intent intent = new Intent(
-                ScannerActivity.this,
-                CartActivity.class
-        );
+        Intent intent =
+                new Intent(
+                        ScannerActivity.this,
+                        CartActivity.class
+                );
 
         startActivity(intent);
-
     }
-
 }

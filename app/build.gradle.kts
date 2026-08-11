@@ -3,7 +3,6 @@ plugins {
 }
 
 android {
-
     namespace = "com.example.smartmartplus"
     compileSdk = 36
 
@@ -25,17 +24,14 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility =
-            JavaVersion.VERSION_11
-
-        targetCompatibility =
-            JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
 }
 
 dependencies {
 
-    // Android Libraries
+    // AndroidX
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.constraintlayout)
@@ -44,20 +40,20 @@ dependencies {
     // Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
 
-    // Gson Converter
+    // Gson
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
     // OkHttp
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
 
-    // Logging Interceptor
+    // OkHttp Logging
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 
-    // Unit Testing
-    testImplementation(libs.junit)
+    // Google Code Scanner
+    implementation("com.google.android.gms:play-services-code-scanner:16.1.0")
 
-    // Android Testing
+    // Testing
+    testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-
 }

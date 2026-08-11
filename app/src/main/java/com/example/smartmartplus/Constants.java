@@ -6,9 +6,7 @@ public class Constants {
     public static final String SUPABASE_URL =
             "https://pfymkjgqhxacncgcpjjv.supabase.co/";
 
-
-    // Supabase Anon Key
+    // Supabase Publishable Key
     public static final String SUPABASE_KEY =
             "sb_publishable_YajWjhBrcJx3qIK_LVy-hw_f7bqu6oG";
-
 }
