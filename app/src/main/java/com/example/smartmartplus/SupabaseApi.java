@@ -39,4 +39,14 @@ public interface SupabaseApi {
             @Query("barcode") String barcode,
             @Query("store_id") String storeId
     );
+
+
+    // =========================
+    // FIND STORE BY QR CODE
+    // =========================
+
+    @GET("rest/v1/stores")
+    Call<List<Store>> getStoreByQR(
+            @Query("entrance_qr_code") String qrCode
+    );
 }

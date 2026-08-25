@@ -343,15 +343,7 @@ public class HomeActivity extends AppCompatActivity {
                         false
                 );
 
-
-        boolean intentInsideStore =
-                getIntent().getBooleanExtra(
-                        "INSIDE_STORE",
-                        false
-                );
-
-
-        if (verified || intentInsideStore) {
+        if (verified) {
 
             insideStore = true;
 
