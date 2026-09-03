@@ -10,6 +10,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartMartPlus">
 
+        <!-- Google Code Scanner -->
+        <meta-data
+            android:name="com.google.mlkit.vision.codescanner.ENABLE_CODE_SCANNER"
+            android:value="true" />
+
         <activity
             android:name=".MainActivity"
             android:exported="false"

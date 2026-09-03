@@ -20,9 +20,15 @@ public class LoginActivity extends AppCompatActivity {
     private Button btnLogin;
     private TextView tvSignup;
 
+    private static final String PREF_NAME = "SmartMartPrefs";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Initialize Retrofit
+        RetrofitClient.initialize(this);
+
         setContentView(R.layout.activity_login);
 
         // Initialize Views
@@ -34,7 +40,7 @@ public class LoginActivity extends AppCompatActivity {
         // Login Button
         btnLogin.setOnClickListener(v -> loginUser());
 
-        // Sign Up Text
+        // Sign Up
         tvSignup.setOnClickListener(v -> {
 
             Intent intent = new Intent(
@@ -43,129 +49,242 @@ public class LoginActivity extends AppCompatActivity {
             );
 
             startActivity(intent);
-
         });
     }
 
+
+    // =====================================================
+    // LOGIN USER
+    // =====================================================
+
     private void loginUser() {
 
-        // Get User Input
-        String email = etEmail.getText().toString().trim();
-        String password = etPassword.getText().toString().trim();
+        String email =
+                etEmail.getText().toString().trim();
+
+        String password =
+                etPassword.getText().toString().trim();
 
 
-        // ==========================
-        // VALIDATIONS
-        // ==========================
+        // =================================================
+        // VALIDATION
+        // =================================================
 
-        // Empty Email Validation
         if (email.isEmpty()) {
-            etEmail.setError("Please enter your email");
+
+            etEmail.setError(
+                    "Please enter your email"
+            );
+
             return;
         }
 
-        // Valid Email Format Validation
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            etEmail.setError("Enter a valid email address");
+
+        if (!Patterns.EMAIL_ADDRESS
+                .matcher(email)
+                .matches()) {
+
+            etEmail.setError(
+                    "Enter a valid email address"
+            );
+
             return;
         }
 
-        // Empty Password Validation
+
         if (password.isEmpty()) {
-            etPassword.setError("Please enter your password");
+
+            etPassword.setError(
+                    "Please enter your password"
+            );
+
             return;
         }
 
-        // Password Length Validation
+
         if (password.length() < 6) {
-            etPassword.setError("Password must be at least 6 characters");
+
+            etPassword.setError(
+                    "Password must be at least 6 characters"
+            );
+
             return;
         }
 
 
-        // ==========================
-        // CREATE LOGIN REQUEST
-        // ==========================
+        // =================================================
+        // LOGIN REQUEST
+        // =================================================
 
         LoginRequest request =
-                new LoginRequest(email, password);
+                new LoginRequest(
+                        email,
+                        password
+                );
 
 
-        // ==========================
-        // CREATE API INSTANCE
-        // ==========================
+        // =================================================
+        // SUPABASE API
+        // =================================================
 
-        SupabaseApi api = RetrofitClient
-                .getRetrofitInstance()
-                .create(SupabaseApi.class);
-
-
-        // ==========================
-        // LOGIN API CALL
-        // ==========================
-
-        Call<LoginResponse> call =
-                api.loginUser(request);
+        SupabaseApi api =
+                RetrofitClient
+                        .getRetrofitInstance()
+                        .create(SupabaseApi.class);
 
 
-        // ==========================
-        // SEND REQUEST TO SUPABASE
-        // ==========================
+        api.loginUser(request)
+                .enqueue(
+                        new Callback<LoginResponse>() {
 
-        call.enqueue(new Callback<LoginResponse>() {
+                            @Override
+                            public void onResponse(
+                                    Call<LoginResponse> call,
+                                    Response<LoginResponse> response) {
 
-            @Override
-            public void onResponse(Call<LoginResponse> call,
-                                   Response<LoginResponse> response) {
+                                // =====================================
+                                // LOGIN SUCCESSFUL
+                                // =====================================
 
-                // Login Successful
-                if (response.isSuccessful()) {
+                                if (response.isSuccessful()
+                                        && response.body() != null) {
 
-                    Toast.makeText(
-                            LoginActivity.this,
-                            "Login Successful",
-                            Toast.LENGTH_SHORT
-                    ).show();
-
-
-                    // Navigate to Home Screen
-                    Intent intent = new Intent(
-                            LoginActivity.this,
-                            HomeActivity.class
-                    );
-
-                    startActivity(intent);
-                    finish();
-
-                }
-
-                // Invalid Credentials
-                else {
-
-                    Toast.makeText(
-                            LoginActivity.this,
-                            "Invalid Email or Password",
-                            Toast.LENGTH_SHORT
-                    ).show();
-
-                }
-
-            }
+                                    LoginResponse loginResponse =
+                                            response.body();
 
 
-            @Override
-            public void onFailure(Call<LoginResponse> call,
-                                  Throwable t) {
+                                    String accessToken =
+                                            loginResponse
+                                                    .getAccessToken();
 
-                Toast.makeText(
-                        LoginActivity.this,
-                        "Network Error : " + t.getMessage(),
-                        Toast.LENGTH_LONG
-                ).show();
 
-            }
+                                    String refreshToken =
+                                            loginResponse
+                                                    .getRefreshToken();
 
-        });
 
+                                    // =================================
+                                    // CHECK ACCESS TOKEN
+                                    // =================================
+
+                                    if (accessToken == null
+                                            || accessToken.trim().isEmpty()) {
+
+                                        Toast.makeText(
+                                                LoginActivity.this,
+                                                "Login succeeded but access token was not received",
+                                                Toast.LENGTH_LONG
+                                        ).show();
+
+                                        return;
+                                    }
+
+
+                                    // =================================
+                                    // SAVE LOGIN SESSION
+                                    // =================================
+
+                                    getSharedPreferences(
+                                            PREF_NAME,
+                                            MODE_PRIVATE
+                                    )
+                                            .edit()
+
+                                            // Save authentication token
+                                            .putString(
+                                                    "ACCESS_TOKEN",
+                                                    accessToken
+                                            )
+
+                                            .putString(
+                                                    "REFRESH_TOKEN",
+                                                    refreshToken
+                                            )
+
+                                            .putBoolean(
+                                                    "IS_LOGGED_IN",
+                                                    true
+                                            )
+
+                                            // =================================
+                                            // IMPORTANT
+                                            // Every NEW login starts OUTSIDE
+                                            // the store.
+                                            // =================================
+
+                                            .putBoolean(
+                                                    "STORE_VERIFIED",
+                                                    false
+                                            )
+
+                                            // Remove previous store session
+                                            .remove("STORE_ID")
+                                            .remove("STORE_NAME")
+                                            .remove("STORE_ADDRESS")
+                                            .remove("STORE_QR")
+
+                                            .apply();
+
+
+                                    // =================================
+                                    // SUCCESS MESSAGE
+                                    // =================================
+
+                                    Toast.makeText(
+                                            LoginActivity.this,
+                                            "Login Successful",
+                                            Toast.LENGTH_SHORT
+                                    ).show();
+
+
+                                    // =================================
+                                    // OPEN HOME
+                                    // =================================
+
+                                    Intent intent =
+                                            new Intent(
+                                                    LoginActivity.this,
+                                                    HomeActivity.class
+                                            );
+
+                                    startActivity(intent);
+
+                                    finish();
+
+                                }
+
+                                // =====================================
+                                // LOGIN FAILED
+                                // =====================================
+
+                                else {
+
+                                    Toast.makeText(
+                                            LoginActivity.this,
+                                            "Invalid Email or Password",
+                                            Toast.LENGTH_SHORT
+                                    ).show();
+                                }
+                            }
+
+
+                            // =========================================
+                            // NETWORK ERROR
+                            // =========================================
+
+                            @Override
+                            public void onFailure(
+                                    Call<LoginResponse> call,
+                                    Throwable t) {
+
+                                Toast.makeText(
+                                        LoginActivity.this,
+                                        "Network Error: "
+                                                + t.getMessage(),
+                                        Toast.LENGTH_LONG
+                                ).show();
+                            }
+                        }
+                );
     }
 }

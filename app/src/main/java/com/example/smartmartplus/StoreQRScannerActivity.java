@@ -22,6 +22,10 @@ public class StoreQRScannerActivity extends AppCompatActivity {
 
     private GmsBarcodeScanner scanner;
 
+    // =====================================================
+    // ON CREATE
+    // =====================================================
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,7 +35,7 @@ public class StoreQRScannerActivity extends AppCompatActivity {
 
 
     // =====================================================
-    // SETUP QR SCANNER
+    // SETUP SCANNER
     // =====================================================
 
     private void setupScanner() {
@@ -41,6 +45,7 @@ public class StoreQRScannerActivity extends AppCompatActivity {
                         .setBarcodeFormats(
                                 Barcode.FORMAT_QR_CODE
                         )
+                        .enableAutoZoom()
                         .build();
 
         scanner =
@@ -49,12 +54,10 @@ public class StoreQRScannerActivity extends AppCompatActivity {
                         options
                 );
 
-
         ModuleInstallRequest request =
                 ModuleInstallRequest.newBuilder()
                         .addApi(scanner)
                         .build();
-
 
         ModuleInstall.getClient(this)
                 .installModules(request)
@@ -66,9 +69,12 @@ public class StoreQRScannerActivity extends AppCompatActivity {
 
                             Toast.makeText(
                                     StoreQRScannerActivity.this,
-                                    "Unable to prepare QR scanner",
+                                    "Unable to prepare QR scanner: "
+                                            + e.getMessage(),
                                     Toast.LENGTH_LONG
                             ).show();
+
+                            e.printStackTrace();
 
                             finish();
                         }
@@ -77,12 +83,27 @@ public class StoreQRScannerActivity extends AppCompatActivity {
 
 
     // =====================================================
-    // START QR SCANNING
+    // START SCANNING
     // =====================================================
 
     private void startScanning() {
 
+        if (scanner == null) {
+
+            Toast.makeText(
+                    StoreQRScannerActivity.this,
+                    "Scanner is not ready",
+                    Toast.LENGTH_LONG
+            ).show();
+
+            return;
+        }
+
         scanner.startScan()
+
+                // -----------------------------------------
+                // SUCCESS
+                // -----------------------------------------
 
                 .addOnSuccessListener(
                         barcode -> {
@@ -100,18 +121,28 @@ public class StoreQRScannerActivity extends AppCompatActivity {
                                 ).show();
 
                                 startScanning();
+
                                 return;
                             }
 
-
-                            // Remove unnecessary spaces
+                            // Remove spaces
                             qrValue = qrValue.trim();
 
+                            // Show exactly what was scanned
+                            Toast.makeText(
+                                    StoreQRScannerActivity.this,
+                                    "QR detected:\n" + qrValue,
+                                    Toast.LENGTH_LONG
+                            ).show();
 
-                            // Send QR to Supabase
+                            // Verify with Supabase
                             verifyStoreQR(qrValue);
                         }
                 )
+
+                // -----------------------------------------
+                // CANCELLED
+                // -----------------------------------------
 
                 .addOnCanceledListener(
                         () -> {
@@ -126,23 +157,39 @@ public class StoreQRScannerActivity extends AppCompatActivity {
                         }
                 )
 
+                // -----------------------------------------
+                // SCAN FAILURE
+                // -----------------------------------------
+
                 .addOnFailureListener(
                         e -> {
 
+                            String error =
+                                    e.getMessage();
+
+                            if (error == null ||
+                                    error.isEmpty()) {
+
+                                error =
+                                        e.getClass()
+                                                .getSimpleName();
+                            }
+
                             Toast.makeText(
                                     StoreQRScannerActivity.this,
-                                    "QR scan failed",
+                                    "QR scan failed:\n"
+                                            + error,
                                     Toast.LENGTH_LONG
                             ).show();
 
-                            finish();
+                            e.printStackTrace();
                         }
                 );
     }
 
 
     // =====================================================
-    // VERIFY STORE USING SUPABASE
+    // VERIFY STORE QR USING SUPABASE
     // =====================================================
 
     private void verifyStoreQR(String qrValue) {
@@ -152,84 +199,138 @@ public class StoreQRScannerActivity extends AppCompatActivity {
                         .getRetrofitInstance()
                         .create(SupabaseApi.class);
 
+        // Supabase PostgREST equality filter
+        String filterValue =
+                "eq." + qrValue;
 
-        api.getStoreByQR(
-                "eq." + qrValue
-        ).enqueue(
-                new Callback<List<Store>>() {
+        api.getStoreByQR(filterValue)
+                .enqueue(
+                        new Callback<List<Store>>() {
 
-                    @Override
-                    public void onResponse(
-                            Call<List<Store>> call,
-                            Response<List<Store>> response) {
+                            // ---------------------------------
+                            // RESPONSE
+                            // ---------------------------------
 
-                        // ---------------------------------
-                        // SERVER ERROR
-                        // ---------------------------------
+                            @Override
+                            public void onResponse(
+                                    Call<List<Store>> call,
+                                    Response<List<Store>> response) {
 
-                        if (!response.isSuccessful()) {
+                                // =============================
+                                // SERVER ERROR
+                                // =============================
 
-                            Toast.makeText(
-                                    StoreQRScannerActivity.this,
-                                    "Unable to verify store",
-                                    Toast.LENGTH_LONG
-                            ).show();
+                                if (!response.isSuccessful()) {
 
-                            return;
+                                    String errorBody = "";
+
+                                    try {
+
+                                        if (response.errorBody()
+                                                != null) {
+
+                                            errorBody =
+                                                    response.errorBody()
+                                                            .string();
+                                        }
+
+                                    } catch (Exception e) {
+
+                                        e.printStackTrace();
+                                    }
+
+                                    Toast.makeText(
+                                            StoreQRScannerActivity.this,
+                                            "Supabase Error: "
+                                                    + response.code()
+                                                    + "\n"
+                                                    + errorBody,
+                                            Toast.LENGTH_LONG
+                                    ).show();
+
+                                    return;
+                                }
+
+
+                                // =============================
+                                // GET RESPONSE
+                                // =============================
+
+                                List<Store> stores =
+                                        response.body();
+
+
+                                // =============================
+                                // NO STORE FOUND
+                                // =============================
+
+                                if (stores == null ||
+                                        stores.isEmpty()) {
+
+                                    Toast.makeText(
+                                            StoreQRScannerActivity.this,
+                                            "No matching store found."
+                                                    + "\nQR: "
+                                                    + qrValue,
+                                            Toast.LENGTH_LONG
+                                    ).show();
+
+                                    return;
+                                }
+
+
+                                // =============================
+                                // STORE FOUND
+                                // =============================
+
+                                Store store =
+                                        stores.get(0);
+
+
+                                // Show store name
+                                Toast.makeText(
+                                        StoreQRScannerActivity.this,
+                                        "Store found:\n"
+                                                + store.getName(),
+                                        Toast.LENGTH_LONG
+                                ).show();
+
+
+                                // Save store
+                                saveVerifiedStore(store);
+                            }
+
+
+                            // ---------------------------------
+                            // CONNECTION FAILURE
+                            // ---------------------------------
+
+                            @Override
+                            public void onFailure(
+                                    Call<List<Store>> call,
+                                    Throwable t) {
+
+                                String error =
+                                        t.getMessage();
+
+                                if (error == null ||
+                                        error.isEmpty()) {
+
+                                    error =
+                                            "Unknown connection error";
+                                }
+
+                                Toast.makeText(
+                                        StoreQRScannerActivity.this,
+                                        "Connection error:\n"
+                                                + error,
+                                        Toast.LENGTH_LONG
+                                ).show();
+
+                                t.printStackTrace();
+                            }
                         }
-
-
-                        // ---------------------------------
-                        // GET STORES
-                        // ---------------------------------
-
-                        List<Store> stores =
-                                response.body();
-
-
-                        // ---------------------------------
-                        // NO STORE FOUND
-                        // ---------------------------------
-
-                        if (stores == null ||
-                                stores.isEmpty()) {
-
-                            Toast.makeText(
-                                    StoreQRScannerActivity.this,
-                                    "Invalid SmartMart+ store QR",
-                                    Toast.LENGTH_LONG
-                            ).show();
-
-                            startScanning();
-                            return;
-                        }
-
-
-                        // ---------------------------------
-                        // STORE FOUND
-                        // ---------------------------------
-
-                        Store store =
-                                stores.get(0);
-
-
-                        saveVerifiedStore(store);
-                    }
-
-
-                    @Override
-                    public void onFailure(
-                            Call<List<Store>> call,
-                            Throwable t) {
-
-                        Toast.makeText(
-                                StoreQRScannerActivity.this,
-                                "Connection error. Please try again.",
-                                Toast.LENGTH_LONG
-                        ).show();
-                    }
-                }
-        );
+                );
     }
 
 
@@ -265,6 +366,11 @@ public class StoreQRScannerActivity extends AppCompatActivity {
                         store.getAddress()
                 )
 
+                .putString(
+                        "STORE_QR",
+                        store.getEntrance_qr_code()
+                )
+
                 .apply();
 
 
@@ -275,7 +381,7 @@ public class StoreQRScannerActivity extends AppCompatActivity {
         ).show();
 
 
-        // Return to the existing HomeActivity
+        // Return to HomeActivity
         finish();
     }
 }
