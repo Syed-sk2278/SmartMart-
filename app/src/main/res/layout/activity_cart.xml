@@ -1,294 +1,245 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/main"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:background="@drawable/login_bg">
+    android:background="#F7FBFA"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp">
+        android:padding="24dp">
 
-        <!-- ========================= -->
+        <!-- ====================================== -->
         <!-- HEADER -->
-        <!-- ========================= -->
+        <!-- ====================================== -->
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingTop="10dp"
-            android:paddingBottom="20dp">
-
-            <!-- BACK -->
+            android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/tvBack"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@drawable/cart_circle_bg"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center"
-                android:text="‹"
-                android:textColor="#FFFFFF"
-                android:textSize="32sp" />
-
-            <!-- TITLE -->
-
-            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginStart="14dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="SmartMart+"
-                    android:textColor="#B69CFF"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="My Cart"
-                    android:textColor="#FFFFFF"
-                    android:textSize="25sp"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-
-            <!-- CART COUNT -->
+                android:text="My Cart"
+                android:textColor="#101C25"
+                android:textSize="32sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvCartCount"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@drawable/cart_circle_bg"
-                android:gravity="center"
-                android:text="0"
-                android:textColor="#FFFFFF"
-                android:textSize="15sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0 items"
+                android:textColor="#087F72"
+                android:textSize="17sp"
                 android:textStyle="bold" />
 
         </LinearLayout>
 
 
-        <!-- ========================= -->
+        <!-- ====================================== -->
         <!-- CART ITEMS -->
-        <!-- ========================= -->
+        <!-- ====================================== -->
 
         <LinearLayout
             android:id="@+id/cartContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/cart_card_bg"
-            android:orientation="vertical"
-            android:padding="18dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Your Items"
-                android:textColor="#FFFFFF"
-                android:textSize="19sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tvEmptyCart"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="35dp"
-                android:gravity="center"
-                android:text="Your cart is empty"
-                android:textColor="#C4CBE0"
-                android:textSize="16sp" />
-
-        </LinearLayout>
+            android:layout_marginTop="24dp"
+            android:orientation="vertical" />
 
 
-        <!-- ========================= -->
-        <!-- BILL SUMMARY -->
-        <!-- ========================= -->
+        <!-- ====================================== -->
+        <!-- SUMMARY TITLE -->
+        <!-- ====================================== -->
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Order Summary"
+            android:textColor="#101C25"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+
+        <!-- ====================================== -->
+        <!-- SUBTOTAL -->
+        <!-- ====================================== -->
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:background="@drawable/cart_card_bg"
-            android:orientation="vertical"
-            android:padding="18dp">
+            android:layout_height="55dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
             <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Subtotal"
+                android:textColor="#52656C"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/tvSubtotal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Bill Summary"
-                android:textColor="#FFFFFF"
-                android:textSize="19sp"
+                android:text="₹0.00"
+                android:textColor="#101C25"
+                android:textSize="18sp"
                 android:textStyle="bold" />
-
-
-            <!-- SUBTOTAL -->
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="18dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Subtotal"
-                    android:textColor="#C4CBE0"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/tvSubtotal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="₹0.00"
-                    android:textColor="#FFFFFF"
-                    android:textSize="14sp" />
-
-            </LinearLayout>
-
-
-            <!-- DISCOUNT -->
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Discount"
-                    android:textColor="#C4CBE0"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/tvDiscount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="- ₹0.00"
-                    android:textColor="#61E6B0"
-                    android:textSize="14sp" />
-
-            </LinearLayout>
-
-
-            <!-- GST -->
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="GST"
-                    android:textColor="#C4CBE0"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/tvGST"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="₹0.00"
-                    android:textColor="#FFFFFF"
-                    android:textSize="14sp" />
-
-            </LinearLayout>
-
-
-            <!-- DIVIDER -->
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="16dp"
-                android:background="#59627D" />
-
-
-            <!-- TOTAL -->
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Total"
-                    android:textColor="#FFFFFF"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tvTotal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="₹0.00"
-                    android:textColor="#B69CFF"
-                    android:textSize="22sp"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
 
         </LinearLayout>
 
 
-        <!-- ========================= -->
-        <!-- PROCEED TO BILLING -->
-        <!-- ========================= -->
+        <!-- ====================================== -->
+        <!-- DISCOUNT -->
+        <!-- ====================================== -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Discount"
+                android:textColor="#52656C"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/tvDiscount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="- ₹0.00"
+                android:textColor="#087F72"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+
+        <!-- ====================================== -->
+        <!-- GST -->
+        <!-- ====================================== -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="GST"
+                android:textColor="#52656C"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/tvGST"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="₹0.00"
+                android:textColor="#101C25"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+
+        <!-- ====================================== -->
+        <!-- TOTAL -->
+        <!-- ====================================== -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginTop="12dp"
+            android:background="#D5ECE7"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Total"
+                android:textColor="#087F72"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvTotal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="₹0.00"
+                android:textColor="#087F72"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+
+        <!-- ====================================== -->
+        <!-- CLEAR CART -->
+        <!-- ====================================== -->
+
+        <Button
+            android:id="@+id/btnClearCart"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="#E7F3F0"
+            android:text="Clear Cart"
+            android:textColor="#087F72"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+
+
+        <!-- ====================================== -->
+        <!-- CONTINUE SHOPPING -->
+        <!-- ====================================== -->
+
+        <Button
+            android:id="@+id/btnContinueShopping"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_marginTop="12dp"
+            android:backgroundTint="#D5ECE7"
+            android:text="Continue Shopping"
+            android:textColor="#087F72"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+
+
+        <!-- ====================================== -->
+        <!-- CHECKOUT -->
+        <!-- ====================================== -->
 
         <Button
             android:id="@+id/btnCheckout"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/cart_button_bg"
-            android:text="Proceed to Billing"
-            android:textAllCaps="false"
+            android:layout_height="60dp"
+            android:layout_marginTop="12dp"
+            android:backgroundTint="#087F72"
+            android:text="Proceed to Checkout"
             android:textColor="#FFFFFF"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-
-        <!-- ========================= -->
-        <!-- CONTINUE SHOPPING -->
-        <!-- ========================= -->
-
-        <TextView
-            android:id="@+id/tvContinueShopping"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="10dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center"
-            android:text="Continue Shopping"
-            android:textColor="#B69CFF"
-            android:textSize="14sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
     </LinearLayout>

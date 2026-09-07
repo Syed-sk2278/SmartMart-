@@ -4,171 +4,263 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.UUID;
 
 public class ReceiptActivity extends AppCompatActivity {
 
-    private TextView tvBack;
-    private TextView tvTransactionId;
-    private TextView tvDate;
-    private TextView tvItems;
-    private TextView tvPaymentMethod;
+    private TextView tvReceiptTitle;
+    private TextView tvReceiptNumber;
+    private TextView tvReceiptDate;
+    private TextView tvReceiptItems;
+    private TextView tvReceiptSubtotal;
+    private TextView tvReceiptDiscount;
+    private TextView tvReceiptGST;
+    private TextView tvReceiptTotal;
+    private TextView tvReceiptPaymentMethod;
 
-    private TextView tvSubtotal;
-    private TextView tvDiscount;
-    private TextView tvGST;
-    private TextView tvTotal;
-
-    private Button btnVerifyReceipt;
-    private Button btnHome;
+    private Button btnDone;
+    private Button btnBackHome;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        EdgeToEdge.enable(this);
-
         setContentView(R.layout.activity_receipt);
 
-        // =========================
-        // SYSTEM BAR HANDLING
-        // =========================
+        // ==========================================
+        // FIND VIEWS
+        // ==========================================
 
-        ViewCompat.setOnApplyWindowInsetsListener(
-                findViewById(R.id.main),
-                (v, insets) -> {
+        tvReceiptTitle =
+                findViewById(R.id.tvReceiptTitle);
 
-                    Insets systemBars =
-                            insets.getInsets(
-                                    WindowInsetsCompat.Type.systemBars()
-                            );
+        tvReceiptNumber =
+                findViewById(R.id.tvReceiptNumber);
 
-                    v.setPadding(
-                            systemBars.left,
-                            systemBars.top,
-                            systemBars.right,
-                            systemBars.bottom
-                    );
+        tvReceiptDate =
+                findViewById(R.id.tvReceiptDate);
 
-                    return insets;
-                }
+        tvReceiptItems =
+                findViewById(R.id.tvReceiptItems);
+
+        tvReceiptSubtotal =
+                findViewById(R.id.tvReceiptSubtotal);
+
+        tvReceiptDiscount =
+                findViewById(R.id.tvReceiptDiscount);
+
+        tvReceiptGST =
+                findViewById(R.id.tvReceiptGST);
+
+        tvReceiptTotal =
+                findViewById(R.id.tvReceiptTotal);
+
+        tvReceiptPaymentMethod =
+                findViewById(R.id.tvReceiptPaymentMethod);
+
+        btnDone =
+                findViewById(R.id.btnDone);
+
+        btnBackHome =
+                findViewById(R.id.btnBackHome);
+
+        // ==========================================
+        // GET PAYMENT DATA
+        // ==========================================
+
+        int itemCount =
+                getIntent().getIntExtra(
+                        "ITEM_COUNT",
+                        0
+                );
+
+        double subtotal =
+                getIntent().getDoubleExtra(
+                        "SUBTOTAL",
+                        0.0
+                );
+
+        double discount =
+                getIntent().getDoubleExtra(
+                        "DISCOUNT",
+                        0.0
+                );
+
+        double gst =
+                getIntent().getDoubleExtra(
+                        "GST",
+                        0.0
+                );
+
+        double total =
+                getIntent().getDoubleExtra(
+                        "TOTAL",
+                        subtotal - discount + gst
+                );
+
+        String paymentMethod =
+                getIntent().getStringExtra(
+                        "PAYMENT_METHOD"
+                );
+
+        if (paymentMethod == null ||
+                paymentMethod.trim().isEmpty()) {
+
+            paymentMethod = "UPI";
+        }
+
+        // ==========================================
+        // RECEIPT NUMBER
+        // ==========================================
+
+        String receiptNumber =
+                "SM"
+                        + UUID.randomUUID()
+                        .toString()
+                        .substring(0, 8)
+                        .toUpperCase();
+
+        tvReceiptNumber.setText(
+                "Receipt No: " + receiptNumber
         );
 
-        // =========================
-        // INITIALIZE VIEWS
-        // =========================
+        // ==========================================
+        // DATE
+        // ==========================================
 
-        tvBack = findViewById(R.id.tvBack);
+        String currentDate =
+                new SimpleDateFormat(
+                        "dd MMM yyyy, hh:mm a",
+                        Locale.getDefault()
+                ).format(new Date());
 
-        tvTransactionId =
-                findViewById(R.id.tvTransactionId);
-
-        tvDate =
-                findViewById(R.id.tvDate);
-
-        tvItems =
-                findViewById(R.id.tvItems);
-
-        tvPaymentMethod =
-                findViewById(R.id.tvPaymentMethod);
-
-        tvSubtotal =
-                findViewById(R.id.tvSubtotal);
-
-        tvDiscount =
-                findViewById(R.id.tvDiscount);
-
-        tvGST =
-                findViewById(R.id.tvGST);
-
-        tvTotal =
-                findViewById(R.id.tvTotal);
-
-        btnVerifyReceipt =
-                findViewById(R.id.btnVerifyReceipt);
-
-        btnHome =
-                findViewById(R.id.btnHome);
-
-
-        // =========================
-        // RECEIPT DETAILS
-        // =========================
-
-        tvTransactionId.setText(
-                "Transaction ID: SM-" +
-                        System.currentTimeMillis()
+        tvReceiptDate.setText(
+                "Date: " + currentDate
         );
 
-        tvDate.setText("Today");
+        // ==========================================
+        // DISPLAY ITEMS
+        // ==========================================
 
-        tvItems.setText("0 items");
+        tvReceiptItems.setText(
+                "Items: " + itemCount
+        );
 
-        tvPaymentMethod.setText("UPI");
+        // ==========================================
+        // DISPLAY SUBTOTAL
+        // ==========================================
 
-        tvSubtotal.setText("₹0.00");
+        tvReceiptSubtotal.setText(
+                String.format(
+                        Locale.getDefault(),
+                        "₹%.2f",
+                        subtotal
+                )
+        );
 
-        tvDiscount.setText("- ₹0.00");
+        // ==========================================
+        // DISPLAY DISCOUNT
+        // ==========================================
 
-        tvGST.setText("₹0.00");
+        tvReceiptDiscount.setText(
+                String.format(
+                        Locale.getDefault(),
+                        "- ₹%.2f",
+                        discount
+                )
+        );
 
-        tvTotal.setText("₹0.00");
+        // ==========================================
+        // DISPLAY GST
+        // ==========================================
 
+        tvReceiptGST.setText(
+                String.format(
+                        Locale.getDefault(),
+                        "₹%.2f",
+                        gst
+                )
+        );
 
-        // =========================
-        // BACK BUTTON
-        // =========================
+        // ==========================================
+        // DISPLAY TOTAL
+        // ==========================================
 
-        tvBack.setOnClickListener(v -> {
+        tvReceiptTotal.setText(
+                String.format(
+                        Locale.getDefault(),
+                        "₹%.2f",
+                        total
+                )
+        );
 
-            finish();
+        // ==========================================
+        // PAYMENT METHOD
+        // ==========================================
 
-        });
+        tvReceiptPaymentMethod.setText(
+                "Payment Method: "
+                        + paymentMethod
+        );
 
+        // ==========================================
+        // DONE
+        // ==========================================
 
-        // =========================
-        // VERIFY RECEIPT
-        // =========================
+        btnDone.setOnClickListener(v -> {
 
-        btnVerifyReceipt.setOnClickListener(v -> {
-
-            Toast.makeText(
-                    ReceiptActivity.this,
-                    "Receipt QR verification will be added next",
-                    Toast.LENGTH_SHORT
-            ).show();
-
-        });
-
-
-        // =========================
-        // BACK TO HOME
-        // =========================
-
-        btnHome.setOnClickListener(v -> {
-
-            Intent intent = new Intent(
-                    ReceiptActivity.this,
-                    HomeActivity.class
+            // Clear cart after successful payment
+            CartManager.clearCart(
+                    ReceiptActivity.this
             );
 
-            // Clear previous shopping screens
-            intent.setFlags(
-                    Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                            Intent.FLAG_ACTIVITY_SINGLE_TOP
+            Intent intent =
+                    new Intent(
+                            ReceiptActivity.this,
+                            HomeActivity.class
+                    );
+
+            intent.addFlags(
+                    Intent.FLAG_ACTIVITY_CLEAR_TOP
+                            | Intent.FLAG_ACTIVITY_SINGLE_TOP
             );
 
             startActivity(intent);
 
             finish();
-
         });
 
+        // ==========================================
+        // BACK TO HOME
+        // ==========================================
+
+        btnBackHome.setOnClickListener(v -> {
+
+            // Clear cart after successful payment
+            CartManager.clearCart(
+                    ReceiptActivity.this
+            );
+
+            Intent intent =
+                    new Intent(
+                            ReceiptActivity.this,
+                            HomeActivity.class
+                    );
+
+            intent.addFlags(
+                    Intent.FLAG_ACTIVITY_CLEAR_TOP
+                            | Intent.FLAG_ACTIVITY_SINGLE_TOP
+            );
+
+            startActivity(intent);
+
+            finish();
+        });
     }
 }

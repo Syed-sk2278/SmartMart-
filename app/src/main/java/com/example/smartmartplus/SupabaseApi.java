@@ -15,16 +15,19 @@ public interface SupabaseApi {
             @Body LoginRequest request
     );
 
+
     @POST("auth/v1/signup")
     Call<RegisterResponse> registerUser(
             @Body RegisterRequest request
     );
+
 
     @GET("rest/v1/products")
     Call<List<Product>> getProductByBarcode(
             @Query("barcode") String barcode,
             @Query("store_id") String storeId
     );
+
 
     @GET("rest/v1/stores")
     Call<List<Store>> getStoreByQR(

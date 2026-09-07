@@ -49,8 +49,11 @@ dependencies {
     // OkHttp Logging
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 
-    // Google Code Scanner
-    implementation("com.google.android.gms:play-services-code-scanner:16.1.0")
+    // ==========================================
+    // PRODUCT BARCODE SCANNER - ZXING
+    // ==========================================
+
+    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
 
     // Testing
     testImplementation(libs.junit)

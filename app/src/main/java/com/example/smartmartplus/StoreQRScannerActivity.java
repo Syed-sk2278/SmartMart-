@@ -1,16 +1,18 @@
 package com.example.smartmartplus;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
-import com.google.android.gms.common.moduleinstall.ModuleInstall;
-import com.google.android.gms.common.moduleinstall.ModuleInstallRequest;
-import com.google.mlkit.vision.barcode.common.Barcode;
-import com.google.mlkit.vision.codescanner.GmsBarcodeScanner;
-import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions;
-import com.google.mlkit.vision.codescanner.GmsBarcodeScanning;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import java.util.List;
 
@@ -20,177 +22,187 @@ import retrofit2.Response;
 
 public class StoreQRScannerActivity extends AppCompatActivity {
 
-    private GmsBarcodeScanner scanner;
+    private static final String PREF_NAME = "SmartMartPrefs";
 
-    // =====================================================
-    // ON CREATE
-    // =====================================================
+    private ActivityResultLauncher<String> cameraPermissionLauncher;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setupScanner();
-    }
 
+        // ==========================================
+        // CAMERA PERMISSION
+        // ==========================================
 
-    // =====================================================
-    // SETUP SCANNER
-    // =====================================================
+        cameraPermissionLauncher =
+                registerForActivityResult(
+                        new ActivityResultContracts.RequestPermission(),
+                        granted -> {
 
-    private void setupScanner() {
+                            if (granted) {
 
-        GmsBarcodeScannerOptions options =
-                new GmsBarcodeScannerOptions.Builder()
-                        .setBarcodeFormats(
-                                Barcode.FORMAT_QR_CODE
-                        )
-                        .enableAutoZoom()
-                        .build();
+                                startStoreQRScanner();
 
-        scanner =
-                GmsBarcodeScanning.getClient(
-                        this,
-                        options
-                );
-
-        ModuleInstallRequest request =
-                ModuleInstallRequest.newBuilder()
-                        .addApi(scanner)
-                        .build();
-
-        ModuleInstall.getClient(this)
-                .installModules(request)
-                .addOnSuccessListener(
-                        unused -> startScanning()
-                )
-                .addOnFailureListener(
-                        e -> {
-
-                            Toast.makeText(
-                                    StoreQRScannerActivity.this,
-                                    "Unable to prepare QR scanner: "
-                                            + e.getMessage(),
-                                    Toast.LENGTH_LONG
-                            ).show();
-
-                            e.printStackTrace();
-
-                            finish();
-                        }
-                );
-    }
-
-
-    // =====================================================
-    // START SCANNING
-    // =====================================================
-
-    private void startScanning() {
-
-        if (scanner == null) {
-
-            Toast.makeText(
-                    StoreQRScannerActivity.this,
-                    "Scanner is not ready",
-                    Toast.LENGTH_LONG
-            ).show();
-
-            return;
-        }
-
-        scanner.startScan()
-
-                // -----------------------------------------
-                // SUCCESS
-                // -----------------------------------------
-
-                .addOnSuccessListener(
-                        barcode -> {
-
-                            String qrValue =
-                                    barcode.getRawValue();
-
-                            if (qrValue == null ||
-                                    qrValue.trim().isEmpty()) {
+                            } else {
 
                                 Toast.makeText(
                                         StoreQRScannerActivity.this,
-                                        "Invalid QR code",
-                                        Toast.LENGTH_SHORT
+                                        "Camera permission is required",
+                                        Toast.LENGTH_LONG
                                 ).show();
 
-                                startScanning();
-
-                                return;
+                                finish();
                             }
-
-                            // Remove spaces
-                            qrValue = qrValue.trim();
-
-                            // Show exactly what was scanned
-                            Toast.makeText(
-                                    StoreQRScannerActivity.this,
-                                    "QR detected:\n" + qrValue,
-                                    Toast.LENGTH_LONG
-                            ).show();
-
-                            // Verify with Supabase
-                            verifyStoreQR(qrValue);
-                        }
-                )
-
-                // -----------------------------------------
-                // CANCELLED
-                // -----------------------------------------
-
-                .addOnCanceledListener(
-                        () -> {
-
-                            Toast.makeText(
-                                    StoreQRScannerActivity.this,
-                                    "QR scanning cancelled",
-                                    Toast.LENGTH_SHORT
-                            ).show();
-
-                            finish();
-                        }
-                )
-
-                // -----------------------------------------
-                // SCAN FAILURE
-                // -----------------------------------------
-
-                .addOnFailureListener(
-                        e -> {
-
-                            String error =
-                                    e.getMessage();
-
-                            if (error == null ||
-                                    error.isEmpty()) {
-
-                                error =
-                                        e.getClass()
-                                                .getSimpleName();
-                            }
-
-                            Toast.makeText(
-                                    StoreQRScannerActivity.this,
-                                    "QR scan failed:\n"
-                                            + error,
-                                    Toast.LENGTH_LONG
-                            ).show();
-
-                            e.printStackTrace();
                         }
                 );
+
+
+        // ==========================================
+        // CHECK CAMERA PERMISSION
+        // ==========================================
+
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.CAMERA
+        ) == PackageManager.PERMISSION_GRANTED) {
+
+            startStoreQRScanner();
+
+        } else {
+
+            cameraPermissionLauncher.launch(
+                    Manifest.permission.CAMERA
+            );
+        }
     }
 
 
-    // =====================================================
-    // VERIFY STORE QR USING SUPABASE
-    // =====================================================
+    // =================================================
+    // START STORE QR SCANNER
+    // =================================================
+
+    private void startStoreQRScanner() {
+
+        IntentIntegrator integrator =
+                new IntentIntegrator(this);
+
+
+        // QR CODE ONLY
+        integrator.setDesiredBarcodeFormats(
+                IntentIntegrator.QR_CODE
+        );
+
+
+        // Scanner message
+        integrator.setPrompt(
+                "Scan SmartMart+ Store Entrance QR"
+        );
+
+
+        // Rear camera
+        integrator.setCameraId(0);
+
+
+        // Beep
+        integrator.setBeepEnabled(true);
+
+
+        // Lock orientation
+        integrator.setOrientationLocked(true);
+
+
+        // Start scanner
+        integrator.initiateScan();
+    }
+
+
+    // =================================================
+    // RECEIVE QR RESULT
+    // =================================================
+
+    @Override
+    protected void onActivityResult(
+            int requestCode,
+            int resultCode,
+            Intent data
+    ) {
+
+        IntentResult result =
+                IntentIntegrator.parseActivityResult(
+                        requestCode,
+                        resultCode,
+                        data
+                );
+
+
+        if (result != null) {
+
+            // ==========================================
+            // CANCELLED
+            // ==========================================
+
+            if (result.getContents() == null) {
+
+                Toast.makeText(
+                        this,
+                        "QR scanning cancelled",
+                        Toast.LENGTH_SHORT
+                ).show();
+
+                finish();
+                return;
+            }
+
+
+            // ==========================================
+            // QR DETECTED
+            // ==========================================
+
+            String qrValue =
+                    result.getContents().trim();
+
+
+            if (qrValue.isEmpty()) {
+
+                Toast.makeText(
+                        this,
+                        "Invalid QR code",
+                        Toast.LENGTH_LONG
+                ).show();
+
+                return;
+            }
+
+
+            Toast.makeText(
+                    this,
+                    "QR detected:\n" + qrValue,
+                    Toast.LENGTH_LONG
+            ).show();
+
+
+            // ==========================================
+            // VERIFY STORE
+            // ==========================================
+
+            verifyStoreQR(qrValue);
+
+        } else {
+
+            super.onActivityResult(
+                    requestCode,
+                    resultCode,
+                    data
+            );
+        }
+    }
+
+
+    // =================================================
+    // VERIFY STORE QR WITH SUPABASE
+    // =================================================
 
     private void verifyStoreQR(String qrValue) {
 
@@ -199,26 +211,25 @@ public class StoreQRScannerActivity extends AppCompatActivity {
                         .getRetrofitInstance()
                         .create(SupabaseApi.class);
 
-        // Supabase PostgREST equality filter
+
+        // PostgREST equality filter
         String filterValue =
                 "eq." + qrValue;
+
 
         api.getStoreByQR(filterValue)
                 .enqueue(
                         new Callback<List<Store>>() {
 
-                            // ---------------------------------
-                            // RESPONSE
-                            // ---------------------------------
-
                             @Override
                             public void onResponse(
                                     Call<List<Store>> call,
-                                    Response<List<Store>> response) {
+                                    Response<List<Store>> response
+                            ) {
 
-                                // =============================
-                                // SERVER ERROR
-                                // =============================
+                                // ==================================
+                                // SUPABASE ERROR
+                                // ==================================
 
                                 if (!response.isSuccessful()) {
 
@@ -239,6 +250,7 @@ public class StoreQRScannerActivity extends AppCompatActivity {
                                         e.printStackTrace();
                                     }
 
+
                                     Toast.makeText(
                                             StoreQRScannerActivity.this,
                                             "Supabase Error: "
@@ -252,20 +264,20 @@ public class StoreQRScannerActivity extends AppCompatActivity {
                                 }
 
 
-                                // =============================
-                                // GET RESPONSE
-                                // =============================
+                                // ==================================
+                                // GET STORES
+                                // ==================================
 
                                 List<Store> stores =
                                         response.body();
 
 
-                                // =============================
-                                // NO STORE FOUND
-                                // =============================
+                                // ==================================
+                                // NO STORE
+                                // ==================================
 
-                                if (stores == null ||
-                                        stores.isEmpty()) {
+                                if (stores == null
+                                        || stores.isEmpty()) {
 
                                     Toast.makeText(
                                             StoreQRScannerActivity.this,
@@ -279,15 +291,14 @@ public class StoreQRScannerActivity extends AppCompatActivity {
                                 }
 
 
-                                // =============================
+                                // ==================================
                                 // STORE FOUND
-                                // =============================
+                                // ==================================
 
                                 Store store =
                                         stores.get(0);
 
 
-                                // Show store name
                                 Toast.makeText(
                                         StoreQRScannerActivity.this,
                                         "Store found:\n"
@@ -296,29 +307,32 @@ public class StoreQRScannerActivity extends AppCompatActivity {
                                 ).show();
 
 
-                                // Save store
+                                // Save verified store
                                 saveVerifiedStore(store);
                             }
 
 
-                            // ---------------------------------
-                            // CONNECTION FAILURE
-                            // ---------------------------------
+                            // ==================================
+                            // CONNECTION ERROR
+                            // ==================================
 
                             @Override
                             public void onFailure(
                                     Call<List<Store>> call,
-                                    Throwable t) {
+                                    Throwable t
+                            ) {
 
                                 String error =
                                         t.getMessage();
 
-                                if (error == null ||
-                                        error.isEmpty()) {
+
+                                if (error == null
+                                        || error.isEmpty()) {
 
                                     error =
                                             "Unknown connection error";
                                 }
+
 
                                 Toast.makeText(
                                         StoreQRScannerActivity.this,
@@ -334,42 +348,68 @@ public class StoreQRScannerActivity extends AppCompatActivity {
     }
 
 
-    // =====================================================
+    // =================================================
     // SAVE VERIFIED STORE
-    // =====================================================
+    // =================================================
 
     private void saveVerifiedStore(Store store) {
 
         getSharedPreferences(
-                "SmartMartPrefs",
+                PREF_NAME,
                 MODE_PRIVATE
         )
                 .edit()
+
+
+                // ======================================
+                // STORE VERIFIED
+                // ======================================
 
                 .putBoolean(
                         "STORE_VERIFIED",
                         true
                 )
 
+
+                // ======================================
+                // STORE ID
+                // ======================================
+
                 .putString(
                         "STORE_ID",
                         store.getId()
                 )
+
+
+                // ======================================
+                // STORE NAME
+                // ======================================
 
                 .putString(
                         "STORE_NAME",
                         store.getName()
                 )
 
+
+                // ======================================
+                // STORE ADDRESS
+                // ======================================
+
                 .putString(
                         "STORE_ADDRESS",
                         store.getAddress()
                 )
 
+
+                // ======================================
+                // STORE QR
+                // ======================================
+
                 .putString(
                         "STORE_QR",
                         store.getEntrance_qr_code()
                 )
+
 
                 .apply();
 
@@ -381,7 +421,10 @@ public class StoreQRScannerActivity extends AppCompatActivity {
         ).show();
 
 
-        // Return to HomeActivity
+        // ==========================================
+        // RETURN TO HOME
+        // ==========================================
+
         finish();
     }
 }

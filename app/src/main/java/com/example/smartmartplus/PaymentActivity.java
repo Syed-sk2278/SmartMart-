@@ -2,184 +2,223 @@ package com.example.smartmartplus;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.LinearLayout;
 import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+
+import java.util.Locale;
 
 public class PaymentActivity extends AppCompatActivity {
 
-    private TextView tvBack;
-    private TextView tvItemCount;
-    private TextView tvAmount;
+    private TextView tvPaymentTitle;
+    private TextView tvPaymentItems;
+    private TextView tvPaymentSubtotal;
+    private TextView tvPaymentDiscount;
+    private TextView tvPaymentGST;
+    private TextView tvPaymentTotal;
 
-    private TextView tvUPI;
-    private TextView tvCard;
-    private TextView tvCash;
+    private RadioGroup rbPaymentMethodGroup;
+    private RadioButton rbUPI;
+    private RadioButton rbCard;
+    private RadioButton rbCash;
 
-    private LinearLayout layoutUPI;
-    private LinearLayout layoutCard;
-    private LinearLayout layoutCash;
+    private Button btnBackToCart;
+    private Button btnPay;
 
-    private Button btnPayNow;
-
-    private String selectedPayment = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        EdgeToEdge.enable(this);
-
         setContentView(R.layout.activity_payment);
 
-        // =========================
-        // SYSTEM BAR HANDLING
-        // =========================
 
-        ViewCompat.setOnApplyWindowInsetsListener(
-                findViewById(R.id.main),
-                (v, insets) -> {
+        // FIND VIEWS
 
-                    Insets systemBars = insets.getInsets(
-                            WindowInsetsCompat.Type.systemBars()
-                    );
+        tvPaymentTitle =
+                findViewById(R.id.tvPaymentTitle);
 
-                    v.setPadding(
-                            systemBars.left,
-                            systemBars.top,
-                            systemBars.right,
-                            systemBars.bottom
-                    );
+        tvPaymentItems =
+                findViewById(R.id.tvPaymentItems);
 
-                    return insets;
-                }
+        tvPaymentSubtotal =
+                findViewById(R.id.tvPaymentSubtotal);
+
+        tvPaymentDiscount =
+                findViewById(R.id.tvPaymentDiscount);
+
+        tvPaymentGST =
+                findViewById(R.id.tvPaymentGST);
+
+        tvPaymentTotal =
+                findViewById(R.id.tvPaymentTotal);
+
+
+        rbPaymentMethodGroup =
+                findViewById(R.id.rbPaymentMethodGroup);
+
+        rbUPI =
+                findViewById(R.id.rbUPI);
+
+        rbCard =
+                findViewById(R.id.rbCard);
+
+        rbCash =
+                findViewById(R.id.rbCash);
+
+
+        btnBackToCart =
+                findViewById(R.id.btnBackToCart);
+
+        btnPay =
+                findViewById(R.id.btnPay);
+
+
+        // GET CART DATA
+
+        int itemCount =
+                getIntent().getIntExtra(
+                        "ITEM_COUNT",
+                        0
+                );
+
+        double subtotal =
+                getIntent().getDoubleExtra(
+                        "SUBTOTAL",
+                        0.0
+                );
+
+        double discount =
+                getIntent().getDoubleExtra(
+                        "DISCOUNT",
+                        0.0
+                );
+
+        double gst =
+                getIntent().getDoubleExtra(
+                        "GST",
+                        0.0
+                );
+
+        double total =
+                getIntent().getDoubleExtra(
+                        "TOTAL",
+                        subtotal - discount + gst
+                );
+
+
+        // DISPLAY DATA
+
+        tvPaymentItems.setText(
+                "Items: " + itemCount
         );
 
-        // =========================
-        // INITIALIZE VIEWS
-        // =========================
+        tvPaymentSubtotal.setText(
+                String.format(
+                        Locale.getDefault(),
+                        "₹%.2f",
+                        subtotal
+                )
+        );
 
-        tvBack = findViewById(R.id.tvBack);
+        tvPaymentDiscount.setText(
+                String.format(
+                        Locale.getDefault(),
+                        "- ₹%.2f",
+                        discount
+                )
+        );
 
-        tvItemCount = findViewById(R.id.tvItemCount);
-        tvAmount = findViewById(R.id.tvAmount);
+        tvPaymentGST.setText(
+                String.format(
+                        Locale.getDefault(),
+                        "₹%.2f",
+                        gst
+                )
+        );
 
-        tvUPI = findViewById(R.id.tvUPI);
-        tvCard = findViewById(R.id.tvCard);
-        tvCash = findViewById(R.id.tvCash);
+        tvPaymentTotal.setText(
+                String.format(
+                        Locale.getDefault(),
+                        "₹%.2f",
+                        total
+                )
+        );
 
-        layoutUPI = findViewById(R.id.layoutUPI);
-        layoutCard = findViewById(R.id.layoutCard);
-        layoutCash = findViewById(R.id.layoutCash);
 
-        btnPayNow = findViewById(R.id.btnPayNow);
+        // DEFAULT UPI
 
-        // =========================
-        // INITIAL VALUES
-        // =========================
+        rbUPI.setChecked(true);
 
-        tvItemCount.setText("0 items");
-        tvAmount.setText("₹0.00");
 
-        // =========================
-        // BACK
-        // =========================
+        // BACK TO CART
 
-        tvBack.setOnClickListener(v -> {
+        btnBackToCart.setOnClickListener(v -> {
             finish();
         });
 
-        // =========================
-        // UPI
-        // =========================
 
-        layoutUPI.setOnClickListener(v -> {
-
-            selectedPayment = "UPI";
-
-            tvUPI.setText("Selected");
-            tvCard.setText("Select");
-            tvCash.setText("Select");
-
-            Toast.makeText(
-                    PaymentActivity.this,
-                    "UPI selected",
-                    Toast.LENGTH_SHORT
-            ).show();
-        });
-
-        // =========================
-        // CARD
-        // =========================
-
-        layoutCard.setOnClickListener(v -> {
-
-            selectedPayment = "Card";
-
-            tvUPI.setText("Select");
-            tvCard.setText("Selected");
-            tvCash.setText("Select");
-
-            Toast.makeText(
-                    PaymentActivity.this,
-                    "Card selected",
-                    Toast.LENGTH_SHORT
-            ).show();
-        });
-
-        // =========================
-        // CASH
-        // =========================
-
-        layoutCash.setOnClickListener(v -> {
-
-            selectedPayment = "Cash";
-
-            tvUPI.setText("Select");
-            tvCard.setText("Select");
-            tvCash.setText("Selected");
-
-            Toast.makeText(
-                    PaymentActivity.this,
-                    "Cash at Counter selected",
-                    Toast.LENGTH_SHORT
-            ).show();
-        });
-
-        // =========================
         // PAY NOW
-        // =========================
 
-        btnPayNow.setOnClickListener(v -> {
+        btnPay.setOnClickListener(v -> {
 
-            if (selectedPayment.isEmpty()) {
+            int selectedId =
+                    rbPaymentMethodGroup
+                            .getCheckedRadioButtonId();
 
-                Toast.makeText(
-                        PaymentActivity.this,
-                        "Please select a payment method",
-                        Toast.LENGTH_SHORT
-                ).show();
-
+            if (selectedId == -1) {
                 return;
             }
 
-            Toast.makeText(
-                    PaymentActivity.this,
-                    "Payment successful",
-                    Toast.LENGTH_SHORT
-            ).show();
+            RadioButton selectedButton =
+                    findViewById(selectedId);
 
-            Intent intent = new Intent(
-                    PaymentActivity.this,
-                    ReceiptActivity.class
+            String paymentMethod =
+                    selectedButton
+                            .getText()
+                            .toString();
+
+
+            Intent intent =
+                    new Intent(
+                            PaymentActivity.this,
+                            ReceiptActivity.class
+                    );
+
+
+            intent.putExtra(
+                    "ITEM_COUNT",
+                    itemCount
             );
+
+            intent.putExtra(
+                    "SUBTOTAL",
+                    subtotal
+            );
+
+            intent.putExtra(
+                    "DISCOUNT",
+                    discount
+            );
+
+            intent.putExtra(
+                    "GST",
+                    gst
+            );
+
+            intent.putExtra(
+                    "TOTAL",
+                    total
+            );
+
+            intent.putExtra(
+                    "PAYMENT_METHOD",
+                    paymentMethod
+            );
+
 
             startActivity(intent);
 

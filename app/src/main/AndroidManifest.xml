@@ -2,6 +2,12 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- Internet access for Supabase / Retrofit -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- Camera access for ZXing QR and barcode scanner -->
+    <uses-permission android:name="android.permission.CAMERA" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,19 +16,28 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartMartPlus">
 
-        <!-- Google Code Scanner -->
-        <meta-data
-            android:name="com.google.mlkit.vision.codescanner.ENABLE_CODE_SCANNER"
-            android:value="true" />
+        <!-- ========================================== -->
+        <!-- MAIN ACTIVITY                              -->
+        <!-- ========================================== -->
 
         <activity
             android:name=".MainActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
+
+        <!-- ========================================== -->
+        <!-- SPLASH                                     -->
+        <!-- ========================================== -->
+
         <activity
             android:name=".SplashActivity"
             android:exported="false" />
+
+
+        <!-- ========================================== -->
+        <!-- LOGIN                                      -->
+        <!-- ========================================== -->
 
         <activity
             android:name=".LoginActivity"
@@ -39,50 +54,110 @@
 
         </activity>
 
+
+        <!-- ========================================== -->
+        <!-- REGISTER                                   -->
+        <!-- ========================================== -->
+
         <activity
             android:name=".RegisterActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+
+
+        <!-- ========================================== -->
+        <!-- PLANNER                                    -->
+        <!-- ========================================== -->
 
         <activity
             android:name=".PlannerActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
+
+        <!-- ========================================== -->
+        <!-- HOME                                       -->
+        <!-- ========================================== -->
+
         <activity
             android:name=".HomeActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
-        <!-- STORE QR SCANNER -->
+
+        <!-- ========================================== -->
+        <!-- STORE ENTRANCE QR SCANNER                  -->
+        <!-- ========================================== -->
+
         <activity
             android:name=".StoreQRScannerActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+
+
+        <!-- ========================================== -->
+        <!-- OTHER SCANNER                              -->
+        <!-- ========================================== -->
 
         <activity
             android:name=".ScannerActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
+
+        <!-- ========================================== -->
+        <!-- PRODUCT BARCODE SCANNER                    -->
+        <!-- ========================================== -->
+
         <activity
             android:name=".BarcodeScannerActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+
+        <!-- ========================================== -->
+        <!-- PRODUCT DETAILS                            -->
+        <!-- ========================================== -->
+
+        <activity
+            android:name=".ProductDetailsActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+
+        <!-- ========================================== -->
+        <!-- CART                                       -->
+        <!-- ========================================== -->
 
         <activity
             android:name=".CartActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
+
+        <!-- ========================================== -->
+        <!-- PAYMENT                                    -->
+        <!-- ========================================== -->
+
         <activity
             android:name=".PaymentActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
+
+        <!-- ========================================== -->
+        <!-- RECEIPT                                    -->
+        <!-- ========================================== -->
+
         <activity
             android:name=".ReceiptActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+
+
+        <!-- ========================================== -->
+        <!-- ADMIN                                      -->
+        <!-- ========================================== -->
 
         <activity
             android:name=".AdminActivity"
