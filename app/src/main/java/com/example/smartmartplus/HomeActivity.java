@@ -13,6 +13,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.Locale;
+
 public class HomeActivity extends AppCompatActivity {
 
     // =========================================================
@@ -113,7 +115,8 @@ public class HomeActivity extends AppCompatActivity {
 
     private boolean insideStore = false;
 
-    private static final String PREF_NAME = "SmartMartPrefs";
+    private static final String PREF_NAME =
+            "SmartMartPrefs";
 
     private static final String KEY_STORE_VERIFIED =
             "STORE_VERIFIED";
@@ -126,6 +129,9 @@ public class HomeActivity extends AppCompatActivity {
 
     private static final String KEY_STORE_ADDRESS =
             "STORE_ADDRESS";
+
+    private static final String KEY_USER_NAME =
+            "USER_NAME";
 
 
     // =========================================================
@@ -293,9 +299,10 @@ public class HomeActivity extends AppCompatActivity {
 
         String userName =
                 prefs.getString(
-                        "USER_NAME",
+                        KEY_USER_NAME,
                         "SmartMart User"
                 );
+
 
         if (userName == null ||
                 userName.trim().isEmpty()) {
@@ -303,8 +310,25 @@ public class HomeActivity extends AppCompatActivity {
             userName = "SmartMart User";
         }
 
+
+        userName = userName.trim();
+
+
+        // -----------------------------------------------------
+        // DISPLAY USER NAME
+        // -----------------------------------------------------
+
         tvUserName.setText(
                 userName
+        );
+
+
+        // -----------------------------------------------------
+        // DISPLAY USER INITIALS
+        // -----------------------------------------------------
+
+        tvProfileCircle.setText(
+                getInitials(userName)
         );
 
 
@@ -318,9 +342,73 @@ public class HomeActivity extends AppCompatActivity {
                         "SmartMart+ Main Store"
                 );
 
+
+        if (storeName == null ||
+                storeName.trim().isEmpty()) {
+
+            storeName =
+                    "SmartMart+ Main Store";
+        }
+
+
         tvStoreName.setText(
                 storeName
         );
+    }
+
+
+    // =========================================================
+    // GET USER INITIALS
+    // =========================================================
+
+    private String getInitials(String name) {
+
+        if (name == null ||
+                name.trim().isEmpty()) {
+
+            return "SM";
+        }
+
+
+        String[] words =
+                name.trim().split("\\s+");
+
+
+        // -----------------------------------------------------
+        // ONE-WORD NAME
+        // -----------------------------------------------------
+
+        if (words.length == 1) {
+
+            String word = words[0];
+
+
+            if (word.length() >= 2) {
+
+                return word.substring(0, 2)
+                        .toUpperCase(Locale.getDefault());
+            }
+
+
+            return word.substring(0, 1)
+                    .toUpperCase(Locale.getDefault());
+        }
+
+
+        // -----------------------------------------------------
+        // FIRST + LAST NAME
+        // -----------------------------------------------------
+
+        String first =
+                words[0].substring(0, 1);
+
+        String last =
+                words[words.length - 1]
+                        .substring(0, 1);
+
+
+        return (first + last)
+                .toUpperCase(Locale.getDefault());
     }
 
 
@@ -343,6 +431,7 @@ public class HomeActivity extends AppCompatActivity {
                         false
                 );
 
+
         if (verified) {
 
             insideStore = true;
@@ -364,28 +453,19 @@ public class HomeActivity extends AppCompatActivity {
 
     private void applyBeforeStoreTheme() {
 
-        // -----------------------------------------------------
-        // WHITE BACKGROUND
-        // -----------------------------------------------------
-
+        // White background
         main.setBackgroundColor(
                 Color.WHITE
         );
 
 
-        // -----------------------------------------------------
-        // STORE QR VISIBLE
-        // -----------------------------------------------------
-
+        // Store QR visible
         layoutStoreQR.setVisibility(
                 View.VISIBLE
         );
 
 
-        // -----------------------------------------------------
-        // BEFORE STORE TEXT
-        // -----------------------------------------------------
-
+        // Before store text
         tvBeforeStoreTitle.setText(
                 "🛍  Before you enter the store"
         );
@@ -395,10 +475,7 @@ public class HomeActivity extends AppCompatActivity {
         );
 
 
-        // -----------------------------------------------------
-        // INSIDE STORE TITLE
-        // -----------------------------------------------------
-
+        // Inside store title
         tvInsideStoreTitle.setText(
                 "🏪  Once you're inside the store"
         );
@@ -408,10 +485,7 @@ public class HomeActivity extends AppCompatActivity {
         );
 
 
-        // -----------------------------------------------------
-        // NORMAL WHITE CARDS
-        // -----------------------------------------------------
-
+        // Normal cards
         cardShoppingList.setBackgroundResource(
                 R.drawable.home_card_bg
         );
@@ -429,10 +503,7 @@ public class HomeActivity extends AppCompatActivity {
         );
 
 
-        // -----------------------------------------------------
-        // NORMAL STORE CARDS
-        // -----------------------------------------------------
-
+        // Store cards
         btnScanner.setBackgroundResource(
                 R.drawable.home_store_card
         );
@@ -454,19 +525,13 @@ public class HomeActivity extends AppCompatActivity {
         );
 
 
-        // -----------------------------------------------------
-        // SELECTED STORE
-        // -----------------------------------------------------
-
+        // Selected store
         layoutSelectedStore.setBackgroundResource(
                 R.drawable.home_store_bg
         );
 
 
-        // -----------------------------------------------------
-        // QUICK ACCESS
-        // -----------------------------------------------------
-
+        // Quick access
         btnHelp.setBackgroundResource(
                 R.drawable.home_small_button
         );
@@ -484,21 +549,27 @@ public class HomeActivity extends AppCompatActivity {
         );
 
 
-        // -----------------------------------------------------
-        // OFFER BUTTON
-        // -----------------------------------------------------
-
+        // Offer button
         btnViewOffers.setBackgroundResource(
                 R.drawable.home_offer_button
         );
 
 
-        // -----------------------------------------------------
-        // LOGOUT
-        // -----------------------------------------------------
-
+        // Logout
         btnLogout.setBackgroundResource(
                 R.drawable.home_logout_bg
+        );
+
+
+        // Restore change store color
+        tvChangeStore.setTextColor(
+                Color.parseColor("#5632C7")
+        );
+
+
+        // Restore quick access color
+        tvQuickAccess.setTextColor(
+                Color.parseColor("#172033")
         );
     }
 
@@ -509,28 +580,19 @@ public class HomeActivity extends AppCompatActivity {
 
     private void applyInsideStoreTheme() {
 
-        // -----------------------------------------------------
-        // BLUE HOME BACKGROUND
-        // -----------------------------------------------------
-
+        // Blue background
         main.setBackgroundColor(
                 Color.parseColor("#EAF4FF")
         );
 
 
-        // -----------------------------------------------------
-        // HIDE STORE QR
-        // -----------------------------------------------------
-
+        // Hide store QR
         layoutStoreQR.setVisibility(
                 View.GONE
         );
 
 
-        // -----------------------------------------------------
-        // CHANGE BEFORE STORE SECTION
-        // -----------------------------------------------------
-
+        // Before store section
         tvBeforeStoreTitle.setText(
                 "🛒  SmartMart+ Shopping"
         );
@@ -540,10 +602,7 @@ public class HomeActivity extends AppCompatActivity {
         );
 
 
-        // -----------------------------------------------------
-        // CHANGE INSIDE STORE SECTION
-        // -----------------------------------------------------
-
+        // Inside store section
         tvInsideStoreTitle.setText(
                 "🔵  In-Store Features"
         );
@@ -553,19 +612,13 @@ public class HomeActivity extends AppCompatActivity {
         );
 
 
-        // -----------------------------------------------------
-        // SELECTED STORE BLUE
-        // -----------------------------------------------------
-
+        // Selected store blue
         layoutSelectedStore.setBackgroundResource(
                 R.drawable.store_selected_bg
         );
 
 
-        // -----------------------------------------------------
-        // BEFORE-STORE CARDS → BLUE
-        // -----------------------------------------------------
-
+        // Before-store cards blue
         cardShoppingList.setBackgroundResource(
                 R.drawable.store_blue_card
         );
@@ -583,10 +636,7 @@ public class HomeActivity extends AppCompatActivity {
         );
 
 
-        // -----------------------------------------------------
-        // STORE FEATURE CARDS → BLUE
-        // -----------------------------------------------------
-
+        // Store feature cards blue
         btnScanner.setBackgroundResource(
                 R.drawable.store_blue_card
         );
@@ -608,10 +658,7 @@ public class HomeActivity extends AppCompatActivity {
         );
 
 
-        // -----------------------------------------------------
-        // QUICK ACCESS → BLUE
-        // -----------------------------------------------------
-
+        // Quick access blue
         btnHelp.setBackgroundResource(
                 R.drawable.store_quick_button
         );
@@ -629,33 +676,25 @@ public class HomeActivity extends AppCompatActivity {
         );
 
 
-        // -----------------------------------------------------
-        // OFFER BUTTON → BLUE
-        // -----------------------------------------------------
-
+        // Offer button blue
         btnViewOffers.setBackgroundResource(
                 R.drawable.store_offer_button
         );
 
 
-        // -----------------------------------------------------
-        // LOGOUT → BLUE/DARK THEME
-        // -----------------------------------------------------
-
+        // Logout blue
         btnLogout.setBackgroundResource(
                 R.drawable.store_logout_button
         );
 
 
-        // -----------------------------------------------------
-        // STORE NAME
-        // -----------------------------------------------------
-
+        // Store name
         SharedPreferences prefs =
                 getSharedPreferences(
                         PREF_NAME,
                         MODE_PRIVATE
                 );
+
 
         String storeName =
                 prefs.getString(
@@ -663,24 +702,27 @@ public class HomeActivity extends AppCompatActivity {
                         "SmartMart+ Main Store"
                 );
 
+
+        if (storeName == null ||
+                storeName.trim().isEmpty()) {
+
+            storeName =
+                    "SmartMart+ Main Store";
+        }
+
+
         tvStoreName.setText(
                 storeName
         );
 
 
-        // -----------------------------------------------------
-        // CHANGE STORE TEXT
-        // -----------------------------------------------------
-
+        // Change store color
         tvChangeStore.setTextColor(
                 Color.parseColor("#1677FF")
         );
 
 
-        // -----------------------------------------------------
-        // QUICK ACCESS TITLE
-        // -----------------------------------------------------
-
+        // Quick access title
         tvQuickAccess.setTextColor(
                 Color.parseColor("#0756C9")
         );
@@ -755,6 +797,7 @@ public class HomeActivity extends AppCompatActivity {
                         return;
                     }
 
+
                     Intent intent =
                             new Intent(
                                     HomeActivity.this,
@@ -779,6 +822,7 @@ public class HomeActivity extends AppCompatActivity {
 
                         return;
                     }
+
 
                     Intent intent =
                             new Intent(
@@ -805,6 +849,7 @@ public class HomeActivity extends AppCompatActivity {
                         return;
                     }
 
+
                     Toast.makeText(
                             HomeActivity.this,
                             "Billing module",
@@ -827,6 +872,7 @@ public class HomeActivity extends AppCompatActivity {
 
                         return;
                     }
+
 
                     Intent intent =
                             new Intent(
@@ -853,6 +899,7 @@ public class HomeActivity extends AppCompatActivity {
                         return;
                     }
 
+
                     Toast.makeText(
                             HomeActivity.this,
                             "Store Map will open here.",
@@ -869,11 +916,13 @@ public class HomeActivity extends AppCompatActivity {
         cardShoppingList.setOnClickListener(
                 v -> {
 
-                    Toast.makeText(
-                            HomeActivity.this,
-                            "My Shopping List",
-                            Toast.LENGTH_SHORT
-                    ).show();
+                    Intent intent =
+                            new Intent(
+                                    HomeActivity.this,
+                                    ShoppingListActivity.class
+                            );
+
+                    startActivity(intent);
                 }
         );
 
@@ -1028,6 +1077,7 @@ public class HomeActivity extends AppCompatActivity {
                         MODE_PRIVATE
                 );
 
+
         return prefs.getBoolean(
                 KEY_STORE_VERIFIED,
                 false
@@ -1062,7 +1112,7 @@ public class HomeActivity extends AppCompatActivity {
                 );
 
 
-        // Clear login/store session
+        // Clear session
         prefs.edit()
                 .clear()
                 .apply();
@@ -1096,7 +1146,7 @@ public class HomeActivity extends AppCompatActivity {
 
 
     // =========================================================
-    // WHEN RETURNING FROM QR SCANNER
+    // WHEN RETURNING FROM OTHER ACTIVITIES
     // =========================================================
 
     @Override
@@ -1104,13 +1154,13 @@ public class HomeActivity extends AppCompatActivity {
 
         super.onResume();
 
-        /*
-         * If StoreQRScannerActivity successfully verified
-         * the store, refresh the Home screen.
-         */
 
         if (main != null) {
 
+            // Reload logged-in user name
+            loadUserAndStoreData();
+
+            // Refresh store status
             checkStoreStatus();
         }
     }

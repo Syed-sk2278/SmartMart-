@@ -5,8 +5,13 @@
     <!-- Internet access for Supabase / Retrofit -->
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <!-- Camera access for ZXing QR and barcode scanner -->
+    <!-- Camera permission for QR and barcode scanning -->
     <uses-permission android:name="android.permission.CAMERA" />
+
+    <!-- Camera hardware is optional -->
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
 
     <application
         android:allowBackup="true"
@@ -16,149 +21,103 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartMartPlus">
 
-        <!-- ========================================== -->
-        <!-- MAIN ACTIVITY                              -->
-        <!-- ========================================== -->
-
+        <!-- Main Activity -->
         <activity
             android:name=".MainActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
-
-        <!-- ========================================== -->
-        <!-- SPLASH                                     -->
-        <!-- ========================================== -->
-
+        <!-- Splash Screen -->
         <activity
             android:name=".SplashActivity"
             android:exported="false" />
 
-
-        <!-- ========================================== -->
-        <!-- LOGIN                                      -->
-        <!-- ========================================== -->
-
+        <!-- Login Screen -->
         <activity
             android:name=".LoginActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
 
             <intent-filter>
-
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
-
             </intent-filter>
 
         </activity>
 
+        <!-- Forgot Password -->
+        <activity
+            android:name=".ForgotPasswordActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
 
-        <!-- ========================================== -->
-        <!-- REGISTER                                   -->
-        <!-- ========================================== -->
-
+        <!-- Register Screen -->
         <activity
             android:name=".RegisterActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
-
-        <!-- ========================================== -->
-        <!-- PLANNER                                    -->
-        <!-- ========================================== -->
-
+        <!-- Planner -->
         <activity
             android:name=".PlannerActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
-
-        <!-- ========================================== -->
-        <!-- HOME                                       -->
-        <!-- ========================================== -->
-
+        <!-- Home -->
         <activity
             android:name=".HomeActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
+        <!-- Shopping List -->
+        <activity
+            android:name=".ShoppingListActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
 
-        <!-- ========================================== -->
-        <!-- STORE ENTRANCE QR SCANNER                  -->
-        <!-- ========================================== -->
-
+        <!-- Store Entrance QR Scanner -->
         <activity
             android:name=".StoreQRScannerActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
-
-        <!-- ========================================== -->
-        <!-- OTHER SCANNER                              -->
-        <!-- ========================================== -->
-
+        <!-- Scanner Activity -->
         <activity
             android:name=".ScannerActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
-
-        <!-- ========================================== -->
-        <!-- PRODUCT BARCODE SCANNER                    -->
-        <!-- ========================================== -->
-
+        <!-- Product Barcode Scanner -->
         <activity
             android:name=".BarcodeScannerActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
-
-        <!-- ========================================== -->
-        <!-- PRODUCT DETAILS                            -->
-        <!-- ========================================== -->
-
+        <!-- Product Details -->
         <activity
             android:name=".ProductDetailsActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
-
-        <!-- ========================================== -->
-        <!-- CART                                       -->
-        <!-- ========================================== -->
-
+        <!-- Cart -->
         <activity
             android:name=".CartActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
-
-        <!-- ========================================== -->
-        <!-- PAYMENT                                    -->
-        <!-- ========================================== -->
-
+        <!-- Payment -->
         <activity
             android:name=".PaymentActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
-
-        <!-- ========================================== -->
-        <!-- RECEIPT                                    -->
-        <!-- ========================================== -->
-
+        <!-- Receipt -->
         <activity
             android:name=".ReceiptActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
-
-        <!-- ========================================== -->
-        <!-- ADMIN                                      -->
-        <!-- ========================================== -->
-
+        <!-- Admin -->
         <activity
             android:name=".AdminActivity"
             android:exported="false"

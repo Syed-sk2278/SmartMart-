@@ -19,6 +19,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText etEmail, etPassword;
     private Button btnLogin;
     private TextView tvSignup;
+    private TextView tvForgot;
 
     private static final String PREF_NAME = "SmartMartPrefs";
 
@@ -26,21 +27,48 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Initialize Retrofit
+        // ==========================================
+        // INITIALIZE RETROFIT
+        // ==========================================
+
         RetrofitClient.initialize(this);
 
         setContentView(R.layout.activity_login);
 
-        // Initialize Views
+        // ==========================================
+        // INITIALIZE VIEWS
+        // ==========================================
+
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
         btnLogin = findViewById(R.id.btnLogin);
         tvSignup = findViewById(R.id.tvSignup);
+        tvForgot = findViewById(R.id.tvForgot);
 
-        // Login Button
+        // ==========================================
+        // LOGIN BUTTON
+        // ==========================================
+
         btnLogin.setOnClickListener(v -> loginUser());
 
-        // Sign Up
+        // ==========================================
+        // FORGOT PASSWORD
+        // ==========================================
+
+        tvForgot.setOnClickListener(v -> {
+
+            Intent intent = new Intent(
+                    LoginActivity.this,
+                    ForgotPasswordActivity.class
+            );
+
+            startActivity(intent);
+        });
+
+        // ==========================================
+        // SIGN UP
+        // ==========================================
+
         tvSignup.setOnClickListener(v -> {
 
             Intent intent = new Intent(
@@ -59,11 +87,13 @@ public class LoginActivity extends AppCompatActivity {
 
     private void loginUser() {
 
-        String email =
-                etEmail.getText().toString().trim();
+        String email = etEmail.getText()
+                .toString()
+                .trim();
 
-        String password =
-                etPassword.getText().toString().trim();
+        String password = etPassword.getText()
+                .toString()
+                .trim();
 
 
         // =================================================
@@ -75,6 +105,8 @@ public class LoginActivity extends AppCompatActivity {
             etEmail.setError(
                     "Please enter your email"
             );
+
+            etEmail.requestFocus();
 
             return;
         }
@@ -88,6 +120,8 @@ public class LoginActivity extends AppCompatActivity {
                     "Enter a valid email address"
             );
 
+            etEmail.requestFocus();
+
             return;
         }
 
@@ -97,6 +131,8 @@ public class LoginActivity extends AppCompatActivity {
             etPassword.setError(
                     "Please enter your password"
             );
+
+            etPassword.requestFocus();
 
             return;
         }
@@ -108,6 +144,8 @@ public class LoginActivity extends AppCompatActivity {
                     "Password must be at least 6 characters"
             );
 
+            etPassword.requestFocus();
+
             return;
         }
 
@@ -116,21 +154,19 @@ public class LoginActivity extends AppCompatActivity {
         // LOGIN REQUEST
         // =================================================
 
-        LoginRequest request =
-                new LoginRequest(
-                        email,
-                        password
-                );
+        LoginRequest request = new LoginRequest(
+                email,
+                password
+        );
 
 
         // =================================================
         // SUPABASE API
         // =================================================
 
-        SupabaseApi api =
-                RetrofitClient
-                        .getRetrofitInstance()
-                        .create(SupabaseApi.class);
+        SupabaseApi api = RetrofitClient
+                .getRetrofitInstance()
+                .create(SupabaseApi.class);
 
 
         api.loginUser(request)
@@ -153,10 +189,13 @@ public class LoginActivity extends AppCompatActivity {
                                             response.body();
 
 
+                                    // =================================
+                                    // GET TOKENS
+                                    // =================================
+
                                     String accessToken =
                                             loginResponse
                                                     .getAccessToken();
-
 
                                     String refreshToken =
                                             loginResponse
@@ -168,7 +207,9 @@ public class LoginActivity extends AppCompatActivity {
                                     // =================================
 
                                     if (accessToken == null
-                                            || accessToken.trim().isEmpty()) {
+                                            || accessToken
+                                            .trim()
+                                            .isEmpty()) {
 
                                         Toast.makeText(
                                                 LoginActivity.this,
@@ -177,6 +218,54 @@ public class LoginActivity extends AppCompatActivity {
                                         ).show();
 
                                         return;
+                                    }
+
+
+                                    // =================================
+                                    // GET USER NAME
+                                    // =================================
+
+                                    String userName =
+                                            "SmartMart User";
+
+
+                                    if (loginResponse.getUser() != null
+                                            && loginResponse
+                                            .getUser()
+                                            .getUserMetadata() != null) {
+
+                                        LoginResponse.UserMetadata metadata =
+                                                loginResponse
+                                                        .getUser()
+                                                        .getUserMetadata();
+
+
+                                        // First try full_name
+                                        if (metadata.getFullName() != null
+                                                && !metadata
+                                                .getFullName()
+                                                .trim()
+                                                .isEmpty()) {
+
+                                            userName =
+                                                    metadata
+                                                            .getFullName()
+                                                            .trim();
+                                        }
+
+                                        // If full_name is empty,
+                                        // try name
+                                        else if (metadata.getName() != null
+                                                && !metadata
+                                                .getName()
+                                                .trim()
+                                                .isEmpty()) {
+
+                                            userName =
+                                                    metadata
+                                                            .getName()
+                                                            .trim();
+                                        }
                                     }
 
 
@@ -190,28 +279,32 @@ public class LoginActivity extends AppCompatActivity {
                                     )
                                             .edit()
 
-                                            // Save authentication token
+                                            // Access token
                                             .putString(
                                                     "ACCESS_TOKEN",
                                                     accessToken
                                             )
 
+                                            // Refresh token
                                             .putString(
                                                     "REFRESH_TOKEN",
                                                     refreshToken
                                             )
 
+                                            // Logged in
                                             .putBoolean(
                                                     "IS_LOGGED_IN",
                                                     true
                                             )
 
-                                            // =================================
-                                            // IMPORTANT
-                                            // Every NEW login starts OUTSIDE
-                                            // the store.
-                                            // =================================
+                                            // User name
+                                            .putString(
+                                                    "USER_NAME",
+                                                    userName
+                                            )
 
+                                            // New login starts
+                                            // outside the store
                                             .putBoolean(
                                                     "STORE_VERIFIED",
                                                     false
@@ -250,8 +343,8 @@ public class LoginActivity extends AppCompatActivity {
                                     startActivity(intent);
 
                                     finish();
-
                                 }
+
 
                                 // =====================================
                                 // LOGIN FAILED

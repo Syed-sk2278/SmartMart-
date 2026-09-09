@@ -651,7 +651,7 @@
                     android:layout_height="wrap_content"
                     android:text="Billing"
                     android:textColor="#172033"
-                     android:textStyle="bold" />
+                    android:textStyle="bold" />
 
             </LinearLayout>
 

@@ -22,12 +22,30 @@ public interface SupabaseApi {
     );
 
 
+    // ==========================================
+    // FORGOT PASSWORD
+    // ==========================================
+
+    @POST("auth/v1/recover")
+    Call<Void> resetPassword(
+            @Body ForgotPasswordRequest request
+    );
+
+
+    // ==========================================
+    // PRODUCTS
+    // ==========================================
+
     @GET("rest/v1/products")
     Call<List<Product>> getProductByBarcode(
             @Query("barcode") String barcode,
             @Query("store_id") String storeId
     );
 
+
+    // ==========================================
+    // STORES
+    // ==========================================
 
     @GET("rest/v1/stores")
     Call<List<Store>> getStoreByQR(
