@@ -1,8 +1,10 @@
 package com.example.smartmartplus;
 
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -26,9 +28,12 @@ public class ShoppingListActivity extends AppCompatActivity {
     private EditText etItemName;
     private EditText etQuantity;
 
-    private Button btnAddItem;
-    private Button btnClearList;
-    private Button btnBackHome;
+    private TextView btnMinus;
+    private TextView btnPlus;
+
+    private TextView btnAddItem;
+    private TextView btnClearList;
+    private TextView btnBackHome;
 
     private LinearLayout shoppingListContainer;
 
@@ -56,9 +61,11 @@ public class ShoppingListActivity extends AppCompatActivity {
 
         initializeViews();
 
-        loadShoppingList();
+        setupQuantityButtons();
 
         setupClickListeners();
+
+        loadShoppingList();
     }
 
 
@@ -71,6 +78,10 @@ public class ShoppingListActivity extends AppCompatActivity {
         etItemName = findViewById(R.id.etItemName);
 
         etQuantity = findViewById(R.id.etQuantity);
+
+        btnMinus = findViewById(R.id.btnMinus);
+
+        btnPlus = findViewById(R.id.btnPlus);
 
         btnAddItem = findViewById(R.id.btnAddItem);
 
@@ -90,21 +101,83 @@ public class ShoppingListActivity extends AppCompatActivity {
 
 
     // =========================================================
+    // QUANTITY BUTTONS
+    // =========================================================
+
+    private void setupQuantityButtons() {
+
+        // MINUS
+
+        btnMinus.setOnClickListener(v -> {
+
+            int quantity = getCurrentQuantity();
+
+            if (quantity > 1) {
+                quantity--;
+            }
+
+            etQuantity.setText(
+                    String.valueOf(quantity)
+            );
+        });
+
+
+        // PLUS
+
+        btnPlus.setOnClickListener(v -> {
+
+            int quantity = getCurrentQuantity();
+
+            quantity++;
+
+            etQuantity.setText(
+                    String.valueOf(quantity)
+            );
+        });
+    }
+
+
+    // =========================================================
+    // GET CURRENT QUANTITY
+    // =========================================================
+
+    private int getCurrentQuantity() {
+
+        String quantityText =
+                etQuantity.getText()
+                        .toString()
+                        .trim();
+
+        if (TextUtils.isEmpty(quantityText)) {
+            return 1;
+        }
+
+        try {
+
+            int quantity =
+                    Integer.parseInt(quantityText);
+
+            return Math.max(quantity, 1);
+
+        } catch (NumberFormatException e) {
+
+            return 1;
+        }
+    }
+
+
+    // =========================================================
     // CLICK LISTENERS
     // =========================================================
 
     private void setupClickListeners() {
 
-        // -----------------------------------------------------
         // ADD ITEM
-        // -----------------------------------------------------
 
         btnAddItem.setOnClickListener(v -> addItem());
 
 
-        // -----------------------------------------------------
         // CLEAR LIST
-        // -----------------------------------------------------
 
         btnClearList.setOnClickListener(v -> {
 
@@ -128,11 +201,13 @@ public class ShoppingListActivity extends AppCompatActivity {
         });
 
 
-        // -----------------------------------------------------
         // BACK HOME
-        // -----------------------------------------------------
 
-        btnBackHome.setOnClickListener(v -> finish());
+        btnBackHome.setOnClickListener(v -> {
+
+            finish();
+
+        });
     }
 
 
@@ -207,9 +282,9 @@ public class ShoppingListActivity extends AppCompatActivity {
         }
 
 
-        // -----------------------------------------------------
+        // =====================================================
         // GET CURRENT LIST
-        // -----------------------------------------------------
+        // =====================================================
 
         JSONArray shoppingList =
                 getShoppingList();
@@ -221,7 +296,7 @@ public class ShoppingListActivity extends AppCompatActivity {
 
 
             // -------------------------------------------------
-            // CHECK IF ITEM ALREADY EXISTS
+            // CHECK EXISTING ITEM
             // -------------------------------------------------
 
             for (int i = 0;
@@ -271,13 +346,19 @@ public class ShoppingListActivity extends AppCompatActivity {
                         quantity
                 );
 
-                shoppingList.put(newItem);
+                shoppingList.put(
+                        newItem
+                );
             }
 
 
         } catch (JSONException e) {
 
-            e.printStackTrace();
+            Log.e(
+                    "ShoppingListActivity",
+                    "Error adding shopping item",
+                    e
+            );
 
             Toast.makeText(
                     ShoppingListActivity.this,
@@ -289,16 +370,18 @@ public class ShoppingListActivity extends AppCompatActivity {
         }
 
 
-        // -----------------------------------------------------
-        // SAVE LIST
-        // -----------------------------------------------------
+        // =====================================================
+        // SAVE
+        // =====================================================
 
-        saveShoppingList(shoppingList);
+        saveShoppingList(
+                shoppingList
+        );
 
 
-        // -----------------------------------------------------
+        // =====================================================
         // CLEAR INPUT
-        // -----------------------------------------------------
+        // =====================================================
 
         etItemName.setText("");
 
@@ -307,9 +390,9 @@ public class ShoppingListActivity extends AppCompatActivity {
         etItemName.requestFocus();
 
 
-        // -----------------------------------------------------
+        // =====================================================
         // REFRESH
-        // -----------------------------------------------------
+        // =====================================================
 
         loadShoppingList();
 
@@ -347,7 +430,11 @@ public class ShoppingListActivity extends AppCompatActivity {
 
         } catch (JSONException e) {
 
-            e.printStackTrace();
+            Log.e(
+                    "ShoppingListActivity",
+                    "Error reading shopping list",
+                    e
+            );
 
             return new JSONArray();
         }
@@ -395,6 +482,10 @@ public class ShoppingListActivity extends AppCompatActivity {
                 shoppingList.length();
 
 
+        // -----------------------------------------------------
+        // UPDATE COUNT
+        // -----------------------------------------------------
+
         tvListCount.setText(
                 itemCount + " item" +
                         (itemCount == 1 ? "" : "s")
@@ -433,7 +524,7 @@ public class ShoppingListActivity extends AppCompatActivity {
 
 
         // -----------------------------------------------------
-        // CREATE ITEM ROWS
+        // CREATE ITEMS
         // -----------------------------------------------------
 
         for (int i = 0;
@@ -461,7 +552,11 @@ public class ShoppingListActivity extends AppCompatActivity {
 
             } catch (JSONException e) {
 
-                e.printStackTrace();
+                Log.e(
+                        "ShoppingListActivity",
+                        "Error displaying shopping item",
+                        e
+                );
             }
         }
     }
@@ -493,19 +588,57 @@ public class ShoppingListActivity extends AppCompatActivity {
         );
 
         row.setPadding(
-                20,
                 18,
-                12,
-                18
+                14,
+                10,
+                14
         );
 
 
         // -----------------------------------------------------
-        // ROW BACKGROUND
+        // BACKGROUND
         // -----------------------------------------------------
 
         row.setBackgroundResource(
                 R.drawable.shopping_list_item_bg
+        );
+
+
+        // -----------------------------------------------------
+        // PRODUCT ICON
+        // -----------------------------------------------------
+
+        TextView tvIcon =
+                new TextView(this);
+
+        tvIcon.setText(
+                getProductIcon(itemName)
+        );
+
+        tvIcon.setTextSize(32);
+
+        tvIcon.setGravity(
+                Gravity.CENTER
+        );
+
+
+        LinearLayout.LayoutParams iconParams =
+                new LinearLayout.LayoutParams(
+                        65,
+                        65
+                );
+
+        iconParams.setMargins(
+                0,
+                0,
+                10,
+                0
+        );
+
+
+        row.addView(
+                tvIcon,
+                iconParams
         );
 
 
@@ -520,16 +653,19 @@ public class ShoppingListActivity extends AppCompatActivity {
                 itemName
         );
 
-        tvName.setTextSize(17);
+        tvName.setTextSize(19);
 
         tvName.setTextColor(
-                android.graphics.Color.parseColor(
-                        "#101C25"
-                )
+                Color.parseColor("#174D3C")
         );
 
         tvName.setGravity(
                 Gravity.CENTER_VERTICAL
+        );
+
+        tvName.setTypeface(
+                null,
+                android.graphics.Typeface.BOLD
         );
 
 
@@ -539,6 +675,7 @@ public class ShoppingListActivity extends AppCompatActivity {
                         LinearLayout.LayoutParams.WRAP_CONTENT,
                         1
                 );
+
 
         row.addView(
                 tvName,
@@ -554,27 +691,31 @@ public class ShoppingListActivity extends AppCompatActivity {
                 new TextView(this);
 
         tvQuantity.setText(
-                "Qty: " + quantity
+                "Qty:\n" + quantity
         );
 
         tvQuantity.setTextSize(15);
 
         tvQuantity.setTextColor(
-                android.graphics.Color.parseColor(
-                        "#087F72"
-                )
+                Color.parseColor("#087F72")
         );
 
         tvQuantity.setGravity(
                 Gravity.CENTER
         );
 
+        tvQuantity.setTypeface(
+                null,
+                android.graphics.Typeface.BOLD
+        );
+
 
         LinearLayout.LayoutParams quantityParams =
                 new LinearLayout.LayoutParams(
-                        75,
+                        65,
                         LinearLayout.LayoutParams.WRAP_CONTENT
                 );
+
 
         row.addView(
                 tvQuantity,
@@ -589,13 +730,15 @@ public class ShoppingListActivity extends AppCompatActivity {
         Button btnDelete =
                 new Button(this);
 
-        btnDelete.setText("✕");
+        btnDelete.setText("🗑");
 
-        btnDelete.setTextSize(16);
+        btnDelete.setTextSize(18);
 
         btnDelete.setTextColor(
-                android.graphics.Color.WHITE
+                Color.WHITE
         );
+
+        btnDelete.setAllCaps(false);
 
         btnDelete.setBackgroundResource(
                 R.drawable.shopping_delete_bg
@@ -604,9 +747,10 @@ public class ShoppingListActivity extends AppCompatActivity {
 
         LinearLayout.LayoutParams deleteParams =
                 new LinearLayout.LayoutParams(
-                        48,
-                        48
+                        52,
+                        52
                 );
+
 
         row.addView(
                 btnDelete,
@@ -615,7 +759,7 @@ public class ShoppingListActivity extends AppCompatActivity {
 
 
         // -----------------------------------------------------
-        // DELETE ACTION
+        // DELETE CLICK
         // -----------------------------------------------------
 
         btnDelete.setOnClickListener(v -> {
@@ -626,7 +770,7 @@ public class ShoppingListActivity extends AppCompatActivity {
 
 
         // -----------------------------------------------------
-        // ADD ROW TO CONTAINER
+        // ADD ROW
         // -----------------------------------------------------
 
         LinearLayout.LayoutParams rowParams =
@@ -647,6 +791,82 @@ public class ShoppingListActivity extends AppCompatActivity {
                 row,
                 rowParams
         );
+    }
+
+
+    // =========================================================
+    // PRODUCT ICON
+    // =========================================================
+
+    private String getProductIcon(
+            String itemName
+    ) {
+
+        String name =
+                itemName.toLowerCase().trim();
+
+
+        if (name.contains("milk")) {
+            return "🥛";
+        }
+
+        if (name.contains("bread")) {
+            return "🍞";
+        }
+
+        if (name.contains("apple")) {
+            return "🍎";
+        }
+
+        if (name.contains("banana")) {
+            return "🍌";
+        }
+
+        if (name.contains("orange")) {
+            return "🍊";
+        }
+
+        if (name.contains("tomato")) {
+            return "🍅";
+        }
+
+        if (name.contains("potato")) {
+            return "🥔";
+        }
+
+        if (name.contains("carrot")) {
+            return "🥕";
+        }
+
+        if (name.contains("egg")) {
+            return "🥚";
+        }
+
+        if (name.contains("rice")) {
+            return "🍚";
+        }
+
+        if (name.contains("chips")) {
+            return "🍟";
+        }
+
+        if (name.contains("juice")) {
+            return "🧃";
+        }
+
+        if (name.contains("water")) {
+            return "💧";
+        }
+
+        if (name.contains("soap")) {
+            return "🧼";
+        }
+
+        if (name.contains("cake")) {
+            return "🍰";
+        }
+
+        return "🛍️";
     }
 
 

@@ -1,171 +1,245 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#F7FBFA">
+    android:background="#FFF9EF">
 
-    <!-- ===================================================== -->
-    <!-- HEADER -->
-    <!-- ===================================================== -->
+    <!-- ================= HEADER ================= -->
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:padding="20dp"
-        android:background="#087F72">
+        android:layout_height="210dp"
+        android:background="#DCEFC1"
+        android:padding="16dp">
 
+        <!-- Decorative shopping emoji -->
+        <TextView
+            android:id="@+id/tvShoppingIcon"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:text="🛒"
+            android:textSize="58sp" />
+
+        <!-- Main title -->
         <TextView
             android:id="@+id/tvShoppingListTitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="🛍  My Shopping List"
-            android:textColor="@android:color/white"
-            android:textSize="23sp"
-            android:textStyle="bold"/>
-
-        <TextView
-            android:id="@+id/tvListCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="25dp"
+            android:fontFamily="sans"
+            android:gravity="center"
+            android:text="My Shopping\nList ♡"
+            android:textColor="#073F35"
+            android:textSize="32sp"
+            android:textStyle="bold" />
+
+        <!-- Item count -->
+        <TextView
+            android:id="@+id/tvListCount"
+            android:layout_width="105dp"
+            android:layout_height="55dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/shopping_count_bg"
+            android:gravity="center"
             android:text="0 items"
-            android:textColor="@android:color/white"
-            android:textSize="14sp"/>
-    </LinearLayout>
+            android:textColor="#174D3C"
+            android:textSize="19sp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
 
 
-    <!-- ===================================================== -->
-    <!-- INPUT AREA -->
-    <!-- ===================================================== -->
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="18dp"
-        android:background="@android:color/white">
-
-        <EditText
-            android:id="@+id/etItemName"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:hint="Enter item name"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:textSize="16sp"
-            android:singleLine="true"
-            android:background="@drawable/shopping_input_bg"/>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginTop="12dp">
-
-            <EditText
-                android:id="@+id/etQuantity"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:hint="Quantity"
-                android:text="1"
-                android:inputType="number"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:textSize="16sp"
-                android:singleLine="true"
-                android:background="@drawable/shopping_input_bg"/>
-
-            <Button
-                android:id="@+id/btnAddItem"
-                android:layout_width="140dp"
-                android:layout_height="50dp"
-                android:layout_marginStart="10dp"
-                android:text="＋ Add"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                android:textColor="@android:color/white"
-                android:background="@drawable/shopping_add_button"/>
-        </LinearLayout>
-
-    </LinearLayout>
-
-
-    <!-- ===================================================== -->
-    <!-- LIST -->
-    <!-- ===================================================== -->
+    <!-- ================= CONTENT ================= -->
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:paddingStart="18dp"
-        android:paddingEnd="18dp"
-        android:paddingTop="16dp"
-        android:paddingBottom="10dp">
+        android:fillViewport="true"
+        android:overScrollMode="never">
 
         <LinearLayout
-            android:id="@+id/shoppingListContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <!-- Item input -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@drawable/shopping_input_bg"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp">
+
+                <TextView
+                    android:layout_width="45dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="🛍️"
+                    android:textSize="30sp" />
+
+                <EditText
+                    android:id="@+id/etItemName"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:hint="Enter item name"
+                    android:paddingStart="8dp"
+                    android:singleLine="true"
+                    android:textColor="#174D3C"
+                    android:textColorHint="#8A8A8A"
+                    android:textSize="19sp" />
+
+            </LinearLayout>
+
+
+            <!-- Quantity + Add -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="75dp"
+                android:layout_marginTop="14dp"
+                android:orientation="horizontal">
+
+                <!-- Quantity box -->
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/shopping_quantity_bg"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/btnMinus"
+                        android:layout_width="52dp"
+                        android:layout_height="52dp"
+                        android:gravity="center"
+                        android:text="−"
+                        android:textColor="#FFFFFF"
+                        android:textSize="30sp"
+                        android:textStyle="bold"
+                        android:background="@drawable/shopping_circle_green" />
+
+                    <EditText
+                        android:id="@+id/etQuantity"
+                        android:layout_width="55dp"
+                        android:layout_height="match_parent"
+                        android:background="@android:color/transparent"
+                        android:gravity="center"
+                        android:inputType="number"
+                        android:text="1"
+                        android:textColor="#174D3C"
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/btnPlus"
+                        android:layout_width="52dp"
+                        android:layout_height="52dp"
+                        android:gravity="center"
+                        android:text="+"
+                        android:textColor="#FFFFFF"
+                        android:textSize="30sp"
+                        android:textStyle="bold"
+                        android:background="@drawable/shopping_circle_green" />
+
+                </LinearLayout>
+
+
+                <!-- Add button -->
+
+                <TextView
+                    android:id="@+id/btnAddItem"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginStart="14dp"
+                    android:background="@drawable/shopping_add_button"
+                    android:gravity="center"
+                    android:text="+  Add"
+                    android:textColor="#FFFFFF"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+
+            <!-- Empty message -->
 
             <TextView
                 android:id="@+id/tvEmptyMessage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
                 android:gravity="center"
-                android:padding="40dp"
-                android:text="Your shopping list is empty.\n\nAdd items you want to buy."
-                android:textColor="#66737A"
-                android:textSize="16sp"/>
+                android:text="Your shopping list is empty 🛒"
+                android:textColor="#6E7D72"
+                android:textSize="18sp"
+                android:visibility="gone" />
+
+
+            <!-- Shopping list items -->
+
+            <LinearLayout
+                android:id="@+id/shoppingListContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:orientation="vertical" />
 
         </LinearLayout>
 
     </ScrollView>
 
 
-    <!-- ===================================================== -->
-    <!-- BOTTOM BUTTONS -->
-    <!-- ===================================================== -->
+    <!-- ================= BOTTOM BUTTONS ================= -->
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="90dp"
         android:orientation="horizontal"
-        android:padding="14dp"
-        android:background="@android:color/white">
+        android:padding="10dp"
+        android:background="#FFFDFC">
 
-        <Button
+        <TextView
             android:id="@+id/btnBackHome"
             android:layout_width="0dp"
-            android:layout_height="52dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="← Home"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:textColor="#087F72"
-            android:background="@drawable/shopping_back_button"/>
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/shopping_back_button"
+            android:gravity="center"
+            android:text="🏠  ← Home"
+            android:textColor="#403080"
+            android:textSize="19sp"
+            android:textStyle="bold" />
 
-        <Button
+        <TextView
             android:id="@+id/btnClearList"
             android:layout_width="0dp"
-            android:layout_height="52dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:layout_marginStart="10dp"
-            android:text="🗑 Clear List"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:textColor="@android:color/white"
+            android:layout_marginStart="8dp"
             android:background="@drawable/shopping_clear_button"
-            android:visibility="gone"/>
+            android:gravity="center"
+            android:text="🗑️  Clear List"
+            android:textColor="#A33D62"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 

@@ -210,6 +210,18 @@ public class ReceiptActivity extends AppCompatActivity {
         );
 
         // ==========================================
+        // SAVE PURCHASE HISTORY
+        // ==========================================
+
+        PurchaseHistoryActivity.savePurchase(
+                ReceiptActivity.this,
+                receiptNumber,
+                itemCount,
+                total,
+                paymentMethod
+        );
+
+        // ==========================================
         // DONE
         // ==========================================
 
@@ -220,20 +232,7 @@ public class ReceiptActivity extends AppCompatActivity {
                     ReceiptActivity.this
             );
 
-            Intent intent =
-                    new Intent(
-                            ReceiptActivity.this,
-                            HomeActivity.class
-                    );
-
-            intent.addFlags(
-                    Intent.FLAG_ACTIVITY_CLEAR_TOP
-                            | Intent.FLAG_ACTIVITY_SINGLE_TOP
-            );
-
-            startActivity(intent);
-
-            finish();
+            goToHome();
         });
 
         // ==========================================
@@ -247,20 +246,29 @@ public class ReceiptActivity extends AppCompatActivity {
                     ReceiptActivity.this
             );
 
-            Intent intent =
-                    new Intent(
-                            ReceiptActivity.this,
-                            HomeActivity.class
-                    );
-
-            intent.addFlags(
-                    Intent.FLAG_ACTIVITY_CLEAR_TOP
-                            | Intent.FLAG_ACTIVITY_SINGLE_TOP
-            );
-
-            startActivity(intent);
-
-            finish();
+            goToHome();
         });
+    }
+
+    // ==============================================
+    // GO TO HOME
+    // ==============================================
+
+    private void goToHome() {
+
+        Intent intent =
+                new Intent(
+                        ReceiptActivity.this,
+                        HomeActivity.class
+                );
+
+        intent.addFlags(
+                Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        | Intent.FLAG_ACTIVITY_SINGLE_TOP
+        );
+
+        startActivity(intent);
+
+        finish();
     }
 }

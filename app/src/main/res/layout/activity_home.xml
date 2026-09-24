@@ -1,851 +1,808 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/main"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:background="#F7F8FC">
+    android:orientation="vertical"
+    android:background="#FFFDF8">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="18dp">
-
-        <!-- ===================================================== -->
-        <!-- HEADER -->
-        <!-- ===================================================== -->
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:overScrollMode="never">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingTop="8dp"
-            android:paddingBottom="12dp">
+            android:orientation="vertical"
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="20dp">
 
-            <TextView
-                android:id="@+id/tvProfileCircle"
-                android:layout_width="58dp"
-                android:layout_height="58dp"
-                android:background="@drawable/home_profile_bg"
-                android:gravity="center"
-                android:text="SM"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+            <!-- ================================================= -->
+            <!-- HEADER -->
+            <!-- ================================================= -->
 
             <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="12dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Welcome back,"
-                    android:textColor="#555555"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/tvUserName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="SmartMart User 👋"
-                    android:textColor="#111936"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tvPoints"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/home_points_bg"
-                    android:paddingLeft="12dp"
-                    android:paddingTop="6dp"
-                    android:paddingRight="12dp"
-                    android:paddingBottom="6dp"
-                    android:text="⭐ Smart Points   120"
-                    android:textColor="#4267E8"
-                    android:textSize="13sp" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-
-        <!-- ===================================================== -->
-        <!-- SELECTED STORE -->
-        <!-- ===================================================== -->
-
-        <LinearLayout
-            android:id="@+id/layoutSelectedStore"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/home_store_bg"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="16dp">
-
-            <TextView
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:gravity="center"
-                android:text="🏪"
-                android:textSize="27sp" />
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="10dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Selected Store"
-                    android:textColor="#666666"
-                    android:textSize="13sp" />
-
-                <TextView
-                    android:id="@+id/tvStoreName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:text="SmartMart+ Main Store"
-                    android:textColor="#111936"
-                    android:textSize="17sp"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/tvChangeStore"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Change Store"
-                android:textColor="#5632C7"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-        </LinearLayout>
-
-
-        <!-- ===================================================== -->
-        <!-- BEFORE ENTERING STORE -->
-        <!-- ===================================================== -->
-
-        <TextView
-            android:id="@+id/tvBeforeStoreTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="🛍  Before you enter the store"
-            android:textColor="#172033"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/tvBeforeStoreSubtitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="Plan ahead for a smarter shopping experience."
-            android:textColor="#666666"
-            android:textSize="14sp" />
-
-
-        <!-- ===================================================== -->
-        <!-- SHOPPING LIST + PURCHASE HISTORY -->
-        <!-- ===================================================== -->
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
-            android:orientation="horizontal">
-
-            <!-- SHOPPING LIST -->
-
-            <LinearLayout
-                android:id="@+id/cardShoppingList"
-                android:layout_width="0dp"
-                android:layout_height="145dp"
-                android:layout_weight="1"
-                android:layout_marginEnd="5dp"
-                android:background="@drawable/home_card_bg"
-                android:clickable="true"
-                android:focusable="true"
+                android:layout_width="match_parent"
+                android:layout_height="190dp"
                 android:orientation="vertical"
+                android:paddingStart="20dp"
+                android:paddingTop="28dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tvUserName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Welcome back, SmartMart User"
+                            android:textColor="#0A4350"
+                            android:textSize="27sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="Good things, everyday! ♡"
+                            android:textColor="#164F59"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tvProfileCircle"
+                        android:layout_width="58dp"
+                        android:layout_height="58dp"
+                        android:gravity="center"
+                        android:text="SM"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:background="@drawable/home_profile_bg" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:gravity="center"
+                        android:text="★"
+                        android:textColor="#F5BD1F"
+                        android:textSize="27sp" />
+
+                    <TextView
+                        android:id="@+id/tvPoints"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:gravity="center"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="10dp"
+                        android:text="⭐ Smart Points 120"
+                        android:textColor="#173E4C"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+            <!-- ================================================= -->
+            <!-- SELECTED STORE -->
+            <!-- ================================================= -->
+
+            <LinearLayout
+                android:id="@+id/layoutSelectedStore"
+                android:layout_width="match_parent"
+                android:layout_height="112dp"
+                android:background="@drawable/home_card_bg"
+                android:backgroundTint="#EEE5FF"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
                 android:padding="12dp">
 
                 <TextView
-                    android:layout_width="42dp"
-                    android:layout_height="42dp"
-                    android:background="@drawable/home_green_circle"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
                     android:gravity="center"
-                    android:text="📝"
-                    android:textSize="20sp" />
+                    android:text="🏪"
+                    android:textSize="36sp"
+                    android:background="@drawable/home_purple_circle" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="12dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Selected Store"
+                        android:textColor="#51469A"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/tvStoreName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:text="SmartMart+ Main Store"
+                        android:textColor="#17156B"
+                        android:textSize="17sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvChangeStore"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Change Store ›"
+                        android:textColor="#5635D0"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="65dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="My Shopping List"
-                    android:textColor="#172033"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tvListCount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="0 items"
-                    android:textColor="#666666"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="View List  ›"
-                    android:textColor="#27956F"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
+                    android:gravity="center"
+                    android:text="📍&#10;Your favourite&#10;store ♡"
+                    android:textColor="#26205F"
+                    android:textSize="11sp" />
 
             </LinearLayout>
 
 
-            <!-- PURCHASE HISTORY -->
+            <!-- ================================================= -->
+            <!-- BEFORE STORE -->
+            <!-- ================================================= -->
 
             <LinearLayout
-                android:id="@+id/cardPurchaseHistory"
-                android:layout_width="0dp"
-                android:layout_height="145dp"
-                android:layout_weight="1"
-                android:layout_marginStart="5dp"
-                android:background="@drawable/home_card_bg"
-                android:clickable="true"
-                android:focusable="true"
-                android:orientation="vertical"
-                android:padding="12dp">
+                android:id="@+id/layoutBeforeStore"
+                android:layout_width="match_parent"
+                android:layout_height="115dp"
+                android:layout_marginTop="14dp"
+                android:background="#D8F4E8"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="14dp">
 
                 <TextView
-                    android:layout_width="42dp"
-                    android:layout_height="42dp"
-                    android:background="@drawable/home_blue_circle"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
                     android:gravity="center"
-                    android:text="📜"
-                    android:textSize="20sp" />
+                    android:text="🛍️"
+                    android:textSize="37sp"
+                    android:background="@drawable/home_green_circle" />
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Purchase History"
-                    android:textColor="#172033"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:layout_weight="1"
+                    android:layout_marginStart="13dp"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/tvOrderCount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="0 Orders"
-                    android:textColor="#666666"
-                    android:textSize="12sp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Before you enter the store"
+                        android:textColor="#075448"
+                        android:textSize="19sp"
+                        android:textStyle="bold" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="View History  ›"
-                    android:textColor="#4169D8"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:text="Plan ahead for a smarter&#10;shopping experience."
+                        android:textColor="#4B756B"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
-        </LinearLayout>
 
-
-        <!-- ===================================================== -->
-        <!-- OFFERS + MONTHLY SUMMARY -->
-        <!-- ===================================================== -->
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal">
-
-            <!-- OFFERS -->
+            <!-- ================================================= -->
+            <!-- INSIDE STORE -->
+            <!-- ================================================= -->
 
             <LinearLayout
-                android:id="@+id/cardOffers"
-                android:layout_width="0dp"
-                android:layout_height="145dp"
-                android:layout_weight="1"
-                android:layout_marginEnd="5dp"
-                android:background="@drawable/home_card_bg"
-                android:clickable="true"
-                android:focusable="true"
+                android:id="@+id/layoutInsideStore"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
                 android:orientation="vertical"
-                android:padding="12dp">
+                android:visibility="gone">
+
+                <!-- Inside Store Confirmation -->
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="82dp"
+                    android:background="#D5F5E8"
+                    android:gravity="center_vertical"
+                    android:paddingStart="18dp">
+
+                    <TextView
+                        android:layout_width="54dp"
+                        android:layout_height="54dp"
+                        android:gravity="center"
+                        android:text="✓"
+                        android:textColor="#FFFFFF"
+                        android:textSize="34sp"
+                        android:textStyle="bold"
+                        android:background="@drawable/home_green_circle" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="13dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="You are inside the store!"
+                            android:textColor="#075448"
+                            android:textSize="19sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:text="Self-billing features are now available."
+                            android:textColor="#4B756B"
+                            android:textSize="13sp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+                <!-- Inside Store Title -->
 
                 <TextView
-                    android:layout_width="42dp"
-                    android:layout_height="42dp"
-                    android:background="@drawable/home_pink_circle"
-                    android:gravity="center"
-                    android:text="%"
-                    android:textColor="#E94B73"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:text="Once you're inside the store"
+                    android:textColor="#0B4050"
                     android:textSize="22sp"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Offers and deals"
-                    android:textColor="#172033"
-                    android:textSize="14sp"
+
+                <!-- Scan Product -->
+
+                <Button
+                    android:id="@+id/btnScanner"
+                    android:layout_width="match_parent"
+                    android:layout_height="62dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/home_card_bg"
+                    android:backgroundTint="#C9F3DF"
+                    android:text="📷   Scan Product                                      ›"
+                    android:textAllCaps="false"
+                    android:textColor="#08765A"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/tvOfferCount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="0 Active Offers"
-                    android:textColor="#666666"
-                    android:textSize="12sp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <!-- My Cart -->
+
+                <Button
+                    android:id="@+id/btnCart"
+                    android:layout_width="match_parent"
+                    android:layout_height="62dp"
                     android:layout_marginTop="8dp"
-                    android:text="View Offers  ›"
-                    android:textColor="#D94C70"
-                    android:textSize="13sp"
+                    android:background="@drawable/home_card_bg"
+                    android:backgroundTint="#E2D2FF"
+                    android:text="🛒   My Cart                                            ›"
+                    android:textAllCaps="false"
+                    android:textColor="#5030B7"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+
+                <!-- Store Map -->
+
+                <Button
+                    android:id="@+id/btnMap"
+                    android:layout_width="match_parent"
+                    android:layout_height="62dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/home_card_bg"
+                    android:backgroundTint="#FFE0AD"
+                    android:text="🗺️   Store Map                                      ›"
+                    android:textAllCaps="false"
+                    android:textColor="#A84D0C"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+
+                <!-- Billing -->
+
+                <Button
+                    android:id="@+id/btnBilling"
+                    android:layout_width="match_parent"
+                    android:layout_height="62dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/home_card_bg"
+                    android:backgroundTint="#C9E7FA"
+                    android:text="🧾   Billing                                            ›"
+                    android:textAllCaps="false"
+                    android:textColor="#145D9E"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+
+                <!-- Payment -->
+
+                <Button
+                    android:id="@+id/btnPayment"
+                    android:layout_width="match_parent"
+                    android:layout_height="62dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/home_card_bg"
+                    android:backgroundTint="#F9CFE0"
+                    android:text="💳   Payment                                         ›"
+                    android:textAllCaps="false"
+                    android:textColor="#A61559"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
             </LinearLayout>
 
 
-            <!-- MONTHLY SUMMARY -->
+            <!-- ================================================= -->
+            <!-- YOUR SMARTMART+ -->
+            <!-- ================================================= -->
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:text="Your SmartMart+"
+                android:textColor="#0B4050"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:text="Plan your shopping and keep track of your purchases."
+                android:textColor="#52717C"
+                android:textSize="14sp" />
+
+
+            <!-- ================================================= -->
+            <!-- SHOPPING LIST -->
+            <!-- ================================================= -->
 
             <LinearLayout
-                android:id="@+id/cardSummary"
-                android:layout_width="0dp"
-                android:layout_height="145dp"
-                android:layout_weight="1"
-                android:layout_marginStart="5dp"
+                android:id="@+id/cardShoppingList"
+                android:layout_width="match_parent"
+                android:layout_height="92dp"
+                android:layout_marginTop="12dp"
                 android:background="@drawable/home_card_bg"
+                android:backgroundTint="#FFF0C7"
                 android:clickable="true"
                 android:focusable="true"
-                android:orientation="vertical"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
                 android:padding="12dp">
 
                 <TextView
-                    android:layout_width="42dp"
-                    android:layout_height="42dp"
-                    android:background="@drawable/home_purple_circle"
-                    android:gravity="center"
-                    android:text="📊"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Monthly Summary"
-                    android:textColor="#172033"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tvMonthlySpent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="Spent ₹0"
-                    android:textColor="#666666"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="View Analytics  ›"
-                    android:textColor="#673AB7"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-
-        <!-- ===================================================== -->
-        <!-- STORE QR SECTION -->
-        <!-- ===================================================== -->
-
-        <LinearLayout
-            android:id="@+id/layoutStoreQR"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="22dp"
-            android:background="@drawable/home_qr_bg"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="16dp">
-
-            <TextView
-                android:layout_width="65dp"
-                android:layout_height="65dp"
-                android:gravity="center"
-                android:text="▣"
-                android:textColor="#62E6B0"
-                android:textSize="45sp" />
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="12dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Ready to start shopping?"
-                    android:textColor="#FFFFFF"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="Scan the store entrance QR code to unlock in-store features."
-                    android:textColor="#E3DFFF"
-                    android:textSize="12sp" />
-
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/btnStoreQR"
-                android:layout_width="110dp"
-                android:layout_height="52dp"
-                android:background="@drawable/home_white_button"
-                android:text="Scan Store QR"
-                android:textAllCaps="false"
-                android:textColor="#4B25B5"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-
-        </LinearLayout>
-
-
-        <!-- ===================================================== -->
-        <!-- INSIDE STORE -->
-        <!-- ===================================================== -->
-
-        <TextView
-            android:id="@+id/tvInsideStoreTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="🏪  Once you're inside the store"
-            android:textColor="#172033"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/tvInsideStoreSubtitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="Access all self-billing features."
-            android:textColor="#666666"
-            android:textSize="14sp" />
-
-
-        <!-- ===================================================== -->
-        <!-- STORE FEATURES -->
-        <!-- ===================================================== -->
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
-            android:orientation="horizontal">
-
-            <!-- SCAN PRODUCT -->
-
-            <LinearLayout
-                android:id="@+id/btnScanner"
-                android:layout_width="0dp"
-                android:layout_height="125dp"
-                android:layout_weight="1"
-                android:layout_marginEnd="4dp"
-                android:background="@drawable/home_store_card"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="8dp">
-
-                <TextView
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
-                    android:gravity="center"
-                    android:text="▥"
-                    android:textColor="#33B8FF"
-                    android:textSize="30sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Scan Product"
-                    android:textColor="#172033"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Scan and Add"
-                    android:textColor="#777777"
-                    android:textSize="10sp" />
-
-            </LinearLayout>
-
-
-            <!-- CART -->
-
-            <LinearLayout
-                android:id="@+id/btnCart"
-                android:layout_width="0dp"
-                android:layout_height="125dp"
-                android:layout_weight="1"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
-                android:background="@drawable/home_store_card"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="8dp">
-
-                <TextView
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
+                    android:layout_width="62dp"
+                    android:layout_height="62dp"
                     android:gravity="center"
                     android:text="🛒"
-                    android:textSize="27sp" />
+                    android:textSize="31sp"
+                    android:background="@drawable/home_green_circle" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="12dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Shopping List"
+                        android:textColor="#075448"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <!-- DYNAMIC COUNT -->
+
+                    <TextView
+                        android:id="@+id/tvShoppingListCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0 items"
+                        android:textColor="#57746D"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="30dp"
                     android:layout_height="wrap_content"
-                    android:text="My Cart"
-                    android:textColor="#172033"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Manage cart"
-                    android:textColor="#777777"
-                    android:textSize="10sp" />
+                    android:text="›"
+                    android:textColor="#07805E"
+                    android:textSize="31sp" />
 
             </LinearLayout>
 
 
-            <!-- STORE MAP -->
+            <!-- ================================================= -->
+            <!-- PURCHASE HISTORY -->
+            <!-- ================================================= -->
 
             <LinearLayout
-                android:id="@+id/btnMap"
-                android:layout_width="0dp"
-                android:layout_height="125dp"
-                android:layout_weight="1"
-                android:layout_marginStart="4dp"
-                android:background="@drawable/home_store_card"
+                android:id="@+id/cardPurchaseHistory"
+                android:layout_width="match_parent"
+                android:layout_height="92dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/home_card_bg"
+                android:backgroundTint="#D8EEFF"
                 android:clickable="true"
                 android:focusable="true"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="8dp">
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="12dp">
 
                 <TextView
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
-                    android:gravity="center"
-                    android:text="📍"
-                    android:textSize="27sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Store Map"
-                    android:textColor="#172033"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Find products"
-                    android:textColor="#777777"
-                    android:textSize="10sp" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-
-        <!-- ===================================================== -->
-        <!-- BILLING + PAYMENT -->
-        <!-- ===================================================== -->
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal">
-
-            <!-- BILLING -->
-
-            <LinearLayout
-                android:id="@+id/btnBilling"
-                android:layout_width="0dp"
-                android:layout_height="115dp"
-                android:layout_weight="1"
-                android:layout_marginEnd="5dp"
-                android:background="@drawable/home_store_card"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="45dp"
-                    android:layout_height="40dp"
+                    android:layout_width="62dp"
+                    android:layout_height="62dp"
                     android:gravity="center"
                     android:text="🧾"
-                    android:textSize="25sp" />
+                    android:textSize="31sp"
+                    android:background="@drawable/home_blue_circle" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="12dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Purchase History"
+                        android:textColor="#174DA3"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <!-- DYNAMIC ORDER COUNT -->
+
+                    <TextView
+                        android:id="@+id/tvPurchaseHistoryCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0 Orders"
+                        android:textColor="#58718A"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="30dp"
                     android:layout_height="wrap_content"
-                    android:text="Billing"
-                    android:textColor="#172033"
-                    android:textStyle="bold" />
+                    android:text="›"
+                    android:textColor="#1769AA"
+                    android:textSize="31sp" />
 
             </LinearLayout>
 
 
-            <!-- PAYMENT -->
+            <!-- ================================================= -->
+            <!-- OFFERS -->
+            <!-- ================================================= -->
 
             <LinearLayout
-                android:id="@+id/btnPayment"
-                android:layout_width="0dp"
-                android:layout_height="115dp"
-                android:layout_weight="1"
-                android:layout_marginStart="5dp"
-                android:background="@drawable/home_store_card"
+                android:id="@+id/cardOffers"
+                android:layout_width="match_parent"
+                android:layout_height="92dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/home_offer_bg"
                 android:clickable="true"
                 android:focusable="true"
-                android:gravity="center"
-                android:orientation="vertical">
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="12dp">
 
                 <TextView
-                    android:layout_width="45dp"
-                    android:layout_height="40dp"
+                    android:layout_width="62dp"
+                    android:layout_height="62dp"
                     android:gravity="center"
-                    android:text="💳"
-                    android:textSize="25sp" />
+                    android:text="🎁"
+                    android:textSize="31sp"
+                    android:background="@drawable/home_pink_circle" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="12dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Offers"
+                        android:textColor="#A30D4F"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0 Active Offers"
+                        android:textColor="#8B5A6F"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="30dp"
                     android:layout_height="wrap_content"
-                    android:text="Payment"
-                    android:textColor="#172033"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
+                    android:text="›"
+                    android:textColor="#C2185B"
+                    android:textSize="31sp" />
 
             </LinearLayout>
 
-        </LinearLayout>
 
-
-        <!-- ===================================================== -->
-        <!-- QUICK ACCESS -->
-        <!-- ===================================================== -->
-
-        <TextView
-            android:id="@+id/tvQuickAccess"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="Quick Access"
-            android:textColor="#172033"
-            android:textSize="19sp"
-            android:textStyle="bold" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/btnHelp"
-                android:layout_width="0dp"
-                android:layout_height="75dp"
-                android:layout_weight="1"
-                android:layout_marginEnd="4dp"
-                android:background="@drawable/home_small_button"
-                android:text="Help&#10;&amp; Support"
-                android:textAllCaps="false"
-                android:textColor="#333333"
-                android:textSize="11sp" />
-
-            <Button
-                android:id="@+id/btnEmergency"
-                android:layout_width="0dp"
-                android:layout_height="75dp"
-                android:layout_weight="1"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
-                android:background="@drawable/home_small_button"
-                android:text="Emergency"
-                android:textAllCaps="false"
-                android:textColor="#333333"
-                android:textSize="11sp" />
-
-            <Button
-                android:id="@+id/btnLostFound"
-                android:layout_width="0dp"
-                android:layout_height="75dp"
-                android:layout_weight="1"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
-                android:background="@drawable/home_small_button"
-                android:text="Lost &amp;&#10;Found"
-                android:textAllCaps="false"
-                android:textColor="#333333"
-                android:textSize="11sp" />
-
-            <Button
-                android:id="@+id/btnReport"
-                android:layout_width="0dp"
-                android:layout_height="75dp"
-                android:layout_weight="1"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
-                android:background="@drawable/home_small_button"
-                android:text="Report&#10;Activity"
-                android:textAllCaps="false"
-                android:textColor="#333333"
-                android:textSize="11sp" />
-
-        </LinearLayout>
-
-
-        <!-- ===================================================== -->
-        <!-- OFFER BANNER -->
-        <!-- ===================================================== -->
-
-        <LinearLayout
-            android:id="@+id/layoutOfferBanner"
-            android:layout_width="match_parent"
-            android:layout_height="90dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/home_offer_bg"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="14dp">
-
-            <TextView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:gravity="center"
-                android:text="🏷"
-                android:textSize="28sp" />
+            <!-- ================================================= -->
+            <!-- MONTHLY SUMMARY -->
+            <!-- ================================================= -->
 
             <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:id="@+id/cardSummary"
+                android:layout_width="match_parent"
+                android:layout_height="92dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/home_card_bg"
+                android:backgroundTint="#E8DDFF"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="12dp">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="62dp"
+                    android:layout_height="62dp"
+                    android:gravity="center"
+                    android:text="📊"
+                    android:textSize="31sp"
+                    android:background="@drawable/home_purple_circle" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="Exclusive for you!"
-                    android:textColor="#3C8C72"
-                    android:textSize="12sp" />
+                    android:layout_weight="1"
+                    android:layout_marginStart="12dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Monthly Summary"
+                        android:textColor="#4E2DA8"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Spent ₹0"
+                        android:textColor="#75659B"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="30dp"
                     android:layout_height="wrap_content"
-                    android:text="Get 5% extra off on self billing"
-                    android:textColor="#172033"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Save time • Shop Smart • Earn More"
-                    android:textColor="#666666"
-                    android:textSize="10sp" />
+                    android:text="›"
+                    android:textColor="#6840C2"
+                    android:textSize="31sp" />
 
             </LinearLayout>
 
+
+            <!-- ================================================= -->
+            <!-- STORE QR -->
+            <!-- ================================================= -->
+
+            <LinearLayout
+                android:id="@+id/layoutStoreQR"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:layout_marginTop="14dp"
+                android:background="@drawable/home_qr_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="15dp">
+
+                <TextView
+                    android:layout_width="55dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="▦"
+                    android:textColor="#FFFFFF"
+                    android:textSize="30sp" />
+
+                <Button
+                    android:id="@+id/btnStoreQR"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:gravity="center_vertical"
+                    android:text="Scan Store Entrance QR   ›"
+                    android:textAllCaps="false"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+
+            <!-- ================================================= -->
+            <!-- QUICK ACCESS -->
+            <!-- ================================================= -->
+
+            <LinearLayout
+                android:id="@+id/layoutQuickAccess"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tvQuickAccess"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="⚡ Quick Access"
+                    android:textColor="#0B4050"
+                    android:textSize="21sp"
+                    android:textStyle="bold" />
+
+
+                <!-- QUICK ACCESS ROW 1 -->
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="65dp"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btnHelp"
+                        android:layout_width="0dp"
+                        android:layout_height="58dp"
+                        android:layout_weight="1"
+                        android:layout_marginTop="7dp"
+                        android:layout_marginEnd="4dp"
+                        android:background="@drawable/home_small_button"
+                        android:backgroundTint="#D5ECFF"
+                        android:text="🎧  Help &amp;&#10;Support   ›"
+                        android:textAllCaps="false"
+                        android:textColor="#1769AA"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/btnEmergency"
+                        android:layout_width="0dp"
+                        android:layout_height="58dp"
+                        android:layout_weight="1"
+                        android:layout_marginTop="7dp"
+                        android:layout_marginStart="4dp"
+                        android:background="@drawable/home_small_button"
+                        android:backgroundTint="#FFD6D6"
+                        android:text="🚨  Emergency&#10;Assistance   ›"
+                        android:textAllCaps="false"
+                        android:textColor="#C62828"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+
+                <!-- QUICK ACCESS ROW 2 -->
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="65dp"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btnLostFound"
+                        android:layout_width="0dp"
+                        android:layout_height="58dp"
+                        android:layout_weight="1"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginEnd="4dp"
+                        android:background="@drawable/home_small_button"
+                        android:backgroundTint="#FFF1B8"
+                        android:text="🔎  Lost &amp;&#10;Found   ›"
+                        android:textAllCaps="false"
+                        android:textColor="#947000"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/btnReport"
+                        android:layout_width="0dp"
+                        android:layout_height="58dp"
+                        android:layout_weight="1"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginStart="4dp"
+                        android:background="@drawable/home_small_button"
+                        android:backgroundTint="#E8D9FF"
+                        android:text="📝  Report an&#10;Activity   ›"
+                        android:textAllCaps="false"
+                        android:textColor="#7040A8"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+            <!-- ================================================= -->
+            <!-- LOGOUT -->
+            <!-- ================================================= -->
+
             <Button
-                android:id="@+id/btnViewOffers"
-                android:layout_width="90dp"
-                android:layout_height="42dp"
-                android:background="@drawable/home_offer_button"
-                android:text="View Offers"
+                android:id="@+id/btnLogout"
+                android:layout_width="match_parent"
+                android:layout_height="58dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/home_logout_bg"
+                android:text="⇥   Logout"
                 android:textAllCaps="false"
-                android:textColor="#31876C"
-                android:textSize="11sp"
+                android:textColor="#D51D58"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
         </LinearLayout>
 
+    </ScrollView>
 
-        <!-- ===================================================== -->
-        <!-- LOGOUT -->
-        <!-- ===================================================== -->
-
-        <Button
-            android:id="@+id/btnLogout"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/home_logout_bg"
-            android:text="Logout"
-            android:textAllCaps="false"
-            android:textColor="#FFFFFF"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-    </LinearLayout>
-
-</ScrollView>
+</LinearLayout>

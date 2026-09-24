@@ -2,141 +2,52 @@ package com.example.smartmartplus;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.Locale;
 
 public class HomeActivity extends AppCompatActivity {
 
-    // =========================================================
-    // MAIN LAYOUT
-    // =========================================================
+    private static final String PREF_NAME = "SmartMartPrefs";
 
-    private ScrollView main;
+    private SharedPreferences prefs;
 
-
-    // =========================================================
-    // HEADER
-    // =========================================================
-
-    private TextView tvProfileCircle;
     private TextView tvUserName;
+    private TextView tvProfileCircle;
     private TextView tvPoints;
-
-
-    // =========================================================
-    // SELECTED STORE
-    // =========================================================
-
-    private LinearLayout layoutSelectedStore;
     private TextView tvStoreName;
-    private TextView tvChangeStore;
 
+    private TextView tvShoppingListCount;
+    private TextView tvPurchaseHistoryCount;
 
-    // =========================================================
-    // BEFORE STORE
-    // =========================================================
-
-    private TextView tvBeforeStoreTitle;
-    private TextView tvBeforeStoreSubtitle;
-
-    private LinearLayout cardShoppingList;
-    private LinearLayout cardPurchaseHistory;
-    private LinearLayout cardOffers;
-    private LinearLayout cardSummary;
-
-    private TextView tvListCount;
-    private TextView tvOrderCount;
-    private TextView tvOfferCount;
-    private TextView tvMonthlySpent;
-
-
-    // =========================================================
-    // STORE QR
-    // =========================================================
-
+    private LinearLayout layoutBeforeStore;
     private LinearLayout layoutStoreQR;
+    private LinearLayout layoutInsideStore;
+    private LinearLayout layoutQuickAccess;
+
     private Button btnStoreQR;
-
-
-    // =========================================================
-    // INSIDE STORE
-    // =========================================================
-
-    private TextView tvInsideStoreTitle;
-    private TextView tvInsideStoreSubtitle;
-
-    private LinearLayout btnScanner;
-    private LinearLayout btnCart;
-    private LinearLayout btnMap;
-    private LinearLayout btnBilling;
-    private LinearLayout btnPayment;
-
-
-    // =========================================================
-    // QUICK ACCESS
-    // =========================================================
-
-    private TextView tvQuickAccess;
+    private Button btnScanner;
+    private Button btnCart;
+    private Button btnMap;
+    private Button btnBilling;
+    private Button btnPayment;
 
     private Button btnHelp;
     private Button btnEmergency;
     private Button btnLostFound;
     private Button btnReport;
 
-
-    // =========================================================
-    // OFFER BANNER
-    // =========================================================
-
-    private LinearLayout layoutOfferBanner;
-    private Button btnViewOffers;
-
-
-    // =========================================================
-    // LOGOUT
-    // =========================================================
-
     private Button btnLogout;
-
-
-    // =========================================================
-    // STORE STATUS
-    // =========================================================
-
-    private boolean insideStore = false;
-
-    private static final String PREF_NAME =
-            "SmartMartPrefs";
-
-    private static final String KEY_STORE_VERIFIED =
-            "STORE_VERIFIED";
-
-    private static final String KEY_STORE_ID =
-            "STORE_ID";
-
-    private static final String KEY_STORE_NAME =
-            "STORE_NAME";
-
-    private static final String KEY_STORE_ADDRESS =
-            "STORE_ADDRESS";
-
-    private static final String KEY_USER_NAME =
-            "USER_NAME";
-
-
-    // =========================================================
-    // ON CREATE
-    // =========================================================
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,15 +55,21 @@ public class HomeActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_home);
 
+        prefs = getSharedPreferences(
+                PREF_NAME,
+                MODE_PRIVATE
+        );
+
         initializeViews();
 
-        loadUserAndStoreData();
+        loadUserData();
+        loadStoreData();
+        updateShoppingListCount();
+        updatePurchaseHistoryCount();
+        updateStoreState();
 
         setupClickListeners();
-
-        checkStoreStatus();
     }
-
 
     // =========================================================
     // INITIALIZE VIEWS
@@ -160,78 +77,38 @@ public class HomeActivity extends AppCompatActivity {
 
     private void initializeViews() {
 
-        // Main
-        main = findViewById(R.id.main);
-
-
-        // Header
-        tvProfileCircle =
-                findViewById(R.id.tvProfileCircle);
-
         tvUserName =
                 findViewById(R.id.tvUserName);
+
+        tvProfileCircle =
+                findViewById(R.id.tvProfileCircle);
 
         tvPoints =
                 findViewById(R.id.tvPoints);
 
-
-        // Selected Store
-        layoutSelectedStore =
-                findViewById(R.id.layoutSelectedStore);
-
         tvStoreName =
                 findViewById(R.id.tvStoreName);
 
-        tvChangeStore =
-                findViewById(R.id.tvChangeStore);
+        tvShoppingListCount =
+                findViewById(R.id.tvShoppingListCount);
 
+        tvPurchaseHistoryCount =
+                findViewById(R.id.tvPurchaseHistoryCount);
 
-        // Before Store
-        tvBeforeStoreTitle =
-                findViewById(R.id.tvBeforeStoreTitle);
+        layoutBeforeStore =
+                findViewById(R.id.layoutBeforeStore);
 
-        tvBeforeStoreSubtitle =
-                findViewById(R.id.tvBeforeStoreSubtitle);
-
-        cardShoppingList =
-                findViewById(R.id.cardShoppingList);
-
-        cardPurchaseHistory =
-                findViewById(R.id.cardPurchaseHistory);
-
-        cardOffers =
-                findViewById(R.id.cardOffers);
-
-        cardSummary =
-                findViewById(R.id.cardSummary);
-
-        tvListCount =
-                findViewById(R.id.tvListCount);
-
-        tvOrderCount =
-                findViewById(R.id.tvOrderCount);
-
-        tvOfferCount =
-                findViewById(R.id.tvOfferCount);
-
-        tvMonthlySpent =
-                findViewById(R.id.tvMonthlySpent);
-
-
-        // Store QR
         layoutStoreQR =
                 findViewById(R.id.layoutStoreQR);
 
+        layoutInsideStore =
+                findViewById(R.id.layoutInsideStore);
+
+        layoutQuickAccess =
+                findViewById(R.id.layoutQuickAccess);
+
         btnStoreQR =
                 findViewById(R.id.btnStoreQR);
-
-
-        // Inside Store
-        tvInsideStoreTitle =
-                findViewById(R.id.tvInsideStoreTitle);
-
-        tvInsideStoreSubtitle =
-                findViewById(R.id.tvInsideStoreSubtitle);
 
         btnScanner =
                 findViewById(R.id.btnScanner);
@@ -248,11 +125,6 @@ public class HomeActivity extends AppCompatActivity {
         btnPayment =
                 findViewById(R.id.btnPayment);
 
-
-        // Quick Access
-        tvQuickAccess =
-                findViewById(R.id.tvQuickAccess);
-
         btnHelp =
                 findViewById(R.id.btnHelp);
 
@@ -265,44 +137,21 @@ public class HomeActivity extends AppCompatActivity {
         btnReport =
                 findViewById(R.id.btnReport);
 
-
-        // Offer Banner
-        layoutOfferBanner =
-                findViewById(R.id.layoutOfferBanner);
-
-        btnViewOffers =
-                findViewById(R.id.btnViewOffers);
-
-
-        // Logout
         btnLogout =
                 findViewById(R.id.btnLogout);
     }
 
-
     // =========================================================
-    // LOAD USER + STORE DATA
+    // USER DATA
     // =========================================================
 
-    private void loadUserAndStoreData() {
-
-        SharedPreferences prefs =
-                getSharedPreferences(
-                        PREF_NAME,
-                        MODE_PRIVATE
-                );
-
-
-        // -----------------------------------------------------
-        // USER NAME
-        // -----------------------------------------------------
+    private void loadUserData() {
 
         String userName =
                 prefs.getString(
-                        KEY_USER_NAME,
+                        "USER_NAME",
                         "SmartMart User"
                 );
-
 
         if (userName == null ||
                 userName.trim().isEmpty()) {
@@ -310,56 +159,18 @@ public class HomeActivity extends AppCompatActivity {
             userName = "SmartMart User";
         }
 
-
-        userName = userName.trim();
-
-
-        // -----------------------------------------------------
-        // DISPLAY USER NAME
-        // -----------------------------------------------------
-
         tvUserName.setText(
-                userName
+                "Welcome back, " + userName
         );
-
-
-        // -----------------------------------------------------
-        // DISPLAY USER INITIALS
-        // -----------------------------------------------------
 
         tvProfileCircle.setText(
                 getInitials(userName)
         );
 
-
-        // -----------------------------------------------------
-        // STORE NAME
-        // -----------------------------------------------------
-
-        String storeName =
-                prefs.getString(
-                        KEY_STORE_NAME,
-                        "SmartMart+ Main Store"
-                );
-
-
-        if (storeName == null ||
-                storeName.trim().isEmpty()) {
-
-            storeName =
-                    "SmartMart+ Main Store";
-        }
-
-
-        tvStoreName.setText(
-                storeName
+        tvPoints.setText(
+                "⭐ Smart Points 120"
         );
     }
-
-
-    // =========================================================
-    // GET USER INITIALS
-    // =========================================================
 
     private String getInitials(String name) {
 
@@ -369,339 +180,49 @@ public class HomeActivity extends AppCompatActivity {
             return "SM";
         }
 
-
-        String[] words =
+        String[] parts =
                 name.trim().split("\\s+");
 
+        if (parts.length == 1) {
 
-        // -----------------------------------------------------
-        // ONE-WORD NAME
-        // -----------------------------------------------------
+            String first =
+                    parts[0];
 
-        if (words.length == 1) {
+            if (first.length() >= 2) {
 
-            String word = words[0];
-
-
-            if (word.length() >= 2) {
-
-                return word.substring(0, 2)
-                        .toUpperCase(Locale.getDefault());
+                return first
+                        .substring(0, 2)
+                        .toUpperCase(
+                                Locale.getDefault()
+                        );
             }
 
-
-            return word.substring(0, 1)
-                    .toUpperCase(Locale.getDefault());
+            return first.toUpperCase(
+                    Locale.getDefault()
+            );
         }
 
-
-        // -----------------------------------------------------
-        // FIRST + LAST NAME
-        // -----------------------------------------------------
-
-        String first =
-                words[0].substring(0, 1);
-
-        String last =
-                words[words.length - 1]
-                        .substring(0, 1);
-
-
-        return (first + last)
-                .toUpperCase(Locale.getDefault());
-    }
-
-
-    // =========================================================
-    // CHECK STORE STATUS
-    // =========================================================
-
-    private void checkStoreStatus() {
-
-        SharedPreferences prefs =
-                getSharedPreferences(
-                        PREF_NAME,
-                        MODE_PRIVATE
-                );
-
-
-        boolean verified =
-                prefs.getBoolean(
-                        KEY_STORE_VERIFIED,
-                        false
-                );
-
-
-        if (verified) {
-
-            insideStore = true;
-
-            applyInsideStoreTheme();
-
-        } else {
-
-            insideStore = false;
-
-            applyBeforeStoreTheme();
-        }
-    }
-
-
-    // =========================================================
-    // BEFORE STORE THEME
-    // =========================================================
-
-    private void applyBeforeStoreTheme() {
-
-        // White background
-        main.setBackgroundColor(
-                Color.WHITE
-        );
-
-
-        // Store QR visible
-        layoutStoreQR.setVisibility(
-                View.VISIBLE
-        );
-
-
-        // Before store text
-        tvBeforeStoreTitle.setText(
-                "🛍  Before you enter the store"
-        );
-
-        tvBeforeStoreSubtitle.setText(
-                "Plan ahead for a smarter shopping experience."
-        );
-
-
-        // Inside store title
-        tvInsideStoreTitle.setText(
-                "🏪  Once you're inside the store"
-        );
-
-        tvInsideStoreSubtitle.setText(
-                "Access all self-billing features."
-        );
-
-
-        // Normal cards
-        cardShoppingList.setBackgroundResource(
-                R.drawable.home_card_bg
-        );
-
-        cardPurchaseHistory.setBackgroundResource(
-                R.drawable.home_card_bg
-        );
-
-        cardOffers.setBackgroundResource(
-                R.drawable.home_card_bg
-        );
-
-        cardSummary.setBackgroundResource(
-                R.drawable.home_card_bg
-        );
-
-
-        // Store cards
-        btnScanner.setBackgroundResource(
-                R.drawable.home_store_card
-        );
-
-        btnCart.setBackgroundResource(
-                R.drawable.home_store_card
-        );
-
-        btnMap.setBackgroundResource(
-                R.drawable.home_store_card
-        );
-
-        btnBilling.setBackgroundResource(
-                R.drawable.home_store_card
-        );
-
-        btnPayment.setBackgroundResource(
-                R.drawable.home_store_card
-        );
-
-
-        // Selected store
-        layoutSelectedStore.setBackgroundResource(
-                R.drawable.home_store_bg
-        );
-
-
-        // Quick access
-        btnHelp.setBackgroundResource(
-                R.drawable.home_small_button
-        );
-
-        btnEmergency.setBackgroundResource(
-                R.drawable.home_small_button
-        );
-
-        btnLostFound.setBackgroundResource(
-                R.drawable.home_small_button
-        );
-
-        btnReport.setBackgroundResource(
-                R.drawable.home_small_button
-        );
-
-
-        // Offer button
-        btnViewOffers.setBackgroundResource(
-                R.drawable.home_offer_button
-        );
-
-
-        // Logout
-        btnLogout.setBackgroundResource(
-                R.drawable.home_logout_bg
-        );
-
-
-        // Restore change store color
-        tvChangeStore.setTextColor(
-                Color.parseColor("#5632C7")
-        );
-
-
-        // Restore quick access color
-        tvQuickAccess.setTextColor(
-                Color.parseColor("#172033")
+        return (
+                parts[0].substring(0, 1)
+                        +
+                        parts[parts.length - 1]
+                                .substring(0, 1)
+        ).toUpperCase(
+                Locale.getDefault()
         );
     }
 
-
     // =========================================================
-    // INSIDE STORE BLUE THEME
+    // STORE DATA
     // =========================================================
 
-    private void applyInsideStoreTheme() {
-
-        // Blue background
-        main.setBackgroundColor(
-                Color.parseColor("#EAF4FF")
-        );
-
-
-        // Hide store QR
-        layoutStoreQR.setVisibility(
-                View.GONE
-        );
-
-
-        // Before store section
-        tvBeforeStoreTitle.setText(
-                "🛒  SmartMart+ Shopping"
-        );
-
-        tvBeforeStoreSubtitle.setText(
-                "You're inside the store. Start shopping smart."
-        );
-
-
-        // Inside store section
-        tvInsideStoreTitle.setText(
-                "🔵  In-Store Features"
-        );
-
-        tvInsideStoreSubtitle.setText(
-                "Scan products, manage your cart and complete self-billing."
-        );
-
-
-        // Selected store blue
-        layoutSelectedStore.setBackgroundResource(
-                R.drawable.store_selected_bg
-        );
-
-
-        // Before-store cards blue
-        cardShoppingList.setBackgroundResource(
-                R.drawable.store_blue_card
-        );
-
-        cardPurchaseHistory.setBackgroundResource(
-                R.drawable.store_blue_card
-        );
-
-        cardOffers.setBackgroundResource(
-                R.drawable.store_blue_card
-        );
-
-        cardSummary.setBackgroundResource(
-                R.drawable.store_blue_card
-        );
-
-
-        // Store feature cards blue
-        btnScanner.setBackgroundResource(
-                R.drawable.store_blue_card
-        );
-
-        btnCart.setBackgroundResource(
-                R.drawable.store_blue_card
-        );
-
-        btnMap.setBackgroundResource(
-                R.drawable.store_blue_card
-        );
-
-        btnBilling.setBackgroundResource(
-                R.drawable.store_blue_card
-        );
-
-        btnPayment.setBackgroundResource(
-                R.drawable.store_blue_card
-        );
-
-
-        // Quick access blue
-        btnHelp.setBackgroundResource(
-                R.drawable.store_quick_button
-        );
-
-        btnEmergency.setBackgroundResource(
-                R.drawable.store_quick_button
-        );
-
-        btnLostFound.setBackgroundResource(
-                R.drawable.store_quick_button
-        );
-
-        btnReport.setBackgroundResource(
-                R.drawable.store_quick_button
-        );
-
-
-        // Offer button blue
-        btnViewOffers.setBackgroundResource(
-                R.drawable.store_offer_button
-        );
-
-
-        // Logout blue
-        btnLogout.setBackgroundResource(
-                R.drawable.store_logout_button
-        );
-
-
-        // Store name
-        SharedPreferences prefs =
-                getSharedPreferences(
-                        PREF_NAME,
-                        MODE_PRIVATE
-                );
-
+    private void loadStoreData() {
 
         String storeName =
                 prefs.getString(
-                        KEY_STORE_NAME,
+                        "STORE_NAME",
                         "SmartMart+ Main Store"
                 );
-
 
         if (storeName == null ||
                 storeName.trim().isEmpty()) {
@@ -710,24 +231,163 @@ public class HomeActivity extends AppCompatActivity {
                     "SmartMart+ Main Store";
         }
 
-
-        tvStoreName.setText(
-                storeName
-        );
-
-
-        // Change store color
-        tvChangeStore.setTextColor(
-                Color.parseColor("#1677FF")
-        );
-
-
-        // Quick access title
-        tvQuickAccess.setTextColor(
-                Color.parseColor("#0756C9")
-        );
+        tvStoreName.setText(storeName);
     }
 
+    // =========================================================
+    // SHOPPING LIST COUNT
+    // =========================================================
+
+    private void updateShoppingListCount() {
+
+        if (tvShoppingListCount == null) {
+            return;
+        }
+
+        String json =
+                prefs.getString(
+                        "SHOPPING_LIST",
+                        "[]"
+                );
+
+        try {
+
+            JSONArray list =
+                    new JSONArray(json);
+
+            int totalItems = 0;
+
+            for (int i = 0;
+                 i < list.length();
+                 i++) {
+
+                JSONObject item =
+                        list.getJSONObject(i);
+
+                int quantity =
+                        item.optInt(
+                                "quantity",
+                                1
+                        );
+
+                totalItems += quantity;
+            }
+
+            if (totalItems == 1) {
+
+                tvShoppingListCount.setText(
+                        "1 item"
+                );
+
+            } else {
+
+                tvShoppingListCount.setText(
+                        totalItems + " items"
+                );
+            }
+
+        } catch (Exception e) {
+
+            tvShoppingListCount.setText(
+                    "0 items"
+            );
+        }
+    }
+
+    // =========================================================
+    // PURCHASE HISTORY COUNT
+    // =========================================================
+
+    private void updatePurchaseHistoryCount() {
+
+        if (tvPurchaseHistoryCount == null) {
+            return;
+        }
+
+        String json =
+                prefs.getString(
+                        "PURCHASE_HISTORY",
+                        "[]"
+                );
+
+        try {
+
+            JSONArray history =
+                    new JSONArray(json);
+
+            int count =
+                    history.length();
+
+            if (count == 1) {
+
+                tvPurchaseHistoryCount.setText(
+                        "1 Order"
+                );
+
+            } else {
+
+                tvPurchaseHistoryCount.setText(
+                        count + " Orders"
+                );
+            }
+
+        } catch (Exception e) {
+
+            tvPurchaseHistoryCount.setText(
+                    "0 Orders"
+            );
+        }
+    }
+
+    // =========================================================
+    // STORE STATE
+    // =========================================================
+
+    private void updateStoreState() {
+
+        boolean storeVerified =
+                prefs.getBoolean(
+                        "STORE_VERIFIED",
+                        false
+                );
+
+        if (storeVerified) {
+
+            layoutBeforeStore.setVisibility(
+                    View.GONE
+            );
+
+            layoutStoreQR.setVisibility(
+                    View.GONE
+            );
+
+            layoutInsideStore.setVisibility(
+                    View.VISIBLE
+            );
+
+            layoutQuickAccess.setVisibility(
+                    View.VISIBLE
+            );
+
+        } else {
+
+            layoutBeforeStore.setVisibility(
+                    View.VISIBLE
+            );
+
+            layoutStoreQR.setVisibility(
+                    View.VISIBLE
+            );
+
+            layoutInsideStore.setVisibility(
+                    View.GONE
+            );
+
+            layoutQuickAccess.setVisibility(
+                    View.GONE
+            );
+        }
+    }
 
     // =========================================================
     // CLICK LISTENERS
@@ -735,369 +395,239 @@ public class HomeActivity extends AppCompatActivity {
 
     private void setupClickListeners() {
 
+        // Store QR
+        btnStoreQR.setOnClickListener(view -> {
 
-        // =====================================================
-        // SCAN STORE QR
-        // =====================================================
-
-        btnStoreQR.setOnClickListener(
-                v -> {
-
-                    Intent intent =
-                            new Intent(
-                                    HomeActivity.this,
-                                    StoreQRScannerActivity.class
-                            );
-
-                    startActivity(intent);
-                }
-        );
-
-
-        // =====================================================
-        // CHANGE STORE
-        // =====================================================
-
-        tvChangeStore.setOnClickListener(
-                v -> {
-
-                    if (insideStore) {
-
-                        Toast.makeText(
-                                HomeActivity.this,
-                                "Please finish your current shopping session first.",
-                                Toast.LENGTH_SHORT
-                        ).show();
-
-                    } else {
-
-                        Intent intent =
-                                new Intent(
-                                        HomeActivity.this,
-                                        StoreQRScannerActivity.class
-                                );
-
-                        startActivity(intent);
-                    }
-                }
-        );
-
-
-        // =====================================================
-        // PRODUCT SCANNER
-        // =====================================================
-
-        btnScanner.setOnClickListener(
-                v -> {
-
-                    if (!isInsideStore()) {
-
-                        showStoreRequiredMessage();
-
-                        return;
-                    }
-
-
-                    Intent intent =
-                            new Intent(
-                                    HomeActivity.this,
-                                    BarcodeScannerActivity.class
-                            );
-
-                    startActivity(intent);
-                }
-        );
-
-
-        // =====================================================
-        // CART
-        // =====================================================
-
-        btnCart.setOnClickListener(
-                v -> {
-
-                    if (!isInsideStore()) {
-
-                        showStoreRequiredMessage();
-
-                        return;
-                    }
-
-
-                    Intent intent =
-                            new Intent(
-                                    HomeActivity.this,
-                                    CartActivity.class
-                            );
-
-                    startActivity(intent);
-                }
-        );
-
-
-        // =====================================================
-        // BILLING
-        // =====================================================
-
-        btnBilling.setOnClickListener(
-                v -> {
-
-                    if (!isInsideStore()) {
-
-                        showStoreRequiredMessage();
-
-                        return;
-                    }
-
-
-                    Toast.makeText(
+            Intent intent =
+                    new Intent(
                             HomeActivity.this,
-                            "Billing module",
-                            Toast.LENGTH_SHORT
-                    ).show();
-                }
-        );
+                            StoreQRScannerActivity.class
+                    );
 
+            startActivity(intent);
+        });
 
-        // =====================================================
-        // PAYMENT
-        // =====================================================
+        // Shopping List
+        findViewById(
+                R.id.cardShoppingList
+        ).setOnClickListener(view -> {
 
-        btnPayment.setOnClickListener(
-                v -> {
-
-                    if (!isInsideStore()) {
-
-                        showStoreRequiredMessage();
-
-                        return;
-                    }
-
-
-                    Intent intent =
-                            new Intent(
-                                    HomeActivity.this,
-                                    PaymentActivity.class
-                            );
-
-                    startActivity(intent);
-                }
-        );
-
-
-        // =====================================================
-        // STORE MAP
-        // =====================================================
-
-        btnMap.setOnClickListener(
-                v -> {
-
-                    if (!isInsideStore()) {
-
-                        showStoreRequiredMessage();
-
-                        return;
-                    }
-
-
-                    Toast.makeText(
+            Intent intent =
+                    new Intent(
                             HomeActivity.this,
-                            "Store Map will open here.",
-                            Toast.LENGTH_SHORT
-                    ).show();
-                }
-        );
+                            ShoppingListActivity.class
+                    );
 
+            startActivity(intent);
+        });
 
-        // =====================================================
-        // SHOPPING LIST
-        // =====================================================
+        // Purchase History
+        findViewById(
+                R.id.cardPurchaseHistory
+        ).setOnClickListener(view -> {
 
-        cardShoppingList.setOnClickListener(
-                v -> {
-
-                    Intent intent =
-                            new Intent(
-                                    HomeActivity.this,
-                                    ShoppingListActivity.class
-                            );
-
-                    startActivity(intent);
-                }
-        );
-
-
-        // =====================================================
-        // PURCHASE HISTORY
-        // =====================================================
-
-        cardPurchaseHistory.setOnClickListener(
-                v -> {
-
-                    Toast.makeText(
+            Intent intent =
+                    new Intent(
                             HomeActivity.this,
-                            "Purchase History",
-                            Toast.LENGTH_SHORT
-                    ).show();
-                }
-        );
+                            PurchaseHistoryActivity.class
+                    );
 
+            startActivity(intent);
+        });
 
-        // =====================================================
-        // OFFERS
-        // =====================================================
+        // Offers
+        findViewById(
+                R.id.cardOffers
+        ).setOnClickListener(view -> {
 
-        cardOffers.setOnClickListener(
-                v -> {
+            Toast.makeText(
+                    HomeActivity.this,
+                    "Offers coming soon",
+                    Toast.LENGTH_SHORT
+            ).show();
+        });
 
-                    Toast.makeText(
+        // Monthly Summary
+        findViewById(
+                R.id.cardSummary
+        ).setOnClickListener(view -> {
+
+            Toast.makeText(
+                    HomeActivity.this,
+                    "Monthly Summary coming soon",
+                    Toast.LENGTH_SHORT
+            ).show();
+        });
+
+        // Product Scanner
+        btnScanner.setOnClickListener(view -> {
+
+            if (!isInsideStore()) {
+
+                showStoreQRMessage();
+
+                return;
+            }
+
+            Intent intent =
+                    new Intent(
                             HomeActivity.this,
-                            "Offers and Deals",
-                            Toast.LENGTH_SHORT
-                    ).show();
-                }
-        );
+                            BarcodeScannerActivity.class
+                    );
 
+            startActivity(intent);
+        });
 
-        // =====================================================
-        // MONTHLY SUMMARY
-        // =====================================================
+        // Cart
+        btnCart.setOnClickListener(view -> {
 
-        cardSummary.setOnClickListener(
-                v -> {
+            if (!isInsideStore()) {
 
-                    Toast.makeText(
+                showStoreQRMessage();
+
+                return;
+            }
+
+            Intent intent =
+                    new Intent(
                             HomeActivity.this,
-                            "Monthly Summary",
-                            Toast.LENGTH_SHORT
-                    ).show();
-                }
-        );
+                            CartActivity.class
+                    );
 
+            startActivity(intent);
+        });
 
-        // =====================================================
-        // VIEW OFFERS
-        // =====================================================
+        // Store Map
+        btnMap.setOnClickListener(view -> {
 
-        btnViewOffers.setOnClickListener(
-                v -> {
+            if (!isInsideStore()) {
 
-                    Toast.makeText(
+                showStoreQRMessage();
+
+                return;
+            }
+
+            Toast.makeText(
+                    HomeActivity.this,
+                    "Store Map coming soon",
+                    Toast.LENGTH_SHORT
+            ).show();
+        });
+
+        // Billing
+        btnBilling.setOnClickListener(view -> {
+
+            if (!isInsideStore()) {
+
+                showStoreQRMessage();
+
+                return;
+            }
+
+            Toast.makeText(
+                    HomeActivity.this,
+                    "Billing is available after adding products to cart.",
+                    Toast.LENGTH_SHORT
+            ).show();
+        });
+
+        // Payment
+        btnPayment.setOnClickListener(view -> {
+
+            if (!isInsideStore()) {
+
+                showStoreQRMessage();
+
+                return;
+            }
+
+            Intent intent =
+                    new Intent(
                             HomeActivity.this,
-                            "Offers and Deals",
-                            Toast.LENGTH_SHORT
-                    ).show();
-                }
-        );
+                            PaymentActivity.class
+                    );
 
+            startActivity(intent);
+        });
 
-        // =====================================================
-        // HELP
-        // =====================================================
+        // Help
+        btnHelp.setOnClickListener(view -> {
 
-        btnHelp.setOnClickListener(
-                v -> {
+            Toast.makeText(
+                    HomeActivity.this,
+                    "Help & Support coming soon",
+                    Toast.LENGTH_SHORT
+            ).show();
+        });
 
-                    Toast.makeText(
-                            HomeActivity.this,
-                            "Help & Support",
-                            Toast.LENGTH_SHORT
-                    ).show();
-                }
-        );
+        // Emergency
+        btnEmergency.setOnClickListener(view -> {
 
+            Toast.makeText(
+                    HomeActivity.this,
+                    "Emergency assistance coming soon",
+                    Toast.LENGTH_SHORT
+            ).show();
+        });
 
-        // =====================================================
-        // EMERGENCY
-        // =====================================================
+        // Lost & Found
+        btnLostFound.setOnClickListener(view -> {
 
-        btnEmergency.setOnClickListener(
-                v -> {
+            Toast.makeText(
+                    HomeActivity.this,
+                    "Lost & Found coming soon",
+                    Toast.LENGTH_SHORT
+            ).show();
+        });
 
-                    Toast.makeText(
-                            HomeActivity.this,
-                            "Emergency assistance",
-                            Toast.LENGTH_SHORT
-                    ).show();
-                }
-        );
+        // Report
+        btnReport.setOnClickListener(view -> {
 
+            Toast.makeText(
+                    HomeActivity.this,
+                    "Report Activity coming soon",
+                    Toast.LENGTH_SHORT
+            ).show();
+        });
 
-        // =====================================================
-        // LOST & FOUND
-        // =====================================================
+        // Change Store
+        findViewById(
+                R.id.tvChangeStore
+        ).setOnClickListener(view -> {
 
-        btnLostFound.setOnClickListener(
-                v -> {
+            Toast.makeText(
+                    HomeActivity.this,
+                    "Store selection coming soon",
+                    Toast.LENGTH_SHORT
+            ).show();
+        });
 
-                    Toast.makeText(
-                            HomeActivity.this,
-                            "Lost & Found",
-                            Toast.LENGTH_SHORT
-                    ).show();
-                }
-        );
-
-
-        // =====================================================
-        // REPORT ACTIVITY
-        // =====================================================
-
-        btnReport.setOnClickListener(
-                v -> {
-
-                    Toast.makeText(
-                            HomeActivity.this,
-                            "Report Activity",
-                            Toast.LENGTH_SHORT
-                    ).show();
-                }
-        );
-
-
-        // =====================================================
-        // LOGOUT
-        // =====================================================
-
+        // Logout
         btnLogout.setOnClickListener(
-                v -> logout()
+                view -> logout()
         );
     }
 
-
     // =========================================================
-    // CHECK WHETHER USER IS INSIDE STORE
+    // STORE VERIFICATION
     // =========================================================
 
     private boolean isInsideStore() {
 
-        SharedPreferences prefs =
-                getSharedPreferences(
-                        PREF_NAME,
-                        MODE_PRIVATE
-                );
-
-
         return prefs.getBoolean(
-                KEY_STORE_VERIFIED,
+                "STORE_VERIFIED",
                 false
         );
     }
 
-
-    // =========================================================
-    // STORE REQUIRED MESSAGE
-    // =========================================================
-
-    private void showStoreRequiredMessage() {
+    private void showStoreQRMessage() {
 
         Toast.makeText(
                 HomeActivity.this,
-                "Please scan the store QR code first.",
+                "Please scan the Store Entrance QR first.",
                 Toast.LENGTH_SHORT
         ).show();
     }
-
 
     // =========================================================
     // LOGOUT
@@ -1105,48 +635,31 @@ public class HomeActivity extends AppCompatActivity {
 
     private void logout() {
 
-        SharedPreferences prefs =
-                getSharedPreferences(
-                        PREF_NAME,
-                        MODE_PRIVATE
-                );
-
-
-        // Clear session
         prefs.edit()
                 .clear()
                 .apply();
 
-
-        Toast.makeText(
-                HomeActivity.this,
-                "Logged out successfully",
-                Toast.LENGTH_SHORT
-        ).show();
-
-
-        // Go to Login
         Intent intent =
                 new Intent(
                         HomeActivity.this,
                         LoginActivity.class
                 );
 
-
-        intent.setFlags(
-                Intent.FLAG_ACTIVITY_NEW_TASK |
+        intent.addFlags(
+                Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        |
+                        Intent.FLAG_ACTIVITY_NEW_TASK
+                        |
                         Intent.FLAG_ACTIVITY_CLEAR_TASK
         );
-
 
         startActivity(intent);
 
         finish();
     }
 
-
     // =========================================================
-    // WHEN RETURNING FROM OTHER ACTIVITIES
+    // RESUME
     // =========================================================
 
     @Override
@@ -1154,14 +667,23 @@ public class HomeActivity extends AppCompatActivity {
 
         super.onResume();
 
+        if (prefs == null) {
 
-        if (main != null) {
-
-            // Reload logged-in user name
-            loadUserAndStoreData();
-
-            // Refresh store status
-            checkStoreStatus();
+            prefs =
+                    getSharedPreferences(
+                            PREF_NAME,
+                            MODE_PRIVATE
+                    );
         }
+
+        loadUserData();
+
+        loadStoreData();
+
+        updateShoppingListCount();
+
+        updatePurchaseHistoryCount();
+
+        updateStoreState();
     }
 }
