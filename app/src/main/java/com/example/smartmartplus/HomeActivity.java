@@ -635,8 +635,25 @@ public class HomeActivity extends AppCompatActivity {
 
     private void logout() {
 
+        /*
+         * IMPORTANT:
+         * Do NOT use prefs.edit().clear()
+         * because that deletes:
+         *
+         * PURCHASE_HISTORY
+         * SHOPPING_LIST
+         *
+         * We only remove login/session information.
+         */
+
         prefs.edit()
-                .clear()
+                .remove("ACCESS_TOKEN")
+                .remove("REFRESH_TOKEN")
+                .remove("IS_LOGGED_IN")
+                .remove("USER_NAME")
+                .remove("STORE_VERIFIED")
+                .remove("STORE_ID")
+                .remove("STORE_NAME")
                 .apply();
 
         Intent intent =
