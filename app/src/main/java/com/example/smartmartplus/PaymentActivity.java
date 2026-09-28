@@ -6,6 +6,7 @@ import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -31,12 +32,15 @@ public class PaymentActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_payment);
 
 
+        // =================================================
         // FIND VIEWS
+        // =================================================
 
         tvPaymentTitle =
                 findViewById(R.id.tvPaymentTitle);
@@ -77,7 +81,9 @@ public class PaymentActivity extends AppCompatActivity {
                 findViewById(R.id.btnPay);
 
 
+        // =================================================
         // GET CART DATA
+        // =================================================
 
         int itemCount =
                 getIntent().getIntExtra(
@@ -110,7 +116,9 @@ public class PaymentActivity extends AppCompatActivity {
                 );
 
 
+        // =================================================
         // DISPLAY DATA
+        // =================================================
 
         tvPaymentItems.setText(
                 "Items: " + itemCount
@@ -149,38 +157,106 @@ public class PaymentActivity extends AppCompatActivity {
         );
 
 
-        // DEFAULT UPI
+        // =================================================
+        // DEFAULT PAYMENT METHOD
+        // =================================================
 
         rbUPI.setChecked(true);
 
 
+        // =================================================
+        // CHECK WHETHER PAYMENT IS ALLOWED
+        // =================================================
+
+        boolean paymentAllowed =
+                itemCount > 0
+                        && total > 0.0;
+
+
+        if (!paymentAllowed) {
+
+            // Disable Pay Now
+            btnPay.setEnabled(false);
+
+            // Make it visually look disabled
+            btnPay.setAlpha(0.45f);
+
+        } else {
+
+            // Enable Pay Now
+            btnPay.setEnabled(true);
+
+            btnPay.setAlpha(1.0f);
+        }
+
+
+        // =================================================
         // BACK TO CART
+        // =================================================
 
         btnBackToCart.setOnClickListener(v -> {
+
             finish();
+
         });
 
 
+        // =================================================
         // PAY NOW
+        // =================================================
 
         btnPay.setOnClickListener(v -> {
+
+            // =================================================
+            // SAFETY CHECK
+            // =================================================
+
+            if (itemCount <= 0 || total <= 0.0) {
+
+                Toast.makeText(
+                        PaymentActivity.this,
+                        "Your cart is empty. Add products before making payment.",
+                        Toast.LENGTH_LONG
+                ).show();
+
+                return;
+            }
+
+
+            // =================================================
+            // CHECK PAYMENT METHOD
+            // =================================================
 
             int selectedId =
                     rbPaymentMethodGroup
                             .getCheckedRadioButtonId();
 
+
             if (selectedId == -1) {
+
+                Toast.makeText(
+                        PaymentActivity.this,
+                        "Please select a payment method",
+                        Toast.LENGTH_SHORT
+                ).show();
+
                 return;
             }
 
+
             RadioButton selectedButton =
                     findViewById(selectedId);
+
 
             String paymentMethod =
                     selectedButton
                             .getText()
                             .toString();
 
+
+            // =================================================
+            // OPEN RECEIPT
+            // =================================================
 
             Intent intent =
                     new Intent(

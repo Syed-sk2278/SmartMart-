@@ -49,6 +49,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private Button btnLogout;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +71,7 @@ public class HomeActivity extends AppCompatActivity {
 
         setupClickListeners();
     }
+
 
     // =========================================================
     // INITIALIZE VIEWS
@@ -141,6 +143,7 @@ public class HomeActivity extends AppCompatActivity {
                 findViewById(R.id.btnLogout);
     }
 
+
     // =========================================================
     // USER DATA
     // =========================================================
@@ -171,6 +174,7 @@ public class HomeActivity extends AppCompatActivity {
                 "⭐ Smart Points 120"
         );
     }
+
 
     private String getInitials(String name) {
 
@@ -212,6 +216,7 @@ public class HomeActivity extends AppCompatActivity {
         );
     }
 
+
     // =========================================================
     // STORE DATA
     // =========================================================
@@ -233,6 +238,7 @@ public class HomeActivity extends AppCompatActivity {
 
         tvStoreName.setText(storeName);
     }
+
 
     // =========================================================
     // SHOPPING LIST COUNT
@@ -294,6 +300,7 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
+
     // =========================================================
     // PURCHASE HISTORY COUNT
     // =========================================================
@@ -338,6 +345,7 @@ public class HomeActivity extends AppCompatActivity {
             );
         }
     }
+
 
     // =========================================================
     // STORE STATE
@@ -389,13 +397,17 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
+
     // =========================================================
     // CLICK LISTENERS
     // =========================================================
 
     private void setupClickListeners() {
 
-        // Store QR
+        // =====================================================
+        // STORE QR
+        // =====================================================
+
         btnStoreQR.setOnClickListener(view -> {
 
             Intent intent =
@@ -407,7 +419,11 @@ public class HomeActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // Shopping List
+
+        // =====================================================
+        // SHOPPING LIST
+        // =====================================================
+
         findViewById(
                 R.id.cardShoppingList
         ).setOnClickListener(view -> {
@@ -421,7 +437,11 @@ public class HomeActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // Purchase History
+
+        // =====================================================
+        // PURCHASE HISTORY
+        // =====================================================
+
         findViewById(
                 R.id.cardPurchaseHistory
         ).setOnClickListener(view -> {
@@ -435,7 +455,11 @@ public class HomeActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // Offers
+
+        // =====================================================
+        // OFFERS
+        // =====================================================
+
         findViewById(
                 R.id.cardOffers
         ).setOnClickListener(view -> {
@@ -447,7 +471,11 @@ public class HomeActivity extends AppCompatActivity {
             ).show();
         });
 
-        // Monthly Summary
+
+        // =====================================================
+        // MONTHLY SUMMARY
+        // =====================================================
+
         findViewById(
                 R.id.cardSummary
         ).setOnClickListener(view -> {
@@ -459,7 +487,11 @@ public class HomeActivity extends AppCompatActivity {
             ).show();
         });
 
-        // Product Scanner
+
+        // =====================================================
+        // PRODUCT SCANNER
+        // =====================================================
+
         btnScanner.setOnClickListener(view -> {
 
             if (!isInsideStore()) {
@@ -478,7 +510,11 @@ public class HomeActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // Cart
+
+        // =====================================================
+        // CART
+        // =====================================================
+
         btnCart.setOnClickListener(view -> {
 
             if (!isInsideStore()) {
@@ -497,24 +533,38 @@ public class HomeActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // Store Map
+
+        // =====================================================
+        // STORE MAP
+        // =====================================================
+
         btnMap.setOnClickListener(view -> {
 
             if (!isInsideStore()) {
 
-                showStoreQRMessage();
+                Toast.makeText(
+                        HomeActivity.this,
+                        "Please scan the Store QR first.",
+                        Toast.LENGTH_SHORT
+                ).show();
 
                 return;
             }
 
-            Toast.makeText(
-                    HomeActivity.this,
-                    "Store Map coming soon",
-                    Toast.LENGTH_SHORT
-            ).show();
+            Intent intent =
+                    new Intent(
+                            HomeActivity.this,
+                            StoreMapActivity.class
+                    );
+
+            startActivity(intent);
         });
 
-        // Billing
+
+        // =====================================================
+        // BILLING
+        // =====================================================
+
         btnBilling.setOnClickListener(view -> {
 
             if (!isInsideStore()) {
@@ -531,7 +581,11 @@ public class HomeActivity extends AppCompatActivity {
             ).show();
         });
 
-        // Payment
+
+        // =====================================================
+        // PAYMENT
+        // =====================================================
+
         btnPayment.setOnClickListener(view -> {
 
             if (!isInsideStore()) {
@@ -550,7 +604,11 @@ public class HomeActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // Help
+
+        // =====================================================
+        // HELP
+        // =====================================================
+
         btnHelp.setOnClickListener(view -> {
 
             Toast.makeText(
@@ -560,7 +618,11 @@ public class HomeActivity extends AppCompatActivity {
             ).show();
         });
 
-        // Emergency
+
+        // =====================================================
+        // EMERGENCY
+        // =====================================================
+
         btnEmergency.setOnClickListener(view -> {
 
             Toast.makeText(
@@ -570,7 +632,11 @@ public class HomeActivity extends AppCompatActivity {
             ).show();
         });
 
-        // Lost & Found
+
+        // =====================================================
+        // LOST & FOUND
+        // =====================================================
+
         btnLostFound.setOnClickListener(view -> {
 
             Toast.makeText(
@@ -580,7 +646,11 @@ public class HomeActivity extends AppCompatActivity {
             ).show();
         });
 
-        // Report
+
+        // =====================================================
+        // REPORT
+        // =====================================================
+
         btnReport.setOnClickListener(view -> {
 
             Toast.makeText(
@@ -590,7 +660,11 @@ public class HomeActivity extends AppCompatActivity {
             ).show();
         });
 
-        // Change Store
+
+        // =====================================================
+        // CHANGE STORE
+        // =====================================================
+
         findViewById(
                 R.id.tvChangeStore
         ).setOnClickListener(view -> {
@@ -602,11 +676,16 @@ public class HomeActivity extends AppCompatActivity {
             ).show();
         });
 
-        // Logout
+
+        // =====================================================
+        // LOGOUT
+        // =====================================================
+
         btnLogout.setOnClickListener(
                 view -> logout()
         );
     }
+
 
     // =========================================================
     // STORE VERIFICATION
@@ -620,6 +699,7 @@ public class HomeActivity extends AppCompatActivity {
         );
     }
 
+
     private void showStoreQRMessage() {
 
         Toast.makeText(
@@ -628,6 +708,7 @@ public class HomeActivity extends AppCompatActivity {
                 Toast.LENGTH_SHORT
         ).show();
     }
+
 
     // =========================================================
     // LOGOUT
@@ -674,6 +755,7 @@ public class HomeActivity extends AppCompatActivity {
 
         finish();
     }
+
 
     // =========================================================
     // RESUME

@@ -1,137 +1,306 @@
 package com.example.smartmartplus;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class ForgotPasswordActivity extends AppCompatActivity {
 
-    private EditText etForgotEmail;
-    private Button btnSendReset;
+    private EditText etEmail;
+    private Button btnResetPassword;
     private TextView tvBackToLogin;
+    private ProgressBar progressBar;
+
+    private final OkHttpClient client = new OkHttpClient();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Initialize Retrofit
-        RetrofitClient.initialize(this);
-
         setContentView(R.layout.activity_forgot_password);
 
-        // Initialize views
-        etForgotEmail = findViewById(R.id.etForgotEmail);
-        btnSendReset = findViewById(R.id.btnSendReset);
+        // ==========================================
+        // FIND VIEWS
+        // ==========================================
+
+        etEmail = findViewById(R.id.etEmail);
+        btnResetPassword = findViewById(R.id.btnResetPassword);
         tvBackToLogin = findViewById(R.id.tvBackToLogin);
+        progressBar = findViewById(R.id.progressBar);
 
-        // Send reset email
-        btnSendReset.setOnClickListener(v -> sendResetEmail());
+        // ==========================================
+        // RESET PASSWORD
+        // ==========================================
 
-        // Back to login
+        btnResetPassword.setOnClickListener(v -> resetPassword());
+
+        // ==========================================
+        // BACK TO LOGIN
+        // ==========================================
+
         tvBackToLogin.setOnClickListener(v -> finish());
     }
 
-    private void sendResetEmail() {
 
-        String email =
-                etForgotEmail.getText()
-                        .toString()
-                        .trim();
+    // ==========================================
+    // RESET PASSWORD
+    // ==========================================
 
-        // Validation
+    private void resetPassword() {
+
+        String email = etEmail.getText()
+                .toString()
+                .trim();
+
+        // ==========================================
+        // VALIDATION
+        // ==========================================
+
         if (email.isEmpty()) {
 
-            etForgotEmail.setError(
-                    "Please enter your email"
-            );
-
-            etForgotEmail.requestFocus();
-
+            etEmail.setError("Enter your email");
+            etEmail.requestFocus();
             return;
         }
 
-        if (!Patterns.EMAIL_ADDRESS
-                .matcher(email)
-                .matches()) {
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
 
-            etForgotEmail.setError(
-                    "Enter a valid email address"
-            );
-
-            etForgotEmail.requestFocus();
-
+            etEmail.setError("Enter a valid email address");
+            etEmail.requestFocus();
             return;
         }
 
-        // Disable button while sending
-        btnSendReset.setEnabled(false);
-        btnSendReset.setText("Sending...");
 
-        // Request
-        ForgotPasswordRequest request =
-                new ForgotPasswordRequest(email);
+        // ==========================================
+        // SHOW LOADING
+        // ==========================================
 
-        SupabaseApi api =
-                RetrofitClient
-                        .getRetrofitInstance()
-                        .create(SupabaseApi.class);
+        setLoading(true);
 
-        api.resetPassword(request)
-                .enqueue(new Callback<Void>() {
 
-                    @Override
-                    public void onResponse(
-                            Call<Void> call,
-                            Response<Void> response) {
+        try {
 
-                        btnSendReset.setEnabled(true);
-                        btnSendReset.setText("SEND RESET LINK");
+            // ==========================================
+            // JSON BODY
+            // ==========================================
 
-                        if (response.isSuccessful()) {
+            JSONObject json = new JSONObject();
 
-                            Toast.makeText(
-                                    ForgotPasswordActivity.this,
-                                    "Password reset email sent",
-                                    Toast.LENGTH_LONG
-                            ).show();
+            json.put("email", email);
 
-                            etForgotEmail.setText("");
 
-                        } else {
+            // ==========================================
+            // REQUEST BODY
+            // ==========================================
 
-                            Toast.makeText(
-                                    ForgotPasswordActivity.this,
-                                    "Unable to send reset email",
-                                    Toast.LENGTH_LONG
-                            ).show();
+            MediaType mediaType =
+                    MediaType.parse("application/json");
+
+            RequestBody body =
+                    RequestBody.create(
+                            json.toString(),
+                            mediaType
+                    );
+
+
+            // ==========================================
+            // SUPABASE RECOVERY URL
+            // ==========================================
+
+            String baseUrl = Constants.SUPABASE_URL;
+
+            if (!baseUrl.endsWith("/")) {
+                baseUrl = baseUrl + "/";
+            }
+
+            String recoverUrl =
+                    baseUrl + "auth/v1/recover";
+
+
+            // ==========================================
+            // REQUEST
+            // ==========================================
+
+            Request request =
+                    new Request.Builder()
+                            .url(recoverUrl)
+                            .post(body)
+                            .addHeader(
+                                    "apikey",
+                                    Constants.SUPABASE_KEY
+                            )
+                            .addHeader(
+                                    "Content-Type",
+                                    "application/json"
+                            )
+                            .build();
+
+
+            // ==========================================
+            // SEND REQUEST
+            // ==========================================
+
+            client.newCall(request).enqueue(
+                    new Callback() {
+
+                        @Override
+                        public void onFailure(
+                                Call call,
+                                IOException e) {
+
+                            runOnUiThread(() -> {
+
+                                setLoading(false);
+
+                                Toast.makeText(
+                                        ForgotPasswordActivity.this,
+                                        "Network error. Please try again.",
+                                        Toast.LENGTH_LONG
+                                ).show();
+                            });
+                        }
+
+
+                        @Override
+                        public void onResponse(
+                                Call call,
+                                Response response)
+                                throws IOException {
+
+                            final int code =
+                                    response.code();
+
+                            final String responseBody =
+                                    response.body() != null
+                                            ? response.body().string()
+                                            : "";
+
+
+                            runOnUiThread(() -> {
+
+                                setLoading(false);
+
+
+                                // ==================================
+                                // SUCCESS
+                                // ==================================
+
+                                if (code >= 200 && code < 300) {
+
+                                    Toast.makeText(
+                                            ForgotPasswordActivity.this,
+                                            "Password reset email sent. Check your inbox.",
+                                            Toast.LENGTH_LONG
+                                    ).show();
+
+                                    etEmail.setText("");
+
+
+                                    // Stay on page so user can
+                                    // read the message.
+
+                                }
+
+                                // ==================================
+                                // ERROR
+                                // ==================================
+
+                                else {
+
+                                    String message =
+                                            "Unable to send reset email.";
+
+                                    try {
+
+                                        JSONObject errorJson =
+                                                new JSONObject(responseBody);
+
+                                        if (errorJson.has("msg")) {
+
+                                            message =
+                                                    errorJson.getString("msg");
+
+                                        } else if (
+                                                errorJson.has("message")) {
+
+                                            message =
+                                                    errorJson.getString("message");
+
+                                        } else if (
+                                                errorJson.has("error_description")) {
+
+                                            message =
+                                                    errorJson.getString(
+                                                            "error_description"
+                                                    );
+                                        }
+
+                                    } catch (Exception ignored) {
+                                    }
+
+
+                                    Toast.makeText(
+                                            ForgotPasswordActivity.this,
+                                            message,
+                                            Toast.LENGTH_LONG
+                                    ).show();
+                                }
+                            });
                         }
                     }
+            );
 
-                    @Override
-                    public void onFailure(
-                            Call<Void> call,
-                            Throwable t) {
+        } catch (Exception e) {
 
-                        btnSendReset.setEnabled(true);
-                        btnSendReset.setText("SEND RESET LINK");
+            setLoading(false);
 
-                        Toast.makeText(
-                                ForgotPasswordActivity.this,
-                                "Network Error: "
-                                        + t.getMessage(),
-                                Toast.LENGTH_LONG
-                        ).show();
-                    }
-                });
+            Toast.makeText(
+                    this,
+                    "Something went wrong. Please try again.",
+                    Toast.LENGTH_LONG
+            ).show();
+        }
+    }
+
+
+    // ==========================================
+    // LOADING
+    // ==========================================
+
+    private void setLoading(boolean loading) {
+
+        if (loading) {
+
+            btnResetPassword.setEnabled(false);
+            btnResetPassword.setText("Sending...");
+
+            progressBar.setVisibility(View.VISIBLE);
+
+        } else {
+
+            btnResetPassword.setEnabled(true);
+            btnResetPassword.setText("Send Reset Link");
+
+            progressBar.setVisibility(View.GONE);
+        }
     }
 }

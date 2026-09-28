@@ -121,6 +121,13 @@
             android:name=".PurchaseHistoryActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".StoreMapActivity"
+            android:exported="false" />
+        <!-- Store Section -->
+        <activity
+            android:name=".StoreSectionActivity"
+            android:exported="false" />
 
         <!-- Admin -->
         <activity

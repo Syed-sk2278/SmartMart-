@@ -4,108 +4,139 @@ import com.google.gson.annotations.SerializedName;
 
 public class Product {
 
-    // ==============================
+    // =========================================
     // PRODUCT ID
-    // ==============================
+    // =========================================
 
     @SerializedName("id")
     private String id;
 
 
-    // ==============================
-    // BARCODE
-    // ==============================
-
-    @SerializedName("barcode")
-    private String barcode;
-
-
-    // ==============================
-    // PRODUCT NAME
-    // ==============================
-
-    @SerializedName("product_name")
-    private String productName;
-
-
-    // ==============================
-    // DESCRIPTION
-    // ==============================
-
-    @SerializedName("description")
-    private String description;
-
-
-    // ==============================
-    // BRAND
-    // ==============================
-
-    @SerializedName("brand")
-    private String brand;
-
-
-    // ==============================
-    // PRICE
-    // ==============================
-
-    @SerializedName("price")
-    private double price;
-
-
-    // ==============================
-    // GST
-    // ==============================
-
-    @SerializedName("gst_percentage")
-    private double gstPercentage;
-
-
-    // ==============================
-    // DISCOUNT
-    // ==============================
-
-    @SerializedName("discount_percentage")
-    private double discountPercentage;
-
-
-    // ==============================
-    // STOCK
-    // ==============================
-
-    @SerializedName("stock_quantity")
-    private int stockQuantity;
-
-
-    // ==============================
-    // SHELF
-    // ==============================
-
-    @SerializedName("shelf_id")
-    private String shelfId;
-
-
-    // ==============================
-    // IMAGE URL
-    // ==============================
-
-    @SerializedName("image_url")
-    private String imageUrl;
-
-
-    // ==============================
+    // =========================================
     // STORE ID
-    // ==============================
+    // =========================================
 
     @SerializedName("store_id")
     private String storeId;
 
 
-    // ==============================
+    // =========================================
+    // CATEGORY ID
+    // =========================================
+
+    @SerializedName("category_id")
+    private String categoryId;
+
+
+    // =========================================
+    // SHELF ID
+    // =========================================
+
+    @SerializedName("shelf_id")
+    private String shelfId;
+
+
+    // =========================================
+    // BARCODE
+    // =========================================
+
+    @SerializedName("barcode")
+    private String barcode;
+
+
+    // =========================================
+    // PRODUCT NAME
+    // =========================================
+
+    @SerializedName("product_name")
+    private String productName;
+
+
+    // =========================================
+    // DESCRIPTION
+    // =========================================
+
+    @SerializedName("description")
+    private String description;
+
+
+    // =========================================
+    // BRAND
+    // =========================================
+
+    @SerializedName("brand")
+    private String brand;
+
+
+    // =========================================
+    // PRICE
+    // =========================================
+
+    @SerializedName("price")
+    private double price;
+
+
+    // =========================================
+    // GST
+    // =========================================
+
+    @SerializedName("gst_percentage")
+    private double gstPercentage;
+
+
+    // =========================================
+    // DISCOUNT
+    // =========================================
+
+    @SerializedName("discount_percentage")
+    private double discountPercentage;
+
+
+    // =========================================
+    // STOCK
+    // =========================================
+
+    @SerializedName("stock_quantity")
+    private int stockQuantity;
+
+
+    // =========================================
+    // IMAGE URL
+    // =========================================
+
+    @SerializedName("image_url")
+    private String imageUrl;
+
+
+    // =========================================
+    // AVAILABLE
+    // =========================================
+
+    @SerializedName("available")
+    private boolean available;
+
+
+    // =========================================
     // GETTERS
-    // ==============================
+    // =========================================
 
     public String getId() {
         return id;
+    }
+
+
+    public String getStoreId() {
+        return storeId;
+    }
+
+
+    public String getCategoryId() {
+        return categoryId;
+    }
+
+
+    public String getShelfId() {
+        return shelfId;
     }
 
 
@@ -114,12 +145,15 @@ public class Product {
     }
 
 
-    public String getName() {
+    public String getProductName() {
         return productName;
     }
 
 
-    public String getProductName() {
+    // Keep these because your existing code
+    // may use getName()
+
+    public String getName() {
         return productName;
     }
 
@@ -139,18 +173,15 @@ public class Product {
     }
 
 
-    public double getGst() {
-        return gstPercentage;
-    }
-
-
     public double getGstPercentage() {
         return gstPercentage;
     }
 
 
-    public double getDiscount() {
-        return discountPercentage;
+    // Existing code compatibility
+
+    public double getGst() {
+        return gstPercentage;
     }
 
 
@@ -159,8 +190,10 @@ public class Product {
     }
 
 
-    public int getStock_quantity() {
-        return stockQuantity;
+    // Existing code compatibility
+
+    public double getDiscount() {
+        return discountPercentage;
     }
 
 
@@ -169,22 +202,21 @@ public class Product {
     }
 
 
-    public String getShelf_id() {
-        return shelfId;
-    }
+    // Existing code compatibility
 
-
-    public String getShelfId() {
-        return shelfId;
-    }
-
-
-    public String getImage_url() {
-        return imageUrl;
+    public int getStock_quantity() {
+        return stockQuantity;
     }
 
 
     public String getImageUrl() {
+        return imageUrl;
+    }
+
+
+    // Existing code compatibility
+
+    public String getImage_url() {
         return imageUrl;
     }
 
@@ -194,7 +226,22 @@ public class Product {
     }
 
 
-    public String getStoreId() {
+    public String getCategory_id() {
+        return categoryId;
+    }
+
+
+    public String getShelf_id() {
+        return shelfId;
+    }
+
+
+    public String getStoreIdValue() {
         return storeId;
+    }
+
+
+    public boolean isAvailable() {
+        return available;
     }
 }

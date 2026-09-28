@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.graphics.Typeface;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -45,8 +46,11 @@ public class ShoppingListActivity extends AppCompatActivity {
     // STORAGE
     // =========================================================
 
-    private static final String PREF_NAME = "SmartMartPrefs";
-    private static final String KEY_SHOPPING_LIST = "SHOPPING_LIST";
+    private static final String PREF_NAME =
+            "SmartMartPrefs";
+
+    private static final String KEY_SHOPPING_LIST =
+            "SHOPPING_LIST";
 
 
     // =========================================================
@@ -55,9 +59,12 @@ public class ShoppingListActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_shopping_list);
+        setContentView(
+                R.layout.activity_shopping_list
+        );
 
         initializeViews();
 
@@ -75,28 +82,55 @@ public class ShoppingListActivity extends AppCompatActivity {
 
     private void initializeViews() {
 
-        etItemName = findViewById(R.id.etItemName);
+        etItemName =
+                findViewById(
+                        R.id.etItemName
+                );
 
-        etQuantity = findViewById(R.id.etQuantity);
+        etQuantity =
+                findViewById(
+                        R.id.etQuantity
+                );
 
-        btnMinus = findViewById(R.id.btnMinus);
+        btnMinus =
+                findViewById(
+                        R.id.btnMinus
+                );
 
-        btnPlus = findViewById(R.id.btnPlus);
+        btnPlus =
+                findViewById(
+                        R.id.btnPlus
+                );
 
-        btnAddItem = findViewById(R.id.btnAddItem);
+        btnAddItem =
+                findViewById(
+                        R.id.btnAddItem
+                );
 
-        btnClearList = findViewById(R.id.btnClearList);
+        btnClearList =
+                findViewById(
+                        R.id.btnClearList
+                );
 
-        btnBackHome = findViewById(R.id.btnBackHome);
+        btnBackHome =
+                findViewById(
+                        R.id.btnBackHome
+                );
 
         shoppingListContainer =
-                findViewById(R.id.shoppingListContainer);
+                findViewById(
+                        R.id.shoppingListContainer
+                );
 
         tvListCount =
-                findViewById(R.id.tvListCount);
+                findViewById(
+                        R.id.tvListCount
+                );
 
         tvEmptyMessage =
-                findViewById(R.id.tvEmptyMessage);
+                findViewById(
+                        R.id.tvEmptyMessage
+                );
     }
 
 
@@ -110,7 +144,8 @@ public class ShoppingListActivity extends AppCompatActivity {
 
         btnMinus.setOnClickListener(v -> {
 
-            int quantity = getCurrentQuantity();
+            int quantity =
+                    getCurrentQuantity();
 
             if (quantity > 1) {
                 quantity--;
@@ -126,7 +161,8 @@ public class ShoppingListActivity extends AppCompatActivity {
 
         btnPlus.setOnClickListener(v -> {
 
-            int quantity = getCurrentQuantity();
+            int quantity =
+                    getCurrentQuantity();
 
             quantity++;
 
@@ -157,7 +193,10 @@ public class ShoppingListActivity extends AppCompatActivity {
             int quantity =
                     Integer.parseInt(quantityText);
 
-            return Math.max(quantity, 1);
+            return Math.max(
+                    quantity,
+                    1
+            );
 
         } catch (NumberFormatException e) {
 
@@ -172,12 +211,18 @@ public class ShoppingListActivity extends AppCompatActivity {
 
     private void setupClickListeners() {
 
+        // =====================================================
         // ADD ITEM
+        // =====================================================
 
-        btnAddItem.setOnClickListener(v -> addItem());
+        btnAddItem.setOnClickListener(
+                v -> addItem()
+        );
 
 
+        // =====================================================
         // CLEAR LIST
+        // =====================================================
 
         btnClearList.setOnClickListener(v -> {
 
@@ -201,13 +246,13 @@ public class ShoppingListActivity extends AppCompatActivity {
         });
 
 
+        // =====================================================
         // BACK HOME
+        // =====================================================
 
-        btnBackHome.setOnClickListener(v -> {
-
-            finish();
-
-        });
+        btnBackHome.setOnClickListener(v ->
+                finish()
+        );
     }
 
 
@@ -228,9 +273,9 @@ public class ShoppingListActivity extends AppCompatActivity {
                         .trim();
 
 
-        // -----------------------------------------------------
+        // =====================================================
         // VALIDATE ITEM NAME
-        // -----------------------------------------------------
+        // =====================================================
 
         if (TextUtils.isEmpty(itemName)) {
 
@@ -244,9 +289,9 @@ public class ShoppingListActivity extends AppCompatActivity {
         }
 
 
-        // -----------------------------------------------------
+        // =====================================================
         // VALIDATE QUANTITY
-        // -----------------------------------------------------
+        // =====================================================
 
         int quantity = 1;
 
@@ -255,7 +300,9 @@ public class ShoppingListActivity extends AppCompatActivity {
             try {
 
                 quantity =
-                        Integer.parseInt(quantityText);
+                        Integer.parseInt(
+                                quantityText
+                        );
 
             } catch (NumberFormatException e) {
 
@@ -283,7 +330,7 @@ public class ShoppingListActivity extends AppCompatActivity {
 
 
         // =====================================================
-        // GET CURRENT LIST
+        // GET CURRENT SHOPPING LIST
         // =====================================================
 
         JSONArray shoppingList =
@@ -295,9 +342,9 @@ public class ShoppingListActivity extends AppCompatActivity {
             boolean itemExists = false;
 
 
-            // -------------------------------------------------
-            // CHECK EXISTING ITEM
-            // -------------------------------------------------
+            // =================================================
+            // CHECK IF ITEM ALREADY EXISTS
+            // =================================================
 
             for (int i = 0;
                  i < shoppingList.length();
@@ -307,18 +354,43 @@ public class ShoppingListActivity extends AppCompatActivity {
                         shoppingList.getJSONObject(i);
 
                 String existingName =
-                        item.getString("name");
+                        item.optString(
+                                "name",
+                                ""
+                        );
 
 
-                if (existingName.equalsIgnoreCase(itemName)) {
+                if (existingName.equalsIgnoreCase(
+                        itemName
+                )) {
 
                     int oldQuantity =
-                            item.getInt("quantity");
+                            item.optInt(
+                                    "quantity",
+                                    0
+                            );
+
+
+                    // Increase requested quantity
 
                     item.put(
                             "quantity",
                             oldQuantity + quantity
                     );
+
+
+                    // Make sure purchasedQuantity exists
+
+                    if (!item.has(
+                            "purchasedQuantity"
+                    )) {
+
+                        item.put(
+                                "purchasedQuantity",
+                                0
+                        );
+                    }
+
 
                     itemExists = true;
 
@@ -327,24 +399,36 @@ public class ShoppingListActivity extends AppCompatActivity {
             }
 
 
-            // -------------------------------------------------
+            // =================================================
             // ADD NEW ITEM
-            // -------------------------------------------------
+            // =================================================
 
             if (!itemExists) {
 
                 JSONObject newItem =
                         new JSONObject();
 
+
                 newItem.put(
                         "name",
                         itemName
                 );
 
+
                 newItem.put(
                         "quantity",
                         quantity
                 );
+
+
+                // IMPORTANT:
+                // New item has not been purchased yet.
+
+                newItem.put(
+                        "purchasedQuantity",
+                        0
+                );
+
 
                 shoppingList.put(
                         newItem
@@ -391,7 +475,7 @@ public class ShoppingListActivity extends AppCompatActivity {
 
 
         // =====================================================
-        // REFRESH
+        // REFRESH LIST
         // =====================================================
 
         loadShoppingList();
@@ -416,6 +500,7 @@ public class ShoppingListActivity extends AppCompatActivity {
                         PREF_NAME,
                         MODE_PRIVATE
                 );
+
 
         String json =
                 prefs.getString(
@@ -482,19 +567,22 @@ public class ShoppingListActivity extends AppCompatActivity {
                 shoppingList.length();
 
 
-        // -----------------------------------------------------
+        // =====================================================
         // UPDATE COUNT
-        // -----------------------------------------------------
+        // =====================================================
 
         tvListCount.setText(
-                itemCount + " item" +
-                        (itemCount == 1 ? "" : "s")
+                itemCount
+                        + " item"
+                        + (itemCount == 1
+                        ? ""
+                        : "s")
         );
 
 
-        // -----------------------------------------------------
+        // =====================================================
         // EMPTY LIST
-        // -----------------------------------------------------
+        // =====================================================
 
         if (itemCount == 0) {
 
@@ -510,9 +598,9 @@ public class ShoppingListActivity extends AppCompatActivity {
         }
 
 
-        // -----------------------------------------------------
+        // =====================================================
         // LIST HAS ITEMS
-        // -----------------------------------------------------
+        // =====================================================
 
         tvEmptyMessage.setVisibility(
                 View.GONE
@@ -523,9 +611,9 @@ public class ShoppingListActivity extends AppCompatActivity {
         );
 
 
-        // -----------------------------------------------------
-        // CREATE ITEMS
-        // -----------------------------------------------------
+        // =====================================================
+        // CREATE EACH ITEM
+        // =====================================================
 
         for (int i = 0;
              i < shoppingList.length();
@@ -536,16 +624,32 @@ public class ShoppingListActivity extends AppCompatActivity {
                 JSONObject item =
                         shoppingList.getJSONObject(i);
 
+
                 String itemName =
-                        item.getString("name");
+                        item.optString(
+                                "name",
+                                "Item"
+                        );
+
 
                 int quantity =
-                        item.getInt("quantity");
+                        item.optInt(
+                                "quantity",
+                                1
+                        );
+
+
+                int purchasedQuantity =
+                        item.optInt(
+                                "purchasedQuantity",
+                                0
+                        );
 
 
                 createItemRow(
                         itemName,
                         quantity,
+                        purchasedQuantity,
                         i
                 );
 
@@ -569,23 +673,27 @@ public class ShoppingListActivity extends AppCompatActivity {
     private void createItemRow(
             String itemName,
             int quantity,
+            int purchasedQuantity,
             int position
     ) {
 
-        // -----------------------------------------------------
+        // =====================================================
         // MAIN ROW
-        // -----------------------------------------------------
+        // =====================================================
 
         LinearLayout row =
                 new LinearLayout(this);
+
 
         row.setOrientation(
                 LinearLayout.HORIZONTAL
         );
 
+
         row.setGravity(
                 Gravity.CENTER_VERTICAL
         );
+
 
         row.setPadding(
                 18,
@@ -595,27 +703,30 @@ public class ShoppingListActivity extends AppCompatActivity {
         );
 
 
-        // -----------------------------------------------------
+        // =====================================================
         // BACKGROUND
-        // -----------------------------------------------------
+        // =====================================================
 
         row.setBackgroundResource(
                 R.drawable.shopping_list_item_bg
         );
 
 
-        // -----------------------------------------------------
+        // =====================================================
         // PRODUCT ICON
-        // -----------------------------------------------------
+        // =====================================================
 
         TextView tvIcon =
                 new TextView(this);
+
 
         tvIcon.setText(
                 getProductIcon(itemName)
         );
 
+
         tvIcon.setTextSize(32);
+
 
         tvIcon.setGravity(
                 Gravity.CENTER
@@ -627,6 +738,7 @@ public class ShoppingListActivity extends AppCompatActivity {
                         65,
                         65
                 );
+
 
         iconParams.setMargins(
                 0,
@@ -642,34 +754,25 @@ public class ShoppingListActivity extends AppCompatActivity {
         );
 
 
-        // -----------------------------------------------------
-        // ITEM NAME
-        // -----------------------------------------------------
+        // =====================================================
+        // NAME + PURCHASE STATUS CONTAINER
+        // =====================================================
 
-        TextView tvName =
-                new TextView(this);
+        LinearLayout nameContainer =
+                new LinearLayout(this);
 
-        tvName.setText(
-                itemName
+
+        nameContainer.setOrientation(
+                LinearLayout.VERTICAL
         );
 
-        tvName.setTextSize(19);
 
-        tvName.setTextColor(
-                Color.parseColor("#174D3C")
-        );
-
-        tvName.setGravity(
+        nameContainer.setGravity(
                 Gravity.CENTER_VERTICAL
         );
 
-        tvName.setTypeface(
-                null,
-                android.graphics.Typeface.BOLD
-        );
 
-
-        LinearLayout.LayoutParams nameParams =
+        LinearLayout.LayoutParams nameContainerParams =
                 new LinearLayout.LayoutParams(
                         0,
                         LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -677,36 +780,168 @@ public class ShoppingListActivity extends AppCompatActivity {
                 );
 
 
-        row.addView(
-                tvName,
-                nameParams
+        // =====================================================
+        // ITEM NAME
+        // =====================================================
+
+        TextView tvName =
+                new TextView(this);
+
+
+        tvName.setText(
+                itemName
         );
 
 
+        tvName.setTextSize(19);
+
+
+        tvName.setTextColor(
+                Color.parseColor(
+                        "#174D3C"
+                )
+        );
+
+
+        tvName.setTypeface(
+                null,
+                Typeface.BOLD
+        );
+
+
+        nameContainer.addView(
+                tvName
+        );
+
+
+        // =====================================================
+        // PURCHASE STATUS
+        // =====================================================
+
+        TextView tvPurchased =
+                new TextView(this);
+
+
         // -----------------------------------------------------
+        // FULLY PURCHASED
+        // -----------------------------------------------------
+
+        if (purchasedQuantity >= quantity) {
+
+            tvPurchased.setText(
+                    "✓ Purchased "
+                            + quantity
+                            + " of "
+                            + quantity
+            );
+
+
+            tvPurchased.setTextColor(
+                    Color.parseColor(
+                            "#087F72"
+                    )
+            );
+
+        }
+
+
+        // -----------------------------------------------------
+        // PARTIALLY PURCHASED
+        // -----------------------------------------------------
+
+        else if (purchasedQuantity > 0) {
+
+            tvPurchased.setText(
+                    "✓ Purchased "
+                            + purchasedQuantity
+                            + " of "
+                            + quantity
+            );
+
+
+            tvPurchased.setTextColor(
+                    Color.parseColor(
+                            "#087F72"
+                    )
+            );
+
+        }
+
+
+        // -----------------------------------------------------
+        // NOT PURCHASED
+        // -----------------------------------------------------
+
+        else {
+
+            tvPurchased.setText(
+                    "☐ Pending"
+            );
+
+
+            tvPurchased.setTextColor(
+                    Color.parseColor(
+                            "#6B7D78"
+                    )
+            );
+        }
+
+
+        tvPurchased.setTextSize(14);
+
+
+        tvPurchased.setTypeface(
+                null,
+                Typeface.BOLD
+        );
+
+
+        nameContainer.addView(
+                tvPurchased
+        );
+
+
+        // =====================================================
+        // ADD NAME CONTAINER TO ROW
+        // =====================================================
+
+        row.addView(
+                nameContainer,
+                nameContainerParams
+        );
+
+
+        // =====================================================
         // QUANTITY
-        // -----------------------------------------------------
+        // =====================================================
 
         TextView tvQuantity =
                 new TextView(this);
+
 
         tvQuantity.setText(
                 "Qty:\n" + quantity
         );
 
+
         tvQuantity.setTextSize(15);
 
+
         tvQuantity.setTextColor(
-                Color.parseColor("#087F72")
+                Color.parseColor(
+                        "#087F72"
+                )
         );
+
 
         tvQuantity.setGravity(
                 Gravity.CENTER
         );
 
+
         tvQuantity.setTypeface(
                 null,
-                android.graphics.Typeface.BOLD
+                Typeface.BOLD
         );
 
 
@@ -723,22 +958,27 @@ public class ShoppingListActivity extends AppCompatActivity {
         );
 
 
-        // -----------------------------------------------------
+        // =====================================================
         // DELETE BUTTON
-        // -----------------------------------------------------
+        // =====================================================
 
         Button btnDelete =
                 new Button(this);
 
+
         btnDelete.setText("🗑");
 
+
         btnDelete.setTextSize(18);
+
 
         btnDelete.setTextColor(
                 Color.WHITE
         );
 
+
         btnDelete.setAllCaps(false);
+
 
         btnDelete.setBackgroundResource(
                 R.drawable.shopping_delete_bg
@@ -758,26 +998,25 @@ public class ShoppingListActivity extends AppCompatActivity {
         );
 
 
-        // -----------------------------------------------------
+        // =====================================================
         // DELETE CLICK
-        // -----------------------------------------------------
+        // =====================================================
 
-        btnDelete.setOnClickListener(v -> {
-
-            deleteItem(position);
-
-        });
+        btnDelete.setOnClickListener(
+                v -> deleteItem(position)
+        );
 
 
-        // -----------------------------------------------------
-        // ADD ROW
-        // -----------------------------------------------------
+        // =====================================================
+        // ADD ROW TO CONTAINER
+        // =====================================================
 
         LinearLayout.LayoutParams rowParams =
                 new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT
                 );
+
 
         rowParams.setMargins(
                 0,
@@ -803,68 +1042,85 @@ public class ShoppingListActivity extends AppCompatActivity {
     ) {
 
         String name =
-                itemName.toLowerCase().trim();
+                itemName
+                        .toLowerCase()
+                        .trim();
 
 
         if (name.contains("milk")) {
             return "🥛";
         }
 
+
         if (name.contains("bread")) {
             return "🍞";
         }
+
 
         if (name.contains("apple")) {
             return "🍎";
         }
 
+
         if (name.contains("banana")) {
             return "🍌";
         }
+
 
         if (name.contains("orange")) {
             return "🍊";
         }
 
+
         if (name.contains("tomato")) {
             return "🍅";
         }
+
 
         if (name.contains("potato")) {
             return "🥔";
         }
 
+
         if (name.contains("carrot")) {
             return "🥕";
         }
+
 
         if (name.contains("egg")) {
             return "🥚";
         }
 
+
         if (name.contains("rice")) {
             return "🍚";
         }
+
 
         if (name.contains("chips")) {
             return "🍟";
         }
 
+
         if (name.contains("juice")) {
             return "🧃";
         }
+
 
         if (name.contains("water")) {
             return "💧";
         }
 
+
         if (name.contains("soap")) {
             return "🧼";
         }
 
+
         if (name.contains("cake")) {
             return "🍰";
         }
+
 
         return "🛍️";
     }
@@ -874,7 +1130,9 @@ public class ShoppingListActivity extends AppCompatActivity {
     // DELETE ITEM
     // =========================================================
 
-    private void deleteItem(int position) {
+    private void deleteItem(
+            int position
+    ) {
 
         JSONArray shoppingList =
                 getShoppingList();
@@ -887,7 +1145,13 @@ public class ShoppingListActivity extends AppCompatActivity {
         }
 
 
-        shoppingList.remove(position);
+        // IMPORTANT:
+        // This is the ONLY place where the shopping
+        // list item is removed.
+
+        shoppingList.remove(
+                position
+        );
 
 
         saveShoppingList(
