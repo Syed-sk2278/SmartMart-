@@ -2,33 +2,26 @@ package com.example.smartmartplus;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Shelf {
+public class Aisle {
 
     @SerializedName("id")
     private String id;
 
-    @SerializedName("aisle_id")
-    private String aisleId;
-
     @SerializedName("name")
     private String name;
 
-    @SerializedName("shelf_number")
-    private int shelfNumber;
+    @SerializedName("aisle_number")
+    private int aisleNumber;
 
     public String getId() {
         return id;
-    }
-
-    public String getAisleId() {
-        return aisleId;
     }
 
     public String getName() {
         return name;
     }
 
-    public int getShelfNumber() {
-        return shelfNumber;
+    public int getAisleNumber() {
+        return aisleNumber;
     }
 }

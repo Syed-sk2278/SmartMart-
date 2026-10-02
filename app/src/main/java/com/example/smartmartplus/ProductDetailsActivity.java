@@ -18,12 +18,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.List;
 import java.util.Locale;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class ProductDetailsActivity
         extends AppCompatActivity {
@@ -39,15 +34,23 @@ public class ProductDetailsActivity
     private TextView tvPrice;
     private TextView tvGst;
     private TextView tvDiscount;
+
+    // Small stock status
     private TextView tvStockStatus;
+
+    // Large stock information box
+    private TextView tvStockInfo;
+
     private TextView tvShelf;
     private TextView tvDescription;
     private TextView tvBarcode;
 
+    // Shopping list status
     private TextView tvShoppingListStatus;
 
     private Button btnAddToCart;
     private Button btnViewCart;
+    private Button btnFindOnMap;
 
 
     // =================================================
@@ -71,9 +74,6 @@ public class ProductDetailsActivity
     ) {
 
         super.onCreate(savedInstanceState);
-
-        // Initialize Retrofit
-        RetrofitClient.initialize(this);
 
         setContentView(
                 R.layout.activity_product_details
@@ -119,6 +119,13 @@ public class ProductDetailsActivity
                         R.id.tvStockStatus
                 );
 
+        // IMPORTANT:
+        // Your XML uses tvStockInfo.
+        tvStockInfo =
+                findViewById(
+                        R.id.tvStockInfo
+                );
+
         tvShelf =
                 findViewById(
                         R.id.tvShelf
@@ -147,6 +154,11 @@ public class ProductDetailsActivity
         btnViewCart =
                 findViewById(
                         R.id.btnViewCart
+                );
+
+        btnFindOnMap =
+                findViewById(
+                        R.id.btnFindOnMap
                 );
 
 
@@ -179,7 +191,7 @@ public class ProductDetailsActivity
                         "PRODUCT_BARCODE"
                 );
 
-        String shelfId =
+        String shelf =
                 getIntent().getStringExtra(
                         "PRODUCT_SHELF"
                 );
@@ -211,6 +223,11 @@ public class ProductDetailsActivity
                 getIntent().getIntExtra(
                         "PRODUCT_STOCK",
                         0
+                );
+
+        String categoryName =
+                getIntent().getStringExtra(
+                        "CATEGORY_NAME"
                 );
 
 
@@ -306,11 +323,12 @@ public class ProductDetailsActivity
 
 
         // =================================================
-        // STOCK STATUS
+        // STOCK
         // =================================================
 
         if (stock > 0) {
 
+            // Small green stock status
             tvStockStatus.setText(
                     "✓  In Stock"
             );
@@ -323,8 +341,25 @@ public class ProductDetailsActivity
                     )
             );
 
+
+            // LARGE STOCK BOX
+            tvStockInfo.setText(
+                    "Stock: "
+                            + stock
+                            + " available"
+            );
+
+            tvStockInfo.setTextColor(
+                    Color.rgb(
+                            16,
+                            28,
+                            37
+                    )
+            );
+
         } else {
 
+            // Small red stock status
             tvStockStatus.setText(
                     "✕  Out of Stock"
             );
@@ -332,37 +367,50 @@ public class ProductDetailsActivity
             tvStockStatus.setTextColor(
                     Color.RED
             );
+
+
+            // LARGE STOCK BOX
+            tvStockInfo.setText(
+                    "Stock: 0 available"
+            );
+
+            tvStockInfo.setTextColor(
+                    Color.RED
+            );
         }
 
 
         // =================================================
-        // SHELF
+        // PRODUCT LOCATION
         // =================================================
 
-        /*
-         * PRODUCT_SHELF contains the shelf UUID.
-         *
-         * We DO NOT display that UUID to the customer.
-         *
-         * Instead we query the shelves table and display:
-         *
-         * 📍 Shelf 1
-         * 📍 Shelf 2
-         * 📍 Shelf 3
-         * 📍 Shelf 4
-         */
+        if (shelf != null
+                && !shelf.trim().isEmpty()) {
 
-        if (shelfId != null
-                && !shelfId.trim().isEmpty()) {
+            /*
+             * StoreSectionActivity should pass the
+             * customer-friendly location such as:
+             *
+             * Aisle 1 • Shelf 2
+             */
 
-            loadShelfName(
-                    shelfId
-            );
+            if (shelf.startsWith("Aisle")) {
+
+                tvShelf.setText(
+                        "📍 " + shelf
+                );
+
+            } else {
+
+                tvShelf.setText(
+                        "📍 " + shelf
+                );
+            }
 
         } else {
 
             tvShelf.setText(
-                    "📍 Shelf: N/A"
+                    "📍 Location unavailable"
             );
         }
 
@@ -410,10 +458,9 @@ public class ProductDetailsActivity
         // =================================================
 
         /*
-         * image_url is currently NULL in Supabase.
-         *
-         * Keep the placeholder until your friend
-         * connects the product image URLs.
+         * image_url is currently NULL.
+         * Keep placeholder until backend image_url
+         * is populated.
          */
 
         imgProduct.setImageResource(
@@ -438,7 +485,7 @@ public class ProductDetailsActivity
                 v -> {
 
                     // -----------------------------------------
-                    // CHECK STOCK
+                    // STOCK CHECK
                     // -----------------------------------------
 
                     if (stock <= 0) {
@@ -480,8 +527,8 @@ public class ProductDetailsActivity
 
                                     stock,
 
-                                    shelfId != null
-                                            ? shelfId
+                                    shelf != null
+                                            ? shelf
                                             : "",
 
                                     description != null
@@ -503,15 +550,6 @@ public class ProductDetailsActivity
                     CartManager.addToCart(
                             ProductDetailsActivity.this,
                             item
-                    );
-
-
-                    // -----------------------------------------
-                    // UPDATE SHOPPING LIST
-                    // -----------------------------------------
-
-                    updateShoppingListAfterPurchase(
-                            displayProductName
                     );
 
 
@@ -554,93 +592,44 @@ public class ProductDetailsActivity
                     startActivity(intent);
                 }
         );
-    }
 
 
-    // =================================================
-    // LOAD SHELF NAME
-    // =================================================
+        // =================================================
+        // FIND PRODUCT ON MAP
+        // =================================================
 
-    private void loadShelfName(
-            String shelfId
-    ) {
+        btnFindOnMap.setOnClickListener(
+                v -> {
 
-        SupabaseApi api =
-                RetrofitClient
-                        .getRetrofitInstance()
-                        .create(
-                                SupabaseApi.class
-                        );
+                    if (categoryName == null
+                            || categoryName.trim().isEmpty()) {
 
+                        Toast.makeText(
+                                ProductDetailsActivity.this,
+                                "Store location is not available",
+                                Toast.LENGTH_SHORT
+                        ).show();
 
-        String shelfFilter =
-                "eq." + shelfId;
-
-
-        api.getShelfById(
-                        shelfFilter
-                )
-                .enqueue(
-                        new Callback<List<Shelf>>() {
-
-                            @Override
-                            public void onResponse(
-                                    Call<List<Shelf>> call,
-                                    Response<List<Shelf>> response
-                            ) {
-
-                                if (!response.isSuccessful()) {
-
-                                    tvShelf.setText(
-                                            "📍 Shelf: N/A"
-                                    );
-
-                                    return;
-                                }
+                        return;
+                    }
 
 
-                                List<Shelf> shelves =
-                                        response.body();
+                    Intent intent =
+                            new Intent(
+                                    ProductDetailsActivity.this,
+                                    StoreMapActivity.class
+                            );
 
 
-                                if (shelves == null ||
-                                        shelves.isEmpty()) {
-
-                                    tvShelf.setText(
-                                            "📍 Shelf: N/A"
-                                    );
-
-                                    return;
-                                }
+                    intent.putExtra(
+                            "HIGHLIGHT_CATEGORY",
+                            categoryName
+                    );
 
 
-                                Shelf shelf =
-                                        shelves.get(0);
-
-
-                                // =====================================
-                                // DISPLAY CLEAN SHELF NAME
-                                // =====================================
-
-                                tvShelf.setText(
-                                        "📍 Shelf "
-                                                + shelf.getShelfNumber()
-                                );
-                            }
-
-
-                            @Override
-                            public void onFailure(
-                                    Call<List<Shelf>> call,
-                                    Throwable t
-                            ) {
-
-                                tvShelf.setText(
-                                        "📍 Shelf: N/A"
-                                );
-                            }
-                        }
-                );
+                    startActivity(intent);
+                }
+        );
     }
 
 
@@ -696,21 +685,13 @@ public class ProductDetailsActivity
                         );
 
 
-                int purchasedQuantity =
-                        item.optInt(
-                                "purchasedQuantity",
-                                0
-                        );
-
-
                 if (isSameShoppingItem(
                         productName,
                         listItemName
                 )) {
 
-                    showShoppingListStatus(
-                            requestedQuantity,
-                            purchasedQuantity
+                    showOnShoppingList(
+                            requestedQuantity
                     );
 
                     return;
@@ -720,111 +701,10 @@ public class ProductDetailsActivity
 
             showNotOnShoppingList();
 
+
         } catch (JSONException e) {
 
             showNotOnShoppingList();
-        }
-    }
-
-
-    // =================================================
-    // UPDATE SHOPPING LIST
-    // =================================================
-
-    private void updateShoppingListAfterPurchase(
-            String productName
-    ) {
-
-        SharedPreferences prefs =
-                getSharedPreferences(
-                        PREF_NAME,
-                        MODE_PRIVATE
-                );
-
-
-        String shoppingListJson =
-                prefs.getString(
-                        KEY_SHOPPING_LIST,
-                        "[]"
-                );
-
-
-        try {
-
-            JSONArray shoppingList =
-                    new JSONArray(
-                            shoppingListJson
-                    );
-
-
-            for (int i = 0;
-                 i < shoppingList.length();
-                 i++) {
-
-                JSONObject item =
-                        shoppingList.getJSONObject(i);
-
-
-                String listItemName =
-                        item.optString(
-                                "name",
-                                ""
-                        ).trim();
-
-
-                if (isSameShoppingItem(
-                        productName,
-                        listItemName
-                )) {
-
-                    int requestedQuantity =
-                            item.optInt(
-                                    "quantity",
-                                    1
-                            );
-
-
-                    int purchasedQuantity =
-                            item.optInt(
-                                    "purchasedQuantity",
-                                    0
-                            );
-
-
-                    if (purchasedQuantity
-                            < requestedQuantity) {
-
-                        purchasedQuantity++;
-
-
-                        item.put(
-                                "purchasedQuantity",
-                                purchasedQuantity
-                        );
-
-
-                        prefs.edit()
-                                .putString(
-                                        KEY_SHOPPING_LIST,
-                                        shoppingList.toString()
-                                )
-                                .apply();
-
-
-                        showShoppingListStatus(
-                                requestedQuantity,
-                                purchasedQuantity
-                        );
-                    }
-
-
-                    return;
-                }
-            }
-
-        } catch (JSONException e) {
-
-            e.printStackTrace();
         }
     }
 
@@ -884,12 +764,11 @@ public class ProductDetailsActivity
 
 
     // =================================================
-    // SHOPPING LIST STATUS
+    // SHOW ON SHOPPING LIST
     // =================================================
 
-    private void showShoppingListStatus(
-            int requestedQuantity,
-            int purchasedQuantity
+    private void showOnShoppingList(
+            int requestedQuantity
     ) {
 
         if (requestedQuantity <= 0) {
@@ -898,39 +777,10 @@ public class ProductDetailsActivity
         }
 
 
-        if (purchasedQuantity < 0) {
-
-            purchasedQuantity = 0;
-        }
-
-
-        if (purchasedQuantity > requestedQuantity) {
-
-            purchasedQuantity =
-                    requestedQuantity;
-        }
-
-
-        String statusText =
+        tvShoppingListStatus.setText(
                 "🛒  On Your Shopping List\n"
                         + "Requested quantity: "
-                        + requestedQuantity;
-
-
-        if (purchasedQuantity > 0) {
-
-            statusText =
-                    statusText
-                            + "\n"
-                            + "✓ Purchased "
-                            + purchasedQuantity
-                            + " of "
-                            + requestedQuantity;
-        }
-
-
-        tvShoppingListStatus.setText(
-                statusText
+                        + requestedQuantity
         );
 
 

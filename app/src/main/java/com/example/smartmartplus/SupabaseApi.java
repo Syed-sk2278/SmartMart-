@@ -80,4 +80,8 @@ public interface SupabaseApi {
     Call<List<Shelf>> getShelfById(
             @Query("id") String shelfId
     );
+    @GET("rest/v1/aisles")
+    Call<List<Aisle>> getAisleById(
+            @Query("id") String aisleId
+    );
 }

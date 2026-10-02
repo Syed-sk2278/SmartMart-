@@ -25,7 +25,6 @@
             android:orientation="horizontal"
             android:paddingBottom="18dp">
 
-
             <TextView
                 android:id="@+id/tvBack"
                 android:layout_width="55dp"
@@ -43,7 +42,6 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
 
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -51,7 +49,6 @@
                     android:textColor="#087F73"
                     android:textSize="18sp"
                     android:textStyle="bold" />
-
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -77,7 +74,7 @@
 
 
         <!-- ========================================= -->
-        <!-- PRODUCT IMAGE AREA                        -->
+        <!-- PRODUCT IMAGE                             -->
         <!-- ========================================= -->
 
         <FrameLayout
@@ -85,7 +82,6 @@
             android:layout_height="300dp"
             android:background="#E7F3F0"
             android:padding="15dp">
-
 
             <ImageView
                 android:id="@+id/imgProduct"
@@ -194,7 +190,6 @@
             android:layout_marginTop="18dp"
             android:orientation="horizontal">
 
-
             <TextView
                 android:id="@+id/tvGst"
                 android:layout_width="0dp"
@@ -207,7 +202,6 @@
                 android:textColor="#087F73"
                 android:textSize="20sp"
                 android:textStyle="bold" />
-
 
             <TextView
                 android:id="@+id/tvDiscount"
@@ -226,8 +220,11 @@
 
 
         <!-- ========================================= -->
-        <!-- STOCK                                     -->
+        <!-- STOCK                                    -->
         <!-- ========================================= -->
+
+        <!-- IMPORTANT:
+             This is tvStockInfo, NOT tvStock -->
 
         <TextView
             android:id="@+id/tvStockInfo"
@@ -237,14 +234,14 @@
             android:background="#FFFFFF"
             android:gravity="center_vertical"
             android:paddingLeft="22dp"
-            android:text="Stock"
+            android:text="Stock: 0 available"
             android:textColor="#101C25"
             android:textSize="20sp"
             android:textStyle="bold" />
 
 
         <!-- ========================================= -->
-        <!-- SHELF                                     -->
+        <!-- PRODUCT LOCATION                          -->
         <!-- ========================================= -->
 
         <TextView
@@ -254,7 +251,7 @@
             android:layout_marginTop="12dp"
             android:background="#FFFFFF"
             android:padding="22dp"
-            android:text="Shelf: N/A"
+            android:text="📍 Location unavailable"
             android:textColor="#35464D"
             android:textSize="20sp" />
 
@@ -316,6 +313,7 @@
             android:layout_marginTop="25dp"
             android:backgroundTint="#087F73"
             android:text="Add to Cart"
+            android:textAllCaps="false"
             android:textColor="#FFFFFF"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -332,11 +330,29 @@
             android:layout_marginTop="12dp"
             android:backgroundTint="#D9EFE9"
             android:text="🛒  View Cart"
+            android:textAllCaps="false"
             android:textColor="#087F73"
             android:textSize="18sp"
             android:textStyle="bold"
             android:visibility="gone" />
 
+
+        <!-- ========================================= -->
+        <!-- FIND PRODUCT ON MAP                       -->
+        <!-- ========================================= -->
+
+        <Button
+            android:id="@+id/btnFindOnMap"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="25dp"
+            android:backgroundTint="#FFE0AD"
+            android:text="🗺️  Find This Product on Map"
+            android:textAllCaps="false"
+            android:textColor="#A84D0C"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 
