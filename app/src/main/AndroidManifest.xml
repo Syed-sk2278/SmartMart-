@@ -105,6 +105,12 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
+        <!-- Billing -->
+        <activity
+            android:name=".BillingActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
         <!-- Payment -->
         <activity
             android:name=".PaymentActivity"
@@ -116,20 +122,36 @@
             android:name=".ReceiptActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+
         <!-- Purchase History -->
         <activity
             android:name=".PurchaseHistoryActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+
+        <!-- Store Map -->
         <activity
             android:name=".StoreMapActivity"
             android:exported="false" />
+
         <!-- Store Section -->
         <activity
             android:name=".StoreSectionActivity"
             android:exported="false" />
 
-        <!-- Admin -->
+        <!-- Exit Verification -->
+        <activity
+            android:name=".ExitVerificationActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!-- Staff/Admin Login -->
+        <activity
+            android:name=".AdminLoginActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!-- Staff/Admin Dashboard -->
         <activity
             android:name=".AdminActivity"
             android:exported="false"

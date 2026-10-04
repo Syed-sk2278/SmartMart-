@@ -18,6 +18,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText etEmail, etPassword;
     private Button btnLogin;
+    private Button btnAdminLogin;
     private TextView tvSignup;
     private TextView tvForgot;
 
@@ -42,11 +43,12 @@ public class LoginActivity extends AppCompatActivity {
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
         btnLogin = findViewById(R.id.btnLogin);
+        btnAdminLogin = findViewById(R.id.btnAdminLogin);
         tvSignup = findViewById(R.id.tvSignup);
         tvForgot = findViewById(R.id.tvForgot);
 
         // ==========================================
-        // LOGIN BUTTON
+        // CUSTOMER LOGIN BUTTON
         // ==========================================
 
         btnLogin.setOnClickListener(v -> loginUser());
@@ -78,8 +80,21 @@ public class LoginActivity extends AppCompatActivity {
 
             startActivity(intent);
         });
-    }
 
+        // ==========================================
+        // STAFF / ADMIN LOGIN
+        // ==========================================
+
+        btnAdminLogin.setOnClickListener(v -> {
+
+            Intent intent = new Intent(
+                    LoginActivity.this,
+                    AdminLoginActivity.class
+            );
+
+            startActivity(intent);
+        });
+    }
 
     // =====================================================
     // LOGIN USER
@@ -94,7 +109,6 @@ public class LoginActivity extends AppCompatActivity {
         String password = etPassword.getText()
                 .toString()
                 .trim();
-
 
         // =================================================
         // VALIDATION
@@ -111,7 +125,6 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-
         if (!Patterns.EMAIL_ADDRESS
                 .matcher(email)
                 .matches()) {
@@ -125,7 +138,6 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-
         if (password.isEmpty()) {
 
             etPassword.setError(
@@ -136,7 +148,6 @@ public class LoginActivity extends AppCompatActivity {
 
             return;
         }
-
 
         if (password.length() < 6) {
 
@@ -149,7 +160,6 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-
         // =================================================
         // LOGIN REQUEST
         // =================================================
@@ -159,7 +169,6 @@ public class LoginActivity extends AppCompatActivity {
                 password
         );
 
-
         // =================================================
         // SUPABASE API
         // =================================================
@@ -167,7 +176,6 @@ public class LoginActivity extends AppCompatActivity {
         SupabaseApi api = RetrofitClient
                 .getRetrofitInstance()
                 .create(SupabaseApi.class);
-
 
         api.loginUser(request)
                 .enqueue(
@@ -188,7 +196,6 @@ public class LoginActivity extends AppCompatActivity {
                                     LoginResponse loginResponse =
                                             response.body();
 
-
                                     // =================================
                                     // GET TOKENS
                                     // =================================
@@ -200,7 +207,6 @@ public class LoginActivity extends AppCompatActivity {
                                     String refreshToken =
                                             loginResponse
                                                     .getRefreshToken();
-
 
                                     // =================================
                                     // CHECK ACCESS TOKEN
@@ -220,14 +226,12 @@ public class LoginActivity extends AppCompatActivity {
                                         return;
                                     }
 
-
                                     // =================================
                                     // GET USER NAME
                                     // =================================
 
                                     String userName =
                                             "SmartMart User";
-
 
                                     if (loginResponse.getUser() != null
                                             && loginResponse
@@ -238,7 +242,6 @@ public class LoginActivity extends AppCompatActivity {
                                                 loginResponse
                                                         .getUser()
                                                         .getUserMetadata();
-
 
                                         // First try full_name
                                         if (metadata.getFullName() != null
@@ -267,7 +270,6 @@ public class LoginActivity extends AppCompatActivity {
                                                             .trim();
                                         }
                                     }
-
 
                                     // =================================
                                     // SAVE LOGIN SESSION
@@ -318,7 +320,6 @@ public class LoginActivity extends AppCompatActivity {
 
                                             .apply();
 
-
                                     // =================================
                                     // SUCCESS MESSAGE
                                     // =================================
@@ -328,7 +329,6 @@ public class LoginActivity extends AppCompatActivity {
                                             "Login Successful",
                                             Toast.LENGTH_SHORT
                                     ).show();
-
 
                                     // =================================
                                     // OPEN HOME
@@ -345,7 +345,6 @@ public class LoginActivity extends AppCompatActivity {
                                     finish();
                                 }
 
-
                                 // =====================================
                                 // LOGIN FAILED
                                 // =====================================
@@ -359,7 +358,6 @@ public class LoginActivity extends AppCompatActivity {
                                     ).show();
                                 }
                             }
-
 
                             // =========================================
                             // NETWORK ERROR

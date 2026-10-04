@@ -1,11 +1,19 @@
 package com.example.smartmartplus;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -23,195 +31,281 @@ public class ReceiptActivity extends AppCompatActivity {
     private TextView tvReceiptGST;
     private TextView tvReceiptTotal;
     private TextView tvReceiptPaymentMethod;
+    private TextView tvTransactionStatus;
+
+    private ImageView ivTransactionQR;
 
     private Button btnDone;
     private Button btnBackHome;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_receipt);
+        setContentView(
+                R.layout.activity_receipt
+        );
 
-        // ==========================================
+        // =================================================
         // FIND VIEWS
-        // ==========================================
+        // =================================================
 
         tvReceiptTitle =
-                findViewById(R.id.tvReceiptTitle);
+                findViewById(
+                        R.id.tvReceiptTitle
+                );
 
         tvReceiptNumber =
-                findViewById(R.id.tvReceiptNumber);
+                findViewById(
+                        R.id.tvReceiptNumber
+                );
 
         tvReceiptDate =
-                findViewById(R.id.tvReceiptDate);
+                findViewById(
+                        R.id.tvReceiptDate
+                );
 
         tvReceiptItems =
-                findViewById(R.id.tvReceiptItems);
+                findViewById(
+                        R.id.tvReceiptItems
+                );
 
         tvReceiptSubtotal =
-                findViewById(R.id.tvReceiptSubtotal);
+                findViewById(
+                        R.id.tvReceiptSubtotal
+                );
 
         tvReceiptDiscount =
-                findViewById(R.id.tvReceiptDiscount);
+                findViewById(
+                        R.id.tvReceiptDiscount
+                );
 
         tvReceiptGST =
-                findViewById(R.id.tvReceiptGST);
+                findViewById(
+                        R.id.tvReceiptGST
+                );
 
         tvReceiptTotal =
-                findViewById(R.id.tvReceiptTotal);
+                findViewById(
+                        R.id.tvReceiptTotal
+                );
 
         tvReceiptPaymentMethod =
-                findViewById(R.id.tvReceiptPaymentMethod);
+                findViewById(
+                        R.id.tvReceiptPaymentMethod
+                );
+
+        tvTransactionStatus =
+                findViewById(
+                        R.id.tvTransactionStatus
+                );
+
+        ivTransactionQR =
+                findViewById(
+                        R.id.ivTransactionQR
+                );
 
         btnDone =
-                findViewById(R.id.btnDone);
+                findViewById(
+                        R.id.btnDone
+                );
 
         btnBackHome =
-                findViewById(R.id.btnBackHome);
+                findViewById(
+                        R.id.btnBackHome
+                );
 
-        // ==========================================
+        // =================================================
         // GET PAYMENT DATA
-        // ==========================================
+        // =================================================
 
-        int itemCount =
+        final int itemCount =
                 getIntent().getIntExtra(
                         "ITEM_COUNT",
                         0
                 );
 
-        double subtotal =
+        final double subtotal =
                 getIntent().getDoubleExtra(
                         "SUBTOTAL",
                         0.0
                 );
 
-        double discount =
+        final double discount =
                 getIntent().getDoubleExtra(
                         "DISCOUNT",
                         0.0
                 );
 
-        double gst =
+        final double gst =
                 getIntent().getDoubleExtra(
                         "GST",
                         0.0
                 );
 
-        double total =
+        double receivedTotal =
                 getIntent().getDoubleExtra(
                         "TOTAL",
-                        subtotal - discount + gst
+                        -1.0
                 );
 
-        String paymentMethod =
+        if (receivedTotal <= 0.0) {
+
+            receivedTotal =
+                    subtotal
+                            - discount
+                            + gst;
+        }
+
+        final double total =
+                receivedTotal;
+
+        String receivedPaymentMethod =
                 getIntent().getStringExtra(
                         "PAYMENT_METHOD"
                 );
 
-        if (paymentMethod == null ||
-                paymentMethod.trim().isEmpty()) {
+        if (receivedPaymentMethod == null
+                || receivedPaymentMethod
+                .trim()
+                .isEmpty()) {
 
-            paymentMethod = "UPI";
+            receivedPaymentMethod = "UPI";
         }
 
-        // ==========================================
-        // RECEIPT NUMBER
-        // ==========================================
+        final String paymentMethod =
+                receivedPaymentMethod;
 
-        String receiptNumber =
+        // =================================================
+        // GENERATE RECEIPT NUMBER
+        // =================================================
+
+        final String receiptNumber =
                 "SM"
                         + UUID.randomUUID()
                         .toString()
-                        .substring(0, 8)
-                        .toUpperCase();
+                        .replace(
+                                "-",
+                                ""
+                        )
+                        .substring(
+                                0,
+                                8
+                        )
+                        .toUpperCase(
+                                Locale.getDefault()
+                        );
 
         tvReceiptNumber.setText(
-                "Receipt No: " + receiptNumber
+                "Receipt No.  " + receiptNumber
         );
 
-        // ==========================================
-        // DATE
-        // ==========================================
+        // =================================================
+        // DATE AND TIME
+        // =================================================
 
         String currentDate =
                 new SimpleDateFormat(
-                        "dd MMM yyyy, hh:mm a",
+                        "dd MMM yyyy  •  hh:mm a",
                         Locale.getDefault()
-                ).format(new Date());
+                ).format(
+                        new Date()
+                );
 
         tvReceiptDate.setText(
-                "Date: " + currentDate
+                currentDate
         );
 
-        // ==========================================
-        // DISPLAY ITEMS
-        // ==========================================
+        // =================================================
+        // SUCCESS STATUS
+        // =================================================
+
+        tvTransactionStatus.setText(
+                "✓  PAYMENT SUCCESSFUL"
+        );
+
+        // =================================================
+        // ITEMS
+        // =================================================
 
         tvReceiptItems.setText(
-                "Items: " + itemCount
+                itemCount
+                        + (
+                        itemCount == 1
+                                ? " item"
+                                : " items"
+                )
         );
 
-        // ==========================================
-        // DISPLAY SUBTOTAL
-        // ==========================================
+        // =================================================
+        // SUBTOTAL
+        // =================================================
 
         tvReceiptSubtotal.setText(
-                String.format(
-                        Locale.getDefault(),
-                        "₹%.2f",
-                        subtotal
-                )
+                formatRupees(subtotal)
         );
 
-        // ==========================================
-        // DISPLAY DISCOUNT
-        // ==========================================
+        // =================================================
+        // DISCOUNT
+        // =================================================
 
         tvReceiptDiscount.setText(
-                String.format(
-                        Locale.getDefault(),
-                        "- ₹%.2f",
-                        discount
-                )
+                "- " + formatRupees(discount)
         );
 
-        // ==========================================
-        // DISPLAY GST
-        // ==========================================
+        // =================================================
+        // GST
+        // =================================================
 
         tvReceiptGST.setText(
-                String.format(
-                        Locale.getDefault(),
-                        "₹%.2f",
-                        gst
-                )
+                formatRupees(gst)
         );
 
-        // ==========================================
-        // DISPLAY TOTAL
-        // ==========================================
+        // =================================================
+        // TOTAL
+        // =================================================
 
         tvReceiptTotal.setText(
-                String.format(
-                        Locale.getDefault(),
-                        "₹%.2f",
-                        total
-                )
+                formatRupees(total)
         );
 
-        // ==========================================
+        // =================================================
         // PAYMENT METHOD
-        // ==========================================
+        // =================================================
 
         tvReceiptPaymentMethod.setText(
-                "Payment Method: "
+                "Paid via  •  "
                         + paymentMethod
         );
 
-        // ==========================================
+        // =================================================
+        // TRANSACTION QR
+        // =================================================
+
+        String transactionQRData =
+                "SMARTMART_TRANSACTION"
+                        + "|RECEIPT="
+                        + receiptNumber
+                        + "|ITEMS="
+                        + itemCount
+                        + "|TOTAL="
+                        + String.format(
+                        Locale.US,
+                        "%.2f",
+                        total
+                )
+                        + "|PAYMENT="
+                        + paymentMethod
+                        + "|STATUS=PAID";
+
+        generateTransactionQR(
+                transactionQRData
+        );
+
+        // =================================================
         // SAVE PURCHASE HISTORY
-        // ==========================================
+        // =================================================
 
         PurchaseHistoryActivity.savePurchase(
                 ReceiptActivity.this,
@@ -221,13 +315,12 @@ public class ReceiptActivity extends AppCompatActivity {
                 paymentMethod
         );
 
-        // ==========================================
+        // =================================================
         // DONE
-        // ==========================================
+        // =================================================
 
         btnDone.setOnClickListener(v -> {
 
-            // Clear cart after successful payment
             CartManager.clearCart(
                     ReceiptActivity.this
             );
@@ -235,13 +328,12 @@ public class ReceiptActivity extends AppCompatActivity {
             goToHome();
         });
 
-        // ==========================================
+        // =================================================
         // BACK TO HOME
-        // ==========================================
+        // =================================================
 
         btnBackHome.setOnClickListener(v -> {
 
-            // Clear cart after successful payment
             CartManager.clearCart(
                     ReceiptActivity.this
             );
@@ -250,9 +342,87 @@ public class ReceiptActivity extends AppCompatActivity {
         });
     }
 
-    // ==============================================
+    // =====================================================
+    // FORMAT RUPEES
+    // =====================================================
+
+    private String formatRupees(
+            double amount
+    ) {
+
+        return String.format(
+                Locale.getDefault(),
+                "₹%.2f",
+                amount
+        );
+    }
+
+    // =====================================================
+    // GENERATE QR
+    // =====================================================
+
+    private void generateTransactionQR(
+            String data
+    ) {
+
+        QRCodeWriter writer =
+                new QRCodeWriter();
+
+        try {
+
+            BitMatrix bitMatrix =
+                    writer.encode(
+                            data,
+                            BarcodeFormat.QR_CODE,
+                            700,
+                            700
+                    );
+
+            int width =
+                    bitMatrix.getWidth();
+
+            int height =
+                    bitMatrix.getHeight();
+
+            Bitmap bitmap =
+                    Bitmap.createBitmap(
+                            width,
+                            height,
+                            Bitmap.Config.ARGB_8888
+                    );
+
+            for (int x = 0; x < width; x++) {
+
+                for (int y = 0; y < height; y++) {
+
+                    bitmap.setPixel(
+                            x,
+                            y,
+                            bitMatrix.get(
+                                    x,
+                                    y
+                            )
+                                    ? Color.BLACK
+                                    : Color.WHITE
+                    );
+                }
+            }
+
+            ivTransactionQR.setImageBitmap(
+                    bitmap
+            );
+
+        } catch (WriterException e) {
+
+            ivTransactionQR.setImageDrawable(
+                    null
+            );
+        }
+    }
+
+    // =====================================================
     // GO TO HOME
-    // ==============================================
+    // =====================================================
 
     private void goToHome() {
 

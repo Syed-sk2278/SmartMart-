@@ -91,7 +91,7 @@ public class CartActivity extends AppCompatActivity {
         });
 
         // ==========================================
-        // PROCEED TO CHECKOUT
+        // PROCEED TO BILLING
         // ==========================================
 
         btnCheckout.setOnClickListener(v -> {
@@ -101,66 +101,20 @@ public class CartActivity extends AppCompatActivity {
                             CartActivity.this
                     );
 
+            // Do not continue if cart is empty
             if (itemCount <= 0) {
-
                 return;
             }
 
-            // Get actual cart values
-            double subtotal =
-                    CartManager.getSubtotal(
-                            CartActivity.this
-                    );
-
-            double discount =
-                    CartManager.getDiscountTotal(
-                            CartActivity.this
-                    );
-
-            double gst =
-                    CartManager.getGstTotal(
-                            CartActivity.this
-                    );
-
-            double total =
-                    CartManager.getGrandTotal(
-                            CartActivity.this
-                    );
-
             // ======================================
-            // SEND DATA TO PAYMENT
+            // OPEN BILLING SCREEN
             // ======================================
 
             Intent intent =
                     new Intent(
                             CartActivity.this,
-                            PaymentActivity.class
+                            BillingActivity.class
                     );
-
-            intent.putExtra(
-                    "ITEM_COUNT",
-                    itemCount
-            );
-
-            intent.putExtra(
-                    "SUBTOTAL",
-                    subtotal
-            );
-
-            intent.putExtra(
-                    "DISCOUNT",
-                    discount
-            );
-
-            intent.putExtra(
-                    "GST",
-                    gst
-            );
-
-            intent.putExtra(
-                    "TOTAL",
-                    total
-            );
 
             startActivity(intent);
         });

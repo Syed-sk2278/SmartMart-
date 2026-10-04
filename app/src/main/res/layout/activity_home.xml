@@ -21,9 +21,7 @@
             android:paddingTop="12dp"
             android:paddingBottom="20dp">
 
-            <!-- ================================================= -->
             <!-- HEADER -->
-            <!-- ================================================= -->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -108,9 +106,7 @@
             </LinearLayout>
 
 
-            <!-- ================================================= -->
             <!-- SELECTED STORE -->
-            <!-- ================================================= -->
 
             <LinearLayout
                 android:id="@+id/layoutSelectedStore"
@@ -154,16 +150,6 @@
                         android:textSize="17sp"
                         android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/tvChangeStore"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="Change Store ›"
-                        android:textColor="#5635D0"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
                 </LinearLayout>
 
                 <TextView
@@ -177,9 +163,7 @@
             </LinearLayout>
 
 
-            <!-- ================================================= -->
             <!-- BEFORE STORE -->
-            <!-- ================================================= -->
 
             <LinearLayout
                 android:id="@+id/layoutBeforeStore"
@@ -227,9 +211,7 @@
             </LinearLayout>
 
 
-            <!-- ================================================= -->
             <!-- INSIDE STORE -->
-            <!-- ================================================= -->
 
             <LinearLayout
                 android:id="@+id/layoutInsideStore"
@@ -238,8 +220,6 @@
                 android:layout_marginTop="14dp"
                 android:orientation="vertical"
                 android:visibility="gone">
-
-                <!-- Inside Store Confirmation -->
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -285,9 +265,6 @@
 
                 </LinearLayout>
 
-
-                <!-- Inside Store Title -->
-
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -296,9 +273,6 @@
                     android:textColor="#0B4050"
                     android:textSize="22sp"
                     android:textStyle="bold" />
-
-
-                <!-- Scan Product -->
 
                 <Button
                     android:id="@+id/btnScanner"
@@ -313,9 +287,6 @@
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
-
-                <!-- My Cart -->
-
                 <Button
                     android:id="@+id/btnCart"
                     android:layout_width="match_parent"
@@ -328,9 +299,6 @@
                     android:textColor="#5030B7"
                     android:textSize="16sp"
                     android:textStyle="bold" />
-
-
-                <!-- Store Map -->
 
                 <Button
                     android:id="@+id/btnMap"
@@ -345,9 +313,6 @@
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
-
-                <!-- Billing -->
-
                 <Button
                     android:id="@+id/btnBilling"
                     android:layout_width="match_parent"
@@ -360,9 +325,6 @@
                     android:textColor="#145D9E"
                     android:textSize="16sp"
                     android:textStyle="bold" />
-
-
-                <!-- Payment -->
 
                 <Button
                     android:id="@+id/btnPayment"
@@ -380,9 +342,7 @@
             </LinearLayout>
 
 
-            <!-- ================================================= -->
             <!-- YOUR SMARTMART+ -->
-            <!-- ================================================= -->
 
             <TextView
                 android:layout_width="match_parent"
@@ -402,9 +362,7 @@
                 android:textSize="14sp" />
 
 
-            <!-- ================================================= -->
             <!-- SHOPPING LIST -->
-            <!-- ================================================= -->
 
             <LinearLayout
                 android:id="@+id/cardShoppingList"
@@ -442,8 +400,6 @@
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
-                    <!-- DYNAMIC COUNT -->
-
                     <TextView
                         android:id="@+id/tvShoppingListCount"
                         android:layout_width="wrap_content"
@@ -464,9 +420,7 @@
             </LinearLayout>
 
 
-            <!-- ================================================= -->
             <!-- PURCHASE HISTORY -->
-            <!-- ================================================= -->
 
             <LinearLayout
                 android:id="@+id/cardPurchaseHistory"
@@ -504,8 +458,6 @@
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
-                    <!-- DYNAMIC ORDER COUNT -->
-
                     <TextView
                         android:id="@+id/tvPurchaseHistoryCount"
                         android:layout_width="wrap_content"
@@ -526,9 +478,7 @@
             </LinearLayout>
 
 
-            <!-- ================================================= -->
             <!-- OFFERS -->
-            <!-- ================================================= -->
 
             <LinearLayout
                 android:id="@+id/cardOffers"
@@ -584,9 +534,7 @@
             </LinearLayout>
 
 
-            <!-- ================================================= -->
             <!-- MONTHLY SUMMARY -->
-            <!-- ================================================= -->
 
             <LinearLayout
                 android:id="@+id/cardSummary"
@@ -643,9 +591,7 @@
             </LinearLayout>
 
 
-            <!-- ================================================= -->
             <!-- STORE QR -->
-            <!-- ================================================= -->
 
             <LinearLayout
                 android:id="@+id/layoutStoreQR"
@@ -681,9 +627,7 @@
             </LinearLayout>
 
 
-            <!-- ================================================= -->
             <!-- QUICK ACCESS -->
-            <!-- ================================================= -->
 
             <LinearLayout
                 android:id="@+id/layoutQuickAccess"
@@ -701,9 +645,6 @@
                     android:textColor="#0B4050"
                     android:textSize="21sp"
                     android:textStyle="bold" />
-
-
-                <!-- QUICK ACCESS ROW 1 -->
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -741,9 +682,6 @@
                         android:textStyle="bold" />
 
                 </LinearLayout>
-
-
-                <!-- QUICK ACCESS ROW 2 -->
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -785,15 +723,13 @@
             </LinearLayout>
 
 
-            <!-- ================================================= -->
             <!-- LOGOUT -->
-            <!-- ================================================= -->
 
             <Button
                 android:id="@+id/btnLogout"
                 android:layout_width="match_parent"
                 android:layout_height="58dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="16dp"
                 android:background="@drawable/home_logout_bg"
                 android:text="⇥   Logout"
                 android:textAllCaps="false"

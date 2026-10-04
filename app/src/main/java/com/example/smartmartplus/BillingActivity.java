@@ -2,6 +2,7 @@ package com.example.smartmartplus;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -42,10 +43,6 @@ public class BillingActivity extends AppCompatActivity {
         loadBillingData();
     }
 
-    // =========================================================
-    // INITIALIZE VIEWS
-    // =========================================================
-
     private void initializeViews() {
 
         billingItemsContainer =
@@ -76,16 +73,9 @@ public class BillingActivity extends AppCompatActivity {
                 findViewById(R.id.btnBackCart);
     }
 
-    // =========================================================
-    // LOAD BILLING DATA
-    // =========================================================
-
     private void loadBillingData() {
 
-        cart =
-                CartManager.getCart(
-                        BillingActivity.this
-                );
+        cart = CartManager.getCart(this);
 
         if (cart == null) {
             cart = new ArrayList<>();
@@ -95,18 +85,12 @@ public class BillingActivity extends AppCompatActivity {
         displaySummary();
     }
 
-    // =========================================================
-    // DISPLAY ITEMS
-    // =========================================================
-
     private void displayItems() {
 
         billingItemsContainer.removeAllViews();
 
         int totalItems =
-                CartManager.getTotalItems(
-                        BillingActivity.this
-                );
+                CartManager.getTotalItems(this);
 
         tvItemCount.setText(
                 totalItems
@@ -124,7 +108,8 @@ public class BillingActivity extends AppCompatActivity {
                     "🛒  Your cart is empty"
             );
 
-            emptyText.setTextSize(17);
+            emptyText.setTextSize(18);
+
             emptyText.setTextColor(
                     Color.parseColor("#66668C")
             );
@@ -135,9 +120,9 @@ public class BillingActivity extends AppCompatActivity {
 
             emptyText.setPadding(
                     20,
-                    35,
+                    40,
                     20,
-                    35
+                    40
             );
 
             billingItemsContainer.addView(
@@ -152,10 +137,6 @@ public class BillingActivity extends AppCompatActivity {
             createBillingItemRow(item);
         }
     }
-
-    // =========================================================
-    // CREATE BILLING ITEM ROW
-    // =========================================================
 
     private void createBillingItemRow(
             CartItem item
@@ -179,33 +160,32 @@ public class BillingActivity extends AppCompatActivity {
                 14
         );
 
-        // -----------------------------------------------------
-        // PRODUCT ICON
-        // -----------------------------------------------------
+        // =========================================
+        // ICON
+        // =========================================
 
         TextView icon =
                 new TextView(this);
 
         icon.setText("🛍️");
+
         icon.setTextSize(28);
+
         icon.setGravity(
                 Gravity.CENTER
         );
 
-        LinearLayout.LayoutParams iconParams =
+        row.addView(
+                icon,
                 new LinearLayout.LayoutParams(
                         55,
                         55
-                );
-
-        row.addView(
-                icon,
-                iconParams
+                )
         );
 
-        // -----------------------------------------------------
+        // =========================================
         // PRODUCT INFORMATION
-        // -----------------------------------------------------
+        // =========================================
 
         LinearLayout info =
                 new LinearLayout(this);
@@ -233,18 +213,17 @@ public class BillingActivity extends AppCompatActivity {
             productName = "Product";
         }
 
-        name.setText(
-                productName
-        );
+        name.setText(productName);
 
         name.setTextColor(
                 Color.parseColor("#17176B")
         );
 
         name.setTextSize(16);
+
         name.setTypeface(
                 null,
-                android.graphics.Typeface.BOLD
+                Typeface.BOLD
         );
 
         info.addView(name);
@@ -267,6 +246,10 @@ public class BillingActivity extends AppCompatActivity {
 
         priceQuantity.setTextSize(14);
 
+        info.addView(
+                priceQuantity
+        );
+
         LinearLayout.LayoutParams infoParams =
                 new LinearLayout.LayoutParams(
                         0,
@@ -279,9 +262,9 @@ public class BillingActivity extends AppCompatActivity {
                 infoParams
         );
 
-        // -----------------------------------------------------
+        // =========================================
         // ITEM TOTAL
-        // -----------------------------------------------------
+        // =========================================
 
         double itemTotal =
                 item.getPrice()
@@ -306,24 +289,20 @@ public class BillingActivity extends AppCompatActivity {
 
         total.setTypeface(
                 null,
-                android.graphics.Typeface.BOLD
+                Typeface.BOLD
         );
 
         total.setGravity(
                 Gravity.CENTER_VERTICAL
         );
 
-        row.addView(
-                total
-        );
+        row.addView(total);
 
-        // -----------------------------------------------------
+        billingItemsContainer.addView(row);
+
+        // =========================================
         // DIVIDER
-        // -----------------------------------------------------
-
-        billingItemsContainer.addView(
-                row
-        );
+        // =========================================
 
         View divider =
                 new View(this);
@@ -341,31 +320,19 @@ public class BillingActivity extends AppCompatActivity {
         );
     }
 
-    // =========================================================
-    // BILL SUMMARY
-    // =========================================================
-
     private void displaySummary() {
 
         double subtotal =
-                CartManager.getSubtotal(
-                        BillingActivity.this
-                );
+                CartManager.getSubtotal(this);
 
         double discount =
-                CartManager.getDiscountTotal(
-                        BillingActivity.this
-                );
+                CartManager.getDiscountTotal(this);
 
         double gst =
-                CartManager.getGstTotal(
-                        BillingActivity.this
-                );
+                CartManager.getGstTotal(this);
 
         double grandTotal =
-                CartManager.getGrandTotal(
-                        BillingActivity.this
-                );
+                CartManager.getGrandTotal(this);
 
         tvSubtotal.setText(
                 formatRupees(subtotal)
@@ -383,21 +350,28 @@ public class BillingActivity extends AppCompatActivity {
                 formatRupees(grandTotal)
         );
 
-        tvSavings.setText(
-                "💚  You saved "
-                        + formatRupees(discount)
-        );
+        if (discount > 0) {
 
-        // -----------------------------------------------------
-        // EMPTY CART
-        // -----------------------------------------------------
+            tvSavings.setText(
+                    "💚  You saved "
+                            + formatRupees(discount)
+            );
+
+        } else {
+
+            tvSavings.setText(
+                    "💚  No discount applied"
+            );
+        }
+
+        // =========================================
+        // PAYMENT BUTTON
+        // =========================================
 
         if (cart.isEmpty()
                 || grandTotal <= 0) {
 
-            btnProceedPayment.setEnabled(
-                    false
-            );
+            btnProceedPayment.setEnabled(false);
 
             btnProceedPayment.setAlpha(
                     0.5f
@@ -405,19 +379,13 @@ public class BillingActivity extends AppCompatActivity {
 
         } else {
 
-            btnProceedPayment.setEnabled(
-                    true
-            );
+            btnProceedPayment.setEnabled(true);
 
             btnProceedPayment.setAlpha(
                     1.0f
             );
         }
     }
-
-    // =========================================================
-    // FORMAT RUPEES
-    // =========================================================
 
     private String formatRupees(
             double amount
@@ -430,77 +398,104 @@ public class BillingActivity extends AppCompatActivity {
         );
     }
 
-    // =========================================================
-    // CLICK LISTENERS
-    // =========================================================
-
     private void setupClickListeners() {
 
-        // -----------------------------------------------------
-        // BACK BUTTON
-        // -----------------------------------------------------
+        // =========================================
+        // BACK ICON
+        // =========================================
 
         findViewById(R.id.tvBack)
-                .setOnClickListener(
-                        v -> finish()
-                );
+                .setOnClickListener(v -> {
 
-        // -----------------------------------------------------
+                    finish();
+                });
+
+        // =========================================
         // BACK TO CART
-        // -----------------------------------------------------
+        // =========================================
 
-        btnBackCart.setOnClickListener(
-                v -> finish()
-        );
+        btnBackCart.setOnClickListener(v -> {
 
-        // -----------------------------------------------------
+            finish();
+        });
+
+        // =========================================
         // PROCEED TO PAYMENT
-        // -----------------------------------------------------
+        // =========================================
 
-        btnProceedPayment.setOnClickListener(
-                v -> {
+        btnProceedPayment.setOnClickListener(v -> {
 
-                    double total =
-                            CartManager.getGrandTotal(
-                                    BillingActivity.this
-                            );
-
-                    if (total <= 0) {
-
-                        Toast.makeText(
-                                BillingActivity.this,
-                                "Your cart is empty",
-                                Toast.LENGTH_SHORT
-                        ).show();
-
-                        return;
-                    }
-
-                    Intent intent =
-                            new Intent(
-                                    BillingActivity.this,
-                                    PaymentActivity.class
-                            );
-
-                    intent.putExtra(
-                            "BILL_TOTAL",
-                            total
+            double total =
+                    CartManager.getGrandTotal(
+                            BillingActivity.this
                     );
 
-                    startActivity(intent);
-                }
-        );
-    }
+            if (total <= 0) {
 
-    // =========================================================
-    // REFRESH WHEN RETURNING
-    // =========================================================
+                Toast.makeText(
+                        BillingActivity.this,
+                        "Your cart is empty",
+                        Toast.LENGTH_SHORT
+                ).show();
+
+                return;
+            }
+
+            // =====================================
+            // OPEN PAYMENT
+            // =====================================
+
+            Intent intent =
+                    new Intent(
+                            BillingActivity.this,
+                            PaymentActivity.class
+                    );
+
+            intent.putExtra(
+                    "BILL_TOTAL",
+                    total
+            );
+
+            intent.putExtra(
+                    "ITEM_COUNT",
+                    CartManager.getTotalItems(
+                            BillingActivity.this
+                    )
+            );
+
+            intent.putExtra(
+                    "SUBTOTAL",
+                    CartManager.getSubtotal(
+                            BillingActivity.this
+                    )
+            );
+
+            intent.putExtra(
+                    "DISCOUNT",
+                    CartManager.getDiscountTotal(
+                            BillingActivity.this
+                    )
+            );
+
+            intent.putExtra(
+                    "GST",
+                    CartManager.getGstTotal(
+                            BillingActivity.this
+                    )
+            );
+
+            startActivity(intent);
+        });
+    }
 
     @Override
     protected void onResume() {
 
         super.onResume();
 
-        loadBillingData();
+        if (billingItemsContainer != null) {
+
+            loadBillingData();
+        }
     }
 }

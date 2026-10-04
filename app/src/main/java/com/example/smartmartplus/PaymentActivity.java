@@ -29,14 +29,12 @@ public class PaymentActivity extends AppCompatActivity {
     private Button btnBackToCart;
     private Button btnPay;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_payment);
-
 
         // =================================================
         // FIND VIEWS
@@ -60,7 +58,6 @@ public class PaymentActivity extends AppCompatActivity {
         tvPaymentTotal =
                 findViewById(R.id.tvPaymentTotal);
 
-
         rbPaymentMethodGroup =
                 findViewById(R.id.rbPaymentMethodGroup);
 
@@ -73,51 +70,62 @@ public class PaymentActivity extends AppCompatActivity {
         rbCash =
                 findViewById(R.id.rbCash);
 
-
         btnBackToCart =
                 findViewById(R.id.btnBackToCart);
 
         btnPay =
                 findViewById(R.id.btnPay);
 
-
         // =================================================
-        // GET CART DATA
+        // GET BILLING DATA
         // =================================================
 
-        int itemCount =
+        final int itemCount =
                 getIntent().getIntExtra(
                         "ITEM_COUNT",
                         0
                 );
 
-        double subtotal =
+        final double subtotal =
                 getIntent().getDoubleExtra(
                         "SUBTOTAL",
                         0.0
                 );
 
-        double discount =
+        final double discount =
                 getIntent().getDoubleExtra(
                         "DISCOUNT",
                         0.0
                 );
 
-        double gst =
+        final double gst =
                 getIntent().getDoubleExtra(
                         "GST",
                         0.0
                 );
 
-        double total =
+        // BillingActivity sends BILL_TOTAL.
+        // Keep TOTAL as fallback for compatibility.
+        double receivedBillTotal =
                 getIntent().getDoubleExtra(
-                        "TOTAL",
-                        subtotal - discount + gst
+                        "BILL_TOTAL",
+                        -1.0
                 );
 
+        if (receivedBillTotal <= 0.0) {
+
+            receivedBillTotal =
+                    getIntent().getDoubleExtra(
+                            "TOTAL",
+                            subtotal - discount + gst
+                    );
+        }
+
+        final double total =
+                receivedBillTotal;
 
         // =================================================
-        // DISPLAY DATA
+        // DISPLAY BILLING INFORMATION
         // =================================================
 
         tvPaymentItems.setText(
@@ -156,39 +164,30 @@ public class PaymentActivity extends AppCompatActivity {
                 )
         );
 
-
         // =================================================
         // DEFAULT PAYMENT METHOD
         // =================================================
 
         rbUPI.setChecked(true);
 
-
         // =================================================
-        // CHECK WHETHER PAYMENT IS ALLOWED
+        // CHECK PAYMENT ALLOWED
         // =================================================
 
         boolean paymentAllowed =
                 itemCount > 0
                         && total > 0.0;
 
-
         if (!paymentAllowed) {
 
-            // Disable Pay Now
             btnPay.setEnabled(false);
-
-            // Make it visually look disabled
             btnPay.setAlpha(0.45f);
 
         } else {
 
-            // Enable Pay Now
             btnPay.setEnabled(true);
-
             btnPay.setAlpha(1.0f);
         }
-
 
         // =================================================
         // BACK TO CART
@@ -200,16 +199,15 @@ public class PaymentActivity extends AppCompatActivity {
 
         });
 
-
         // =================================================
         // PAY NOW
         // =================================================
 
         btnPay.setOnClickListener(v -> {
 
-            // =================================================
+            // -------------------------------------------------
             // SAFETY CHECK
-            // =================================================
+            // -------------------------------------------------
 
             if (itemCount <= 0 || total <= 0.0) {
 
@@ -222,15 +220,13 @@ public class PaymentActivity extends AppCompatActivity {
                 return;
             }
 
-
-            // =================================================
+            // -------------------------------------------------
             // CHECK PAYMENT METHOD
-            // =================================================
+            // -------------------------------------------------
 
             int selectedId =
                     rbPaymentMethodGroup
                             .getCheckedRadioButtonId();
-
 
             if (selectedId == -1) {
 
@@ -243,27 +239,23 @@ public class PaymentActivity extends AppCompatActivity {
                 return;
             }
 
-
             RadioButton selectedButton =
                     findViewById(selectedId);
 
-
-            String paymentMethod =
+            final String paymentMethod =
                     selectedButton
                             .getText()
                             .toString();
 
-
-            // =================================================
+            // -------------------------------------------------
             // OPEN RECEIPT
-            // =================================================
+            // -------------------------------------------------
 
             Intent intent =
                     new Intent(
                             PaymentActivity.this,
                             ReceiptActivity.class
                     );
-
 
             intent.putExtra(
                     "ITEM_COUNT",
@@ -294,7 +286,6 @@ public class PaymentActivity extends AppCompatActivity {
                     "PAYMENT_METHOD",
                     paymentMethod
             );
-
 
             startActivity(intent);
 

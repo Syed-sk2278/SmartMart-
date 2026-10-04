@@ -1,4 +1,5 @@
-package com.example.smartmartplus;
+
+        package com.example.smartmartplus;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,14 +19,18 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.List;
 import java.util.Locale;
 
-public class ProductDetailsActivity
-        extends AppCompatActivity {
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-    // =================================================
+public class ProductDetailsActivity extends AppCompatActivity {
+
+    // =========================================================
     // PRODUCT VIEWS
-    // =================================================
+    // =========================================================
 
     private ImageView imgProduct;
 
@@ -35,17 +40,13 @@ public class ProductDetailsActivity
     private TextView tvGst;
     private TextView tvDiscount;
 
-    // Small stock status
     private TextView tvStockStatus;
-
-    // Large stock information box
     private TextView tvStockInfo;
 
     private TextView tvShelf;
     private TextView tvDescription;
     private TextView tvBarcode;
 
-    // Shopping list status
     private TextView tvShoppingListStatus;
 
     private Button btnAddToCart;
@@ -53,9 +54,17 @@ public class ProductDetailsActivity
     private Button btnFindOnMap;
 
 
-    // =================================================
+    // =========================================================
+    // LOCATION
+    // =========================================================
+
+    private String resolvedShelfLocation = "";
+    private String resolvedCategoryName = "";
+
+
+    // =========================================================
     // SHARED PREFERENCES
-    // =================================================
+    // =========================================================
 
     private static final String PREF_NAME =
             "SmartMartPrefs";
@@ -64,14 +73,12 @@ public class ProductDetailsActivity
             "SHOPPING_LIST";
 
 
-    // =================================================
+    // =========================================================
     // ON CREATE
-    // =================================================
+    // =========================================================
 
     @Override
-    protected void onCreate(
-            Bundle savedInstanceState
-    ) {
+    protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
 
@@ -80,118 +87,81 @@ public class ProductDetailsActivity
         );
 
 
-        // =================================================
+        // =====================================================
         // FIND VIEWS
-        // =================================================
+        // =====================================================
 
         imgProduct =
-                findViewById(
-                        R.id.imgProduct
-                );
+                findViewById(R.id.imgProduct);
 
         tvProductName =
-                findViewById(
-                        R.id.tvProductName
-                );
+                findViewById(R.id.tvProductName);
 
         tvBrand =
-                findViewById(
-                        R.id.tvBrand
-                );
+                findViewById(R.id.tvBrand);
 
         tvPrice =
-                findViewById(
-                        R.id.tvPrice
-                );
+                findViewById(R.id.tvPrice);
 
         tvGst =
-                findViewById(
-                        R.id.tvGst
-                );
+                findViewById(R.id.tvGst);
 
         tvDiscount =
-                findViewById(
-                        R.id.tvDiscount
-                );
+                findViewById(R.id.tvDiscount);
 
         tvStockStatus =
-                findViewById(
-                        R.id.tvStockStatus
-                );
+                findViewById(R.id.tvStockStatus);
 
-        // IMPORTANT:
-        // Your XML uses tvStockInfo.
         tvStockInfo =
-                findViewById(
-                        R.id.tvStockInfo
-                );
+                findViewById(R.id.tvStockInfo);
 
         tvShelf =
-                findViewById(
-                        R.id.tvShelf
-                );
+                findViewById(R.id.tvShelf);
 
         tvDescription =
-                findViewById(
-                        R.id.tvDescription
-                );
+                findViewById(R.id.tvDescription);
 
         tvBarcode =
-                findViewById(
-                        R.id.tvBarcode
-                );
+                findViewById(R.id.tvBarcode);
 
         tvShoppingListStatus =
-                findViewById(
-                        R.id.tvShoppingListStatus
-                );
+                findViewById(R.id.tvShoppingListStatus);
 
         btnAddToCart =
-                findViewById(
-                        R.id.btnAddToCart
-                );
+                findViewById(R.id.btnAddToCart);
 
         btnViewCart =
-                findViewById(
-                        R.id.btnViewCart
-                );
+                findViewById(R.id.btnViewCart);
 
         btnFindOnMap =
-                findViewById(
-                        R.id.btnFindOnMap
-                );
+                findViewById(R.id.btnFindOnMap);
 
 
-        // =================================================
+        // =====================================================
         // GET PRODUCT DATA
-        // =================================================
+        // =====================================================
 
-        String productId =
+        final String productId =
                 getIntent().getStringExtra(
                         "PRODUCT_ID"
                 );
 
-        String productName =
+        final String productName =
                 getIntent().getStringExtra(
                         "PRODUCT_NAME"
                 );
 
-        String brand =
+        final String brand =
                 getIntent().getStringExtra(
                         "PRODUCT_BRAND"
                 );
 
-        String description =
+        final String description =
                 getIntent().getStringExtra(
                         "PRODUCT_DESCRIPTION"
                 );
 
-        String barcode =
-                getIntent().getStringExtra(
-                        "PRODUCT_BARCODE"
-                );
-
-        String shelf =
+        final String shelf =
                 getIntent().getStringExtra(
                         "PRODUCT_SHELF"
                 );
@@ -201,70 +171,103 @@ public class ProductDetailsActivity
                         "IMAGE_URL"
                 );
 
-        double price =
+        if (imageUrl == null ||
+                imageUrl.trim().isEmpty()) {
+
+            imageUrl =
+                    getIntent().getStringExtra(
+                            "PRODUCT_IMAGE"
+                    );
+        }
+
+        final String finalImageUrl =
+                imageUrl != null
+                        ? imageUrl
+                        : "";
+
+        final String barcode =
+                getIntent().getStringExtra(
+                        "PRODUCT_BARCODE"
+                );
+
+        final double price =
                 getIntent().getDoubleExtra(
                         "PRODUCT_PRICE",
                         0
                 );
 
-        double gst =
+        final double gst =
                 getIntent().getDoubleExtra(
                         "PRODUCT_GST",
                         0
                 );
 
-        double discount =
+        final double discount =
                 getIntent().getDoubleExtra(
                         "PRODUCT_DISCOUNT",
                         0
                 );
 
-        int stock =
+        final int stock =
                 getIntent().getIntExtra(
                         "PRODUCT_STOCK",
                         0
                 );
 
-        String categoryName =
+        final String categoryName =
                 getIntent().getStringExtra(
                         "CATEGORY_NAME"
                 );
 
 
-        // =================================================
+        // =====================================================
         // SAFE PRODUCT NAME
-        // =================================================
+        // =====================================================
 
-        String displayProductName;
+        final String finalProductName;
 
-        if (productName != null
-                && !productName.trim().isEmpty()) {
+        if (productName != null &&
+                !productName.trim().isEmpty()) {
 
-            displayProductName =
+            finalProductName =
                     productName.trim();
 
         } else {
 
-            displayProductName =
+            finalProductName =
                     "Product";
         }
 
 
-        // =================================================
+        // =====================================================
+        // CATEGORY
+        // =====================================================
+
+        if (categoryName != null &&
+                !categoryName.trim().isEmpty()) {
+
+            resolvedCategoryName =
+                    normalizeCategoryName(
+                            categoryName
+                    );
+        }
+
+
+        // =====================================================
         // PRODUCT NAME
-        // =================================================
+        // =====================================================
 
         tvProductName.setText(
-                displayProductName
+                finalProductName
         );
 
 
-        // =================================================
+        // =====================================================
         // BRAND
-        // =================================================
+        // =====================================================
 
-        if (brand != null
-                && !brand.trim().isEmpty()) {
+        if (brand != null &&
+                !brand.trim().isEmpty()) {
 
             tvBrand.setText(
                     "Brand: " + brand
@@ -278,57 +281,56 @@ public class ProductDetailsActivity
         }
 
 
-        // =================================================
+        // =====================================================
         // PRICE
-        // =================================================
+        // =====================================================
 
         tvPrice.setText(
-                "₹"
-                        + String.format(
-                        Locale.getDefault(),
-                        "%.2f",
-                        price
-                )
+                "₹" +
+                        String.format(
+                                Locale.getDefault(),
+                                "%.2f",
+                                price
+                        )
         );
 
 
-        // =================================================
+        // =====================================================
         // GST
-        // =================================================
+        // =====================================================
 
         tvGst.setText(
-                "GST: "
-                        + String.format(
-                        Locale.getDefault(),
-                        "%.0f",
-                        gst
-                )
-                        + "%"
+                "GST: " +
+                        String.format(
+                                Locale.getDefault(),
+                                "%.0f",
+                                gst
+                        ) +
+                        "%"
         );
 
 
-        // =================================================
+        // =====================================================
         // DISCOUNT
-        // =================================================
+        // =====================================================
 
         tvDiscount.setText(
-                "Discount: "
-                        + String.format(
-                        Locale.getDefault(),
-                        "%.0f",
-                        discount
-                )
-                        + "%"
+                "Discount: " +
+                        String.format(
+                                Locale.getDefault(),
+                                "%.0f",
+                                discount
+                        ) +
+                        "%"
         );
 
 
-        // =================================================
+        // =====================================================
         // STOCK
-        // =================================================
+        // =====================================================
 
         if (stock > 0) {
 
-            // Small green stock status
             tvStockStatus.setText(
                     "✓  In Stock"
             );
@@ -341,12 +343,10 @@ public class ProductDetailsActivity
                     )
             );
 
-
-            // LARGE STOCK BOX
             tvStockInfo.setText(
-                    "Stock: "
-                            + stock
-                            + " available"
+                    "Stock: " +
+                            stock +
+                            " available"
             );
 
             tvStockInfo.setTextColor(
@@ -359,7 +359,6 @@ public class ProductDetailsActivity
 
         } else {
 
-            // Small red stock status
             tvStockStatus.setText(
                     "✕  Out of Stock"
             );
@@ -368,8 +367,6 @@ public class ProductDetailsActivity
                     Color.RED
             );
 
-
-            // LARGE STOCK BOX
             tvStockInfo.setText(
                     "Stock: 0 available"
             );
@@ -380,30 +377,31 @@ public class ProductDetailsActivity
         }
 
 
-        // =================================================
+        // =====================================================
         // PRODUCT LOCATION
-        // =================================================
+        // =====================================================
 
-        if (shelf != null
-                && !shelf.trim().isEmpty()) {
+        if (shelf != null &&
+                !shelf.trim().isEmpty()) {
 
-            /*
-             * StoreSectionActivity should pass the
-             * customer-friendly location such as:
-             *
-             * Aisle 1 • Shelf 2
-             */
-
-            if (shelf.startsWith("Aisle")) {
+            if (looksLikeUuid(shelf)) {
 
                 tvShelf.setText(
-                        "📍 " + shelf
+                        "📍 Finding product location..."
+                );
+
+                resolveShelfLocation(
+                        shelf.trim()
                 );
 
             } else {
 
+                resolvedShelfLocation =
+                        shelf.trim();
+
                 tvShelf.setText(
-                        "📍 " + shelf
+                        "📍 " +
+                                resolvedShelfLocation
                 );
             }
 
@@ -415,12 +413,12 @@ public class ProductDetailsActivity
         }
 
 
-        // =================================================
+        // =====================================================
         // DESCRIPTION
-        // =================================================
+        // =====================================================
 
-        if (description != null
-                && !description.trim().isEmpty()) {
+        if (description != null &&
+                !description.trim().isEmpty()) {
 
             tvDescription.setText(
                     description
@@ -434,15 +432,16 @@ public class ProductDetailsActivity
         }
 
 
-        // =================================================
+        // =====================================================
         // BARCODE
-        // =================================================
+        // =====================================================
 
-        if (barcode != null
-                && !barcode.trim().isEmpty()) {
+        if (barcode != null &&
+                !barcode.trim().isEmpty()) {
 
             tvBarcode.setText(
-                    "Barcode: " + barcode
+                    "Barcode: " +
+                            barcode
             );
 
         } else {
@@ -453,40 +452,55 @@ public class ProductDetailsActivity
         }
 
 
-        // =================================================
-        // PRODUCT IMAGE
-        // =================================================
-
-        /*
-         * image_url is currently NULL.
-         * Keep placeholder until backend image_url
-         * is populated.
-         */
+        // =====================================================
+        // IMAGE
+        // =====================================================
 
         imgProduct.setImageResource(
                 android.R.drawable.ic_menu_gallery
         );
 
 
-        // =================================================
-        // CHECK SHOPPING LIST
-        // =================================================
+        // =====================================================
+        // SHOPPING LIST
+        // =====================================================
 
         checkShoppingList(
-                displayProductName
+                finalProductName
         );
 
 
-        // =================================================
+        // =====================================================
+        // FINAL BRAND
+        // =====================================================
+
+        final String finalBrand =
+                brand != null
+                        ? brand
+                        : "N/A";
+
+        final String finalBarcode =
+                barcode != null
+                        ? barcode
+                        : "";
+
+        final String finalDescription =
+                description != null
+                        ? description
+                        : "";
+
+        final String originalShelf =
+                shelf != null
+                        ? shelf
+                        : "";
+
+
+        // =====================================================
         // ADD TO CART
-        // =================================================
+        // =====================================================
 
         btnAddToCart.setOnClickListener(
                 v -> {
-
-                    // -----------------------------------------
-                    // STOCK CHECK
-                    // -----------------------------------------
 
                     if (stock <= 0) {
 
@@ -500,24 +514,35 @@ public class ProductDetailsActivity
                     }
 
 
-                    // -----------------------------------------
-                    // CREATE CART ITEM
-                    // -----------------------------------------
+                    String cartShelf;
+
+                    if (resolvedShelfLocation != null &&
+                            !resolvedShelfLocation
+                                    .trim()
+                                    .isEmpty()) {
+
+                        cartShelf =
+                                resolvedShelfLocation;
+
+                    } else {
+
+                        cartShelf =
+                                originalShelf;
+                    }
+
 
                     CartItem item =
                             new CartItem(
 
-                                    productId,
-
-                                    displayProductName,
-
-                                    brand != null
-                                            ? brand
-                                            : "N/A",
-
-                                    barcode != null
-                                            ? barcode
+                                    productId != null
+                                            ? productId
                                             : "",
+
+                                    finalProductName,
+
+                                    finalBrand,
+
+                                    finalBarcode,
 
                                     price,
 
@@ -527,25 +552,15 @@ public class ProductDetailsActivity
 
                                     stock,
 
-                                    shelf != null
-                                            ? shelf
-                                            : "",
+                                    cartShelf,
 
-                                    description != null
-                                            ? description
-                                            : "",
+                                    finalDescription,
 
-                                    imageUrl != null
-                                            ? imageUrl
-                                            : "",
+                                    finalImageUrl,
 
                                     1
                             );
 
-
-                    // -----------------------------------------
-                    // ADD TO CART
-                    // -----------------------------------------
 
                     CartManager.addToCart(
                             ProductDetailsActivity.this,
@@ -553,21 +568,18 @@ public class ProductDetailsActivity
                     );
 
 
-                    // -----------------------------------------
-                    // MESSAGE
-                    // -----------------------------------------
+                    markShoppingListItemPurchased(
+                            finalProductName
+                    );
+
 
                     Toast.makeText(
                             ProductDetailsActivity.this,
-                            displayProductName
-                                    + " added to cart",
+                            finalProductName +
+                                    " added to cart",
                             Toast.LENGTH_SHORT
                     ).show();
 
-
-                    // -----------------------------------------
-                    // SHOW VIEW CART
-                    // -----------------------------------------
 
                     btnViewCart.setVisibility(
                             View.VISIBLE
@@ -576,9 +588,9 @@ public class ProductDetailsActivity
         );
 
 
-        // =================================================
+        // =====================================================
         // VIEW CART
-        // =================================================
+        // =====================================================
 
         btnViewCart.setOnClickListener(
                 v -> {
@@ -594,19 +606,23 @@ public class ProductDetailsActivity
         );
 
 
-        // =================================================
-        // FIND PRODUCT ON MAP
-        // =================================================
+        // =====================================================
+        // FIND ON MAP
+        // =====================================================
 
         btnFindOnMap.setOnClickListener(
                 v -> {
 
-                    if (categoryName == null
-                            || categoryName.trim().isEmpty()) {
+                    String category =
+                            resolvedCategoryName;
+
+
+                    if (category == null ||
+                            category.trim().isEmpty()) {
 
                         Toast.makeText(
                                 ProductDetailsActivity.this,
-                                "Store location is not available",
+                                "Product map location is not available yet",
                                 Toast.LENGTH_SHORT
                         ).show();
 
@@ -623,7 +639,7 @@ public class ProductDetailsActivity
 
                     intent.putExtra(
                             "HIGHLIGHT_CATEGORY",
-                            categoryName
+                            category
                     );
 
 
@@ -633,9 +649,413 @@ public class ProductDetailsActivity
     }
 
 
-    // =================================================
+    // =========================================================
+    // SHELF → AISLE
+    // =========================================================
+
+    private void resolveShelfLocation(
+            final String shelfId
+    ) {
+
+        SupabaseClient
+                .getApi()
+                .getShelfById(
+                        "eq." + shelfId
+                )
+                .enqueue(
+                        new Callback<List<Shelf>>() {
+
+                            @Override
+                            public void onResponse(
+                                    Call<List<Shelf>> call,
+                                    Response<List<Shelf>> response
+                            ) {
+
+                                // ---------------------------------
+                                // CHECK RESPONSE
+                                // ---------------------------------
+
+                                if (!response.isSuccessful()) {
+
+                                    tvShelf.setText(
+                                            "📍 Location unavailable"
+                                    );
+
+                                    return;
+                                }
+
+
+                                if (response.body() == null ||
+                                        response.body().isEmpty()) {
+
+                                    tvShelf.setText(
+                                            "📍 Location unavailable"
+                                    );
+
+                                    return;
+                                }
+
+
+                                // ---------------------------------
+                                // GET SHELF
+                                // ---------------------------------
+
+                                Shelf shelf =
+                                        response.body().get(0);
+
+
+                                String aisleId =
+                                        shelf.getAisleId();
+
+
+                                int shelfNumber =
+                                        shelf.getShelfNumber();
+
+
+                                // ---------------------------------
+                                // CHECK AISLE ID
+                                // ---------------------------------
+
+                                if (aisleId == null ||
+                                        aisleId.trim().isEmpty()) {
+
+                                    if (shelfNumber > 0) {
+
+                                        resolvedShelfLocation =
+                                                "Shelf " +
+                                                        shelfNumber;
+
+                                        tvShelf.setText(
+                                                "📍 " +
+                                                        resolvedShelfLocation
+                                        );
+
+                                    } else {
+
+                                        tvShelf.setText(
+                                                "📍 Location unavailable"
+                                        );
+                                    }
+
+                                    return;
+                                }
+
+
+                                // ---------------------------------
+                                // RESOLVE AISLE
+                                // ---------------------------------
+
+                                resolveAisleLocation(
+                                        aisleId.trim(),
+                                        shelfNumber
+                                );
+                            }
+
+
+                            @Override
+                            public void onFailure(
+                                    Call<List<Shelf>> call,
+                                    Throwable t
+                            ) {
+
+                                tvShelf.setText(
+                                        "📍 Location unavailable"
+                                );
+                            }
+                        }
+                );
+    }
+
+
+    // =========================================================
+    // AISLE RESOLUTION
+    // =========================================================
+
+    private void resolveAisleLocation(
+            final String aisleId,
+            final int shelfNumber
+    ) {
+
+        SupabaseClient
+                .getApi()
+                .getAisleById(
+                        "eq." + aisleId
+                )
+                .enqueue(
+                        new Callback<List<Aisle>>() {
+
+                            @Override
+                            public void onResponse(
+                                    Call<List<Aisle>> call,
+                                    Response<List<Aisle>> response
+                            ) {
+
+                                if (!response.isSuccessful()) {
+
+                                    showShelfOnly(
+                                            shelfNumber
+                                    );
+
+                                    return;
+                                }
+
+
+                                if (response.body() == null ||
+                                        response.body().isEmpty()) {
+
+                                    showShelfOnly(
+                                            shelfNumber
+                                    );
+
+                                    return;
+                                }
+
+
+                                // ---------------------------------
+                                // GET AISLE
+                                // ---------------------------------
+
+                                Aisle aisle =
+                                        response.body().get(0);
+
+
+                                int aisleNumber =
+                                        aisle.getAisleNumber();
+
+
+                                String aisleName =
+                                        aisle.getName();
+
+
+                                // ---------------------------------
+                                // BUILD LOCATION
+                                // ---------------------------------
+
+                                String location;
+
+
+                                if (aisleNumber > 0 &&
+                                        shelfNumber > 0) {
+
+                                    location =
+                                            "Aisle " +
+                                                    aisleNumber +
+                                                    " • Shelf " +
+                                                    shelfNumber;
+
+                                } else if (aisleNumber > 0) {
+
+                                    location =
+                                            "Aisle " +
+                                                    aisleNumber;
+
+                                } else if (shelfNumber > 0) {
+
+                                    location =
+                                            "Shelf " +
+                                                    shelfNumber;
+
+                                } else {
+
+                                    location =
+                                            "";
+                                }
+
+
+                                // ---------------------------------
+                                // DISPLAY LOCATION
+                                // ---------------------------------
+
+                                if (!location.isEmpty()) {
+
+                                    resolvedShelfLocation =
+                                            location;
+
+                                    tvShelf.setText(
+                                            "📍 " +
+                                                    location
+                                    );
+
+                                } else {
+
+                                    tvShelf.setText(
+                                            "📍 Location unavailable"
+                                    );
+                                }
+
+
+                                // ---------------------------------
+                                // DETERMINE MAP CATEGORY
+                                // ---------------------------------
+
+                                String category =
+                                        normalizeCategoryName(
+                                                aisleName
+                                        );
+
+
+                                if (category.isEmpty()) {
+
+                                    category =
+                                            categoryFromAisleNumber(
+                                                    aisleNumber
+                                            );
+                                }
+
+
+                                if (!category.isEmpty()) {
+
+                                    resolvedCategoryName =
+                                            category;
+                                }
+                            }
+
+
+                            @Override
+                            public void onFailure(
+                                    Call<List<Aisle>> call,
+                                    Throwable t
+                            ) {
+
+                                showShelfOnly(
+                                        shelfNumber
+                                );
+                            }
+                        }
+                );
+    }
+
+
+    // =========================================================
+    // SHELF ONLY
+    // =========================================================
+
+    private void showShelfOnly(
+            int shelfNumber
+    ) {
+
+        if (shelfNumber > 0) {
+
+            resolvedShelfLocation =
+                    "Shelf " +
+                            shelfNumber;
+
+            tvShelf.setText(
+                    "📍 " +
+                            resolvedShelfLocation
+            );
+
+        } else {
+
+            tvShelf.setText(
+                    "📍 Location unavailable"
+            );
+        }
+    }
+
+
+    // =========================================================
+    // CATEGORY FROM AISLE NUMBER
+    // =========================================================
+
+    private String categoryFromAisleNumber(
+            int aisleNumber
+    ) {
+
+        switch (aisleNumber) {
+
+            case 1:
+                return "Dairy";
+
+            case 2:
+                return "Snacks";
+
+            case 3:
+                return "Beverages";
+
+            case 4:
+                return "Personal Care";
+
+            case 5:
+                return "Household";
+
+            case 6:
+                return "Groceries";
+
+            case 7:
+                return "Billing / Checkout";
+
+            default:
+                return "";
+        }
+    }
+
+
+    // =========================================================
+    // NORMALIZE CATEGORY
+    // =========================================================
+
+    private String normalizeCategoryName(
+            String category
+    ) {
+
+        if (category == null ||
+                category.trim().isEmpty()) {
+
+            return "";
+        }
+
+
+        String value =
+                category.trim();
+
+
+        if (value.equalsIgnoreCase(
+                "Fresh Food"
+        )) {
+
+            return "Groceries";
+        }
+
+
+        if (value.equalsIgnoreCase(
+                "Grocery"
+        )) {
+
+            return "Groceries";
+        }
+
+
+        return value;
+    }
+
+
+    // =========================================================
+    // CHECK UUID
+    // =========================================================
+
+    private boolean looksLikeUuid(
+            String value
+    ) {
+
+        if (value == null) {
+            return false;
+        }
+
+
+        return value.matches(
+                "[0-9a-fA-F]{8}-" +
+                        "[0-9a-fA-F]{4}-" +
+                        "[0-9a-fA-F]{4}-" +
+                        "[0-9a-fA-F]{4}-" +
+                        "[0-9a-fA-F]{12}"
+        );
+    }
+
+
+    // =========================================================
     // CHECK SHOPPING LIST
-    // =================================================
+    // =========================================================
 
     private void checkShoppingList(
             String productName
@@ -701,7 +1121,6 @@ public class ProductDetailsActivity
 
             showNotOnShoppingList();
 
-
         } catch (JSONException e) {
 
             showNotOnShoppingList();
@@ -709,9 +1128,105 @@ public class ProductDetailsActivity
     }
 
 
-    // =================================================
-    // COMPARE SHOPPING ITEM
-    // =================================================
+    // =========================================================
+    // MARK SHOPPING LIST PURCHASED
+    // =========================================================
+
+    private void markShoppingListItemPurchased(
+            String productName
+    ) {
+
+        SharedPreferences prefs =
+                getSharedPreferences(
+                        PREF_NAME,
+                        MODE_PRIVATE
+                );
+
+
+        String shoppingListJson =
+                prefs.getString(
+                        KEY_SHOPPING_LIST,
+                        "[]"
+                );
+
+
+        try {
+
+            JSONArray shoppingList =
+                    new JSONArray(
+                            shoppingListJson
+                    );
+
+
+            for (int i = 0;
+                 i < shoppingList.length();
+                 i++) {
+
+                JSONObject item =
+                        shoppingList.getJSONObject(i);
+
+
+                String listItemName =
+                        item.optString(
+                                "name",
+                                ""
+                        ).trim();
+
+
+                if (isSameShoppingItem(
+                        productName,
+                        listItemName
+                )) {
+
+                    int requestedQuantity =
+                            item.optInt(
+                                    "quantity",
+                                    1
+                            );
+
+
+                    int purchasedQuantity =
+                            item.optInt(
+                                    "purchasedQuantity",
+                                    0
+                            );
+
+
+                    if (purchasedQuantity <
+                            requestedQuantity) {
+
+                        purchasedQuantity++;
+                    }
+
+
+                    item.put(
+                            "purchasedQuantity",
+                            purchasedQuantity
+                    );
+
+
+                    prefs.edit()
+                            .putString(
+                                    KEY_SHOPPING_LIST,
+                                    shoppingList.toString()
+                            )
+                            .apply();
+
+
+                    return;
+                }
+            }
+
+        } catch (JSONException e) {
+
+            e.printStackTrace();
+        }
+    }
+
+
+    // =========================================================
+    // COMPARE SHOPPING ITEMS
+    // =========================================================
 
     private boolean isSameShoppingItem(
             String productName,
@@ -753,19 +1268,13 @@ public class ProductDetailsActivity
         }
 
 
-        if (listItem.contains(product)) {
-
-            return true;
-        }
-
-
-        return false;
+        return listItem.contains(product);
     }
 
 
-    // =================================================
+    // =========================================================
     // SHOW ON SHOPPING LIST
-    // =================================================
+    // =========================================================
 
     private void showOnShoppingList(
             int requestedQuantity
@@ -778,9 +1287,9 @@ public class ProductDetailsActivity
 
 
         tvShoppingListStatus.setText(
-                "🛒  On Your Shopping List\n"
-                        + "Requested quantity: "
-                        + requestedQuantity
+                "🛒  On Your Shopping List\n" +
+                        "Requested quantity: " +
+                        requestedQuantity
         );
 
 
@@ -822,15 +1331,15 @@ public class ProductDetailsActivity
     }
 
 
-    // =================================================
+    // =========================================================
     // NOT ON SHOPPING LIST
-    // =================================================
+    // =========================================================
 
     private void showNotOnShoppingList() {
 
         tvShoppingListStatus.setText(
-                "ℹ  Not on Your Shopping List,\n"
-                        + "but please continue shopping."
+                "ℹ  Not on Your Shopping List,\n" +
+                        "but please continue shopping."
         );
 
 
@@ -871,3 +1380,4 @@ public class ProductDetailsActivity
         );
     }
 }
+

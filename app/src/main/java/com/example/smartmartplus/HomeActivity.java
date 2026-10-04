@@ -49,7 +49,6 @@ public class HomeActivity extends AppCompatActivity {
 
     private Button btnLogout;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,7 +70,6 @@ public class HomeActivity extends AppCompatActivity {
 
         setupClickListeners();
     }
-
 
     // =========================================================
     // INITIALIZE VIEWS
@@ -143,7 +141,6 @@ public class HomeActivity extends AppCompatActivity {
                 findViewById(R.id.btnLogout);
     }
 
-
     // =========================================================
     // USER DATA
     // =========================================================
@@ -174,7 +171,6 @@ public class HomeActivity extends AppCompatActivity {
                 "⭐ Smart Points 120"
         );
     }
-
 
     private String getInitials(String name) {
 
@@ -216,7 +212,6 @@ public class HomeActivity extends AppCompatActivity {
         );
     }
 
-
     // =========================================================
     // STORE DATA
     // =========================================================
@@ -238,7 +233,6 @@ public class HomeActivity extends AppCompatActivity {
 
         tvStoreName.setText(storeName);
     }
-
 
     // =========================================================
     // SHOPPING LIST COUNT
@@ -300,7 +294,6 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-
     // =========================================================
     // PURCHASE HISTORY COUNT
     // =========================================================
@@ -345,7 +338,6 @@ public class HomeActivity extends AppCompatActivity {
             );
         }
     }
-
 
     // =========================================================
     // STORE STATE
@@ -397,7 +389,6 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-
     // =========================================================
     // CLICK LISTENERS
     // =========================================================
@@ -419,7 +410,6 @@ public class HomeActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-
         // =====================================================
         // SHOPPING LIST
         // =====================================================
@@ -436,7 +426,6 @@ public class HomeActivity extends AppCompatActivity {
 
             startActivity(intent);
         });
-
 
         // =====================================================
         // PURCHASE HISTORY
@@ -455,7 +444,6 @@ public class HomeActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-
         // =====================================================
         // OFFERS
         // =====================================================
@@ -471,7 +459,6 @@ public class HomeActivity extends AppCompatActivity {
             ).show();
         });
 
-
         // =====================================================
         // MONTHLY SUMMARY
         // =====================================================
@@ -486,7 +473,6 @@ public class HomeActivity extends AppCompatActivity {
                     Toast.LENGTH_SHORT
             ).show();
         });
-
 
         // =====================================================
         // PRODUCT SCANNER
@@ -510,7 +496,6 @@ public class HomeActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-
         // =====================================================
         // CART
         // =====================================================
@@ -532,7 +517,6 @@ public class HomeActivity extends AppCompatActivity {
 
             startActivity(intent);
         });
-
 
         // =====================================================
         // STORE MAP
@@ -560,7 +544,6 @@ public class HomeActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-
         // =====================================================
         // BILLING
         // =====================================================
@@ -580,7 +563,6 @@ public class HomeActivity extends AppCompatActivity {
                     Toast.LENGTH_SHORT
             ).show();
         });
-
 
         // =====================================================
         // PAYMENT
@@ -604,7 +586,6 @@ public class HomeActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-
         // =====================================================
         // HELP
         // =====================================================
@@ -617,7 +598,6 @@ public class HomeActivity extends AppCompatActivity {
                     Toast.LENGTH_SHORT
             ).show();
         });
-
 
         // =====================================================
         // EMERGENCY
@@ -632,7 +612,6 @@ public class HomeActivity extends AppCompatActivity {
             ).show();
         });
 
-
         // =====================================================
         // LOST & FOUND
         // =====================================================
@@ -645,7 +624,6 @@ public class HomeActivity extends AppCompatActivity {
                     Toast.LENGTH_SHORT
             ).show();
         });
-
 
         // =====================================================
         // REPORT
@@ -660,23 +638,6 @@ public class HomeActivity extends AppCompatActivity {
             ).show();
         });
 
-
-        // =====================================================
-        // CHANGE STORE
-        // =====================================================
-
-        findViewById(
-                R.id.tvChangeStore
-        ).setOnClickListener(view -> {
-
-            Toast.makeText(
-                    HomeActivity.this,
-                    "Store selection coming soon",
-                    Toast.LENGTH_SHORT
-            ).show();
-        });
-
-
         // =====================================================
         // LOGOUT
         // =====================================================
@@ -685,7 +646,6 @@ public class HomeActivity extends AppCompatActivity {
                 view -> logout()
         );
     }
-
 
     // =========================================================
     // STORE VERIFICATION
@@ -699,7 +659,6 @@ public class HomeActivity extends AppCompatActivity {
         );
     }
 
-
     private void showStoreQRMessage() {
 
         Toast.makeText(
@@ -709,7 +668,6 @@ public class HomeActivity extends AppCompatActivity {
         ).show();
     }
 
-
     // =========================================================
     // LOGOUT
     // =========================================================
@@ -718,13 +676,10 @@ public class HomeActivity extends AppCompatActivity {
 
         /*
          * IMPORTANT:
-         * Do NOT use prefs.edit().clear()
-         * because that deletes:
+         * Do NOT clear all SharedPreferences.
          *
-         * PURCHASE_HISTORY
-         * SHOPPING_LIST
-         *
-         * We only remove login/session information.
+         * Shopping List and Purchase History
+         * must remain saved.
          */
 
         prefs.edit()
@@ -735,6 +690,8 @@ public class HomeActivity extends AppCompatActivity {
                 .remove("STORE_VERIFIED")
                 .remove("STORE_ID")
                 .remove("STORE_NAME")
+                .remove("STORE_ADDRESS")
+                .remove("STORE_QR")
                 .apply();
 
         Intent intent =
@@ -755,7 +712,6 @@ public class HomeActivity extends AppCompatActivity {
 
         finish();
     }
-
 
     // =========================================================
     // RESUME

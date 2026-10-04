@@ -4,16 +4,16 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F7FBFA"
+    android:background="#F3F7FF"
     android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="24dp">
+        android:padding="20dp">
 
-        <!-- Header -->
+        <!-- SmartMart+ Header -->
 
         <TextView
             android:id="@+id/tvReceiptTitle"
@@ -21,222 +21,371 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="SmartMart+"
-            android:textColor="#087F72"
+            android:textColor="#172B75"
             android:textSize="32sp"
             android:textStyle="bold" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="4dp"
             android:gravity="center"
-            android:text="Digital Receipt"
-            android:textColor="#52656C"
-            android:textSize="20sp" />
-
-        <!-- Success -->
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="28dp"
-            android:gravity="center"
-            android:text="✓ Payment Successful"
-            android:textColor="#087F72"
-            android:textSize="21sp"
+            android:text="SMART • SIMPLE • SECURE"
+            android:textColor="#7180A6"
+            android:textSize="12sp"
             android:textStyle="bold" />
 
-        <!-- Receipt Card -->
+        <!-- Payment Successful -->
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:background="#E2F2EF"
+            android:layout_marginTop="22dp"
+            android:background="#E5F8EE"
+            android:gravity="center"
             android:orientation="vertical"
             android:padding="20dp">
+
+            <TextView
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:background="#35B879"
+                android:gravity="center"
+                android:text="✓"
+                android:textColor="#FFFFFF"
+                android:textSize="38sp"
+                android:textStyle="bold" />
+
+            <!-- IMPORTANT: Java uses this ID -->
+
+            <TextView
+                android:id="@+id/tvTransactionStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:gravity="center"
+                android:text="✓ PAYMENT SUCCESSFUL"
+                android:textColor="#16834F"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:text="Your purchase has been completed"
+                android:textColor="#557463"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <!-- Receipt Information -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="#FFFFFF"
+            android:elevation="3dp"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="DIGITAL RECEIPT"
+                android:textColor="#172B75"
+                android:textSize="13sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvReceiptNumber"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Receipt No: SM000000"
-                android:textColor="#263238"
-                android:textSize="16sp" />
+                android:layout_marginTop="13dp"
+                android:text="Receipt No. SM000000"
+                android:textColor="#202A3C"
+                android:textSize="17sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvReceiptDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="Date: --"
-                android:textColor="#52656C"
-                android:textSize="16sp" />
+                android:layout_marginTop="7dp"
+                android:text="Date"
+                android:textColor="#72809A"
+                android:textSize="14sp" />
 
-            <TextView
-                android:id="@+id/tvReceiptItems"
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="18dp"
+                android:background="#E7EBF4" />
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="Items: 0"
-                android:textColor="#263238"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:layout_marginTop="15dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Products purchased"
+                    android:textColor="#66738A"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/tvReceiptItems"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0 items"
+                    android:textColor="#172B75"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
-        <!-- Subtotal -->
+        <!-- Payment Summary -->
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:layout_marginTop="22dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Subtotal"
-                android:textColor="#52656C"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/tvReceiptSubtotal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="₹0.00"
-                android:textColor="#101C25"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-        </LinearLayout>
-
-        <!-- Discount -->
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Discount"
-                android:textColor="#52656C"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/tvReceiptDiscount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="- ₹0.00"
-                android:textColor="#087F72"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-        </LinearLayout>
-
-        <!-- GST -->
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="GST"
-                android:textColor="#52656C"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/tvReceiptGST"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="₹0.00"
-                android:textColor="#101C25"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-        </LinearLayout>
-
-        <!-- Total -->
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:layout_marginTop="10dp"
-            android:background="#D5ECE7"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Total Paid"
-                android:textColor="#087F72"
-                android:textSize="23sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tvReceiptTotal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="₹0.00"
-                android:textColor="#087F72"
-                android:textSize="25sp"
-                android:textStyle="bold" />
-
-        </LinearLayout>
-
-        <!-- Payment Method -->
-
-        <TextView
-            android:id="@+id/tvReceiptPaymentMethod"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="22dp"
-            android:gravity="center"
-            android:text="Payment Method: UPI"
-            android:textColor="#37474F"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:layout_marginTop="16dp"
+            android:background="#FFFFFF"
+            android:elevation="3dp"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="PAYMENT SUMMARY"
+                android:textColor="#172B75"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <!-- Subtotal -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Subtotal"
+                    android:textColor="#66738A"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tvReceiptSubtotal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="₹0.00"
+                    android:textColor="#202A3C"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <!-- Discount -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Discount"
+                    android:textColor="#66738A"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tvReceiptDiscount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="- ₹0.00"
+                    android:textColor="#1E9A62"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <!-- GST -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="GST"
+                    android:textColor="#66738A"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tvReceiptGST"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="₹0.00"
+                    android:textColor="#202A3C"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <!-- Total -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:layout_marginTop="8dp"
+                android:background="#172B75"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="18dp"
+                android:paddingEnd="18dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="TOTAL PAID"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvReceiptTotal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="₹0.00"
+                    android:textColor="#FFFFFF"
+                    android:textSize="23sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <!-- Payment Method -->
+
+            <TextView
+                android:id="@+id/tvReceiptPaymentMethod"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:gravity="center"
+                android:text="Paid via • UPI"
+                android:textColor="#586681"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <!-- Exit Verification QR -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="#FFFFFF"
+            android:elevation="3dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="EXIT VERIFICATION"
+                android:textColor="#172B75"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:gravity="center"
+                android:text="Show this QR code to the staff at the exit"
+                android:textColor="#66738A"
+                android:textSize="14sp" />
+
+            <!-- IMPORTANT: Java uses this ID -->
+
+            <ImageView
+                android:id="@+id/ivTransactionQR"
+                android:layout_width="220dp"
+                android:layout_height="220dp"
+                android:layout_marginTop="16dp"
+                android:contentDescription="Transaction QR code"
+                android:padding="8dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="✓ PAID • READY FOR EXIT"
+                android:textColor="#16834F"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
 
         <!-- Done -->
 
         <Button
             android:id="@+id/btnDone"
             android:layout_width="match_parent"
-            android:layout_height="62dp"
-            android:layout_marginTop="28dp"
-            android:backgroundTint="#087F72"
-            android:text="Done"
+            android:layout_height="60dp"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="#172B75"
+            android:text="✓  Done &amp; Continue"
             android:textColor="#FFFFFF"
-            android:textSize="19sp"
+            android:textSize="17sp"
             android:textStyle="bold" />
 
-        <!-- Home -->
+        <!-- Back Home -->
 
         <Button
             android:id="@+id/btnBackHome"
             android:layout_width="match_parent"
-            android:layout_height="58dp"
-            android:layout_marginTop="12dp"
-            android:backgroundTint="#DCEDEA"
+            android:layout_height="56dp"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="#E4E9F7"
             android:text="Back to Home"
-            android:textColor="#087F72"
-            android:textSize="18sp"
+            android:textColor="#172B75"
+            android:textSize="16sp"
             android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:text="Thank you for shopping with SmartMart+"
+            android:textColor="#8994A9"
+            android:textSize="13sp" />
 
     </LinearLayout>
 

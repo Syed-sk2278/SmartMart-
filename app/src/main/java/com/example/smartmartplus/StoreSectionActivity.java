@@ -1,4 +1,5 @@
-package com.example.smartmartplus;
+
+        package com.example.smartmartplus;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -96,6 +97,20 @@ public class StoreSectionActivity extends AppCompatActivity {
                 findViewById(
                         R.id.productsContainer
                 );
+
+
+        // -------------------------------------------------
+        // BACK TO STORE MAP
+        // -------------------------------------------------
+
+        View btnBackMap =
+                findViewById(
+                        R.id.btnBackMap
+                );
+
+        btnBackMap.setOnClickListener(
+                v -> finish()
+        );
 
 
         // -------------------------------------------------
@@ -293,13 +308,6 @@ public class StoreSectionActivity extends AppCompatActivity {
                         if (!response.isSuccessful()
                                 || response.body() == null
                                 || response.body().isEmpty()) {
-
-                            /*
-                             * If the database still has
-                             * "Fresh Food", allow the
-                             * Groceries screen to work
-                             * with that category too.
-                             */
 
                             if (categoryName.equalsIgnoreCase(
                                     "Groceries"
@@ -549,7 +557,6 @@ public class StoreSectionActivity extends AppCompatActivity {
         );
 
 
-        // Product icon
         TextView icon =
                 new TextView(this);
 
@@ -582,7 +589,6 @@ public class StoreSectionActivity extends AppCompatActivity {
         );
 
 
-        // Product name + brand
         LinearLayout nameBox =
                 new LinearLayout(this);
 
@@ -678,7 +684,6 @@ public class StoreSectionActivity extends AppCompatActivity {
         );
 
 
-        // Price
         TextView price =
                 new TextView(this);
 
@@ -855,10 +860,6 @@ public class StoreSectionActivity extends AppCompatActivity {
         );
 
 
-        // =================================================
-        // ADD CARD TO SCREEN
-        // =================================================
-
         productsContainer.addView(
                 card
         );
@@ -880,15 +881,6 @@ public class StoreSectionActivity extends AppCompatActivity {
 
         card.setOnClickListener(
                 v -> {
-
-                    /*
-                     * We cannot immediately use the
-                     * location TextView because the
-                     * database lookup is asynchronous.
-                     *
-                     * Resolve it again and then open
-                     * Product Details.
-                     */
 
                     resolveLocationAndOpenDetails(
                             product
@@ -1260,8 +1252,6 @@ public class StoreSectionActivity extends AppCompatActivity {
         );
 
 
-        // IMPORTANT:
-        // Pass readable location, NOT UUID.
         intent.putExtra(
                 "PRODUCT_SHELF",
                 location
@@ -1347,3 +1337,4 @@ public class StoreSectionActivity extends AppCompatActivity {
         ).show();
     }
 }
+
